@@ -1,90 +1,80 @@
 
 
-# Overview
+# EasyCodef-Java Library · [![Maven Central](https://img.shields.io/maven-central/v/io.codef.api/easycodef-java.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.codef.api%22%20AND%20a:%22easycodef-java%22) [![javadoc](https://javadoc.io/badge2/io.codef.api/easycodef-java/javadoc.svg)](https://javadoc.io/doc/io.codef.api/easycodef-java) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/codef-io/easycodef-java/blob/master/LICENSE)
 
-CODEF는 온라인에 흩어진 데이터를 클라이언트 엔진과 웹 API 등을 활용해 쉽고 빠르게 사용할 수 있도록 돕습니다. 아이디어가 구현되기 위한 복잡한 과정을 간결하게 바꾸고, 수고로움을 줄이고자 노력합니다. 
+<br>
 
-[홈페이지](https://codef.io/)  
-[개발가이드](https://developer.codef.io/)  
-[블로그](https://blog.hectodata.co.kr/)  
+> 💡 **Codef 사용이 처음이라면 [개발 시작하기](https://developer.codef.io/common-guide/rest-api) 페이지도 참고해보세요.**
+- [Codef 홈페이지](https://codef.io/)  
+- [Codef 개발가이드](https://developer.codef.io/)  
+- [헥토데이터 블로그](https://blog.hectodata.co.kr/)
 
-easycodef-java는 CODEF API 연동 개발을 돕는 라이브러리 유틸입니다.  사용을 위해서는 [홈페이지](https://codef.io/) 가입 후 데모/정식 서비스 신청을 통해 자격 증명을 위한 클라이언트 정보 등을 발급받아야 하며 사용 가능한 모든 API의 엔드포인트(은행, 카드, 보험, 증권, 공공, 기타)와 요청/응답 항목은 모두 [개발가이드](https://developer.codef.io/)를 통해 확인할 수 있습니다.
+<br>
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.codef.api/easycodef-java.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.codef.api%22%20AND%20a:%22easycodef-java%22) [![javadoc](https://javadoc.io/badge2/io.codef.api/easycodef-java/javadoc.svg)](https://javadoc.io/doc/io.codef.api/easycodef-java) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/codef-io/easycodef-java/blob/master/LICENSE)
+## EasyCodef를 통해 간편한 Codef API 연결
 
-# Get it!
-  
-## Maven
+> easycodef-java는 Codef API 연동 개발을 돕는 라이브러리입니다.<br>
+> java 코드를 활용해 간단하게 토큰 발급, 요청, 실제 데이터 응답까지 확인할 수 있습니다.
 
-라이브러리는 [Maven 중앙 저장소](https://search.maven.org/artifact/io.codef.api/easycodef-java)에서 확인 가능한 io.codef.api 패키지에 속해 있으며 의존관계 설정을 통해 사용 가능합니다.
+1. 프로젝트 의존성 설정 (5분)
+2. 클라이언트 정보 생성 (5분)
+3. 토큰 요청 (10분)
+4. API 요청 (10분)
+
+
+
+
+<br>
+<br>
+
+## 프로젝트 의존성 설정
+
+### Maven
+
+> [메이븐 중앙 저장소](https://search.maven.org/artifact/io.codef.api/easycodef-java)에서 jar 파일을 다운로드할 수 있습니다.
 
 ```xml
-<dependencies>
-  ...
-  <!-- 가급적 최신 버전 사용 권장 -->
   <dependency>
     <groupId>io.codef.api</groupId>
     <artifactId>easycodef-java</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.5</version>
   </dependency>
-  ...
-</dependencies>
 ```
 
-## Non-Maven dependency resolution
-
-[메이븐 중앙 저장소](https://search.maven.org/artifact/io.codef.api/easycodef-java)에서 모든 버전의 easycodef-java jar 파일을 다운로드할 수 있습니다.
 
 
+### Gradle
 
-# Use it!
+```gradle
+implementation group: 'io.codef.api', name: 'easycodef-java', version: '1.0.5'
+```
 
-## 1. 토큰 요청
+<br>
+<br>
 
-CODEF API 서비스를 이용하기 위해서는 서비스 이용에 대한 자격 증명을 통해 토큰을 발급받아야 합니다. 토큰은 모든 요청시 헤더 값에 포함되어야 하며 한번 발급 받은 토큰은 일주일간 재사용이 가능합니다. 
+## 토큰 요청
 
-> **easycodef-java 라이브러리는 토큰의 발급과 재사용을 자동으로 처리합니다.**  
-> **재사용 중인 토큰의 유효기간이 만료되는 경우 재발급 또한 자동으로 처리됩니다.**
+CODEF API 서비스를 이용하기 위해서는 서비스 이용에 대한 자격 증명을 통해 토큰을 발급받아야 합니다.<br>
+토큰은 모든 요청시 **헤더 값에 포함**되어야 하며 한 번 발급 받은 토큰은 **일 주일간 재사용**이 가능합니다.
 
-사용자는 단순히 자격증명을 위한 **클라이언트 정보** 설정 만을 진행하면 됩니다.  아래의 예제는 사용자가 직접 토큰을 발급받는 과정을 설명합니다. 계정 관리나 상품 요청시 토큰은 라이브러리 내에서 자동 발급받아 사용하기 때문에 특별한 경우가 아니라면 사용자가 직접 토큰을 요청할 필요는 없습니다.
+> 본 라이브러리는 토큰의 발급, 재사용, 만료 토큰 재발급을 자동으로 처리합니다.<br>
+> 따라서, 사용자가 직접 토큰을 요청할 필요는 없습니다.<br>
+> 아래 예제와 같이 **클라이언트 정보** 설정만을 진행하면 됩니다.<br>
+
+아래의 예제는. EasyCodef를 통해 **액세스 토큰을 발급받는 과정**을 간단하게 정리한 코드입니다.<br>
+실습은 [\<상세코드>](https://github.com/codef-io/easycodef-java/blob/master/src/test/java/io/codef/api/EasyCodefTokenTest.java) 링크를 참고해주세요.
+
+> 이렇게 발급된 accessToken은 일 주일간 Postman등 다양한 방법으로 HttpRequest에 활용하실 수 있습니다.
 
 ```java
-// #1.쉬운 코드에프 객체 생성
 EasyCodef codef = new EasyCodef();
 
-/** #2.데모 클라이언트 정보 설정
-* - 데모 서비스 가입 후 코드에프 홈페이지에 확인 가능(https://codef.io/#/account/keys)
-* - 데모 서비스로 상품 조회 요청시 필수 입력 항목	*/
 codef.setClientInfoForDemo(EasyCodefClientInfo.DEMO_CLIENT_ID, EasyCodefClientInfo.DEMO_CLIENT_SECRET);
-
-/** #3.정식 클라이언트 정보 설정
-* - 정식 서비스 가입 후 코드에프 홈페이지에 확인 가능(https://codef.io/#/account/keys)
-* - 정식 서비스로 상품 조회 요청시 필수 입력 항목 */
 codef.setClientInfo(EasyCodefClientInfo.CLIENT_ID, EasyCodefClientInfo.CLIENT_SECRET);
-
-/** #4.RSA암호화를 위한 퍼블릭키 설정
-* - 데모/정식 서비스 가입 후 코드에프 홈페이지에 확인 가능(https://codef.io/#/account/keys)
-* - 암호화가 필요한 필드에 사용 (ex)encryptValue(String plainText); */
 codef.setPublicKey(EasyCodefClientInfo.PUBLIC_KEY);
 
-/** #5.코드에프 토큰 발급 요청 - 서비스타입(API:정식, DEMO:데모, SANDBOX:샌드박스) */
-String accessToken1 = codef.requestToken(EasyCodefServiceType.SANDBOX);	// 토큰 요청1 (requestToken)
-System.out.println(accessToken1);
-		
-String accessToken2 = codef.requestToken(EasyCodefServiceType.SANDBOX);	// 토큰 요청2 (requestToken)
-System.out.println(accessToken2);
-		
-assertEquals("성능 향상을 위한 재사용 토큰 이용 확인", accessToken1, accessToken2);
-		
-String accessToken3 = codef.requestNewToken(EasyCodefServiceType.SANDBOX);// 신규 토큰 요청1 (requestNewToken)
-System.out.println(accessToken3);
-	
-String accessToken4 = codef.requestNewToken(EasyCodefServiceType.SANDBOX);// 신규 토큰 요청2 (requestNewToken)
-System.out.println(accessToken4);
-	
-assertNotEquals("토큰 권한 변경 등에 따라 필요한 신규 토큰 발급 확인", accessToken3, accessToken4);
+String accessToken = codef.requestToken(EasyCodefServiceType.DEMO);
 ```
-
 
 ## 2. 계정 관리
 
