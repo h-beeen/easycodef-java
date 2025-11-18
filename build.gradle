@@ -1,0 +1,46 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+
+dependencies {
+    api 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+    api 'commons-codec:commons-codec:1.16.0'
+    api 'commons-io:commons-io:2.16.1'
+    testImplementation 'junit:junit:4.13.1'
+
+    implementation('org.json:json:20211205')
+}
+
+group = 'io.codef.api'
+version = '1.0.6'
+description = 'easycodef'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
