@@ -45,7 +45,7 @@ public class EasyCodefConnector {
 	 * @throws InterruptedException
 	 */
 	@SuppressWarnings("unchecked")
-	protected static EasyCodefResponse execute(String urlPath, int serviceType, HashMap<String, Object> bodyMap, EasyCodefProperties properties) throws InterruptedException {
+	protected static EasyCodefResponse execute(String urlPath, int serviceType, String accessToken, HashMap<String, Object> bodyMap, EasyCodefProperties properties) throws InterruptedException {
 		/**	#1.토큰 체크	*/
 		String domain;
 		String clientId;
@@ -65,7 +65,7 @@ public class EasyCodefConnector {
 			clientSecret = EasyCodefConstant.SANDBOX_CLIENT_SECRET;
 		}
 		
-		String accessToken = getToken(clientId, clientSecret); // 토큰 반환
+//		String accessToken = getToken(clientId, clientSecret); // 토큰 반환
 		
 		/**	#2.요청 파라미터 인코딩	*/
 		String bodyString;
@@ -83,8 +83,8 @@ public class EasyCodefConnector {
 		/**	#3.상품 조회 요청	*/
 		HashMap<String, Object> responseMap = requestProduct(domain + urlPath, accessToken, bodyString);
 		if(EasyCodefConstant.INVALID_TOKEN.equals(responseMap.get("error")) || "CF-00401".equals(((HashMap<String, Object>)responseMap.get(EasyCodefConstant.RESULT)).get(EasyCodefConstant.CODE))){	// 액세스 토큰 유효기간 만료되었을 경우 토큰 재발급 후 상품 조회 요청 진행
-			EasyCodefTokenMap.setToken(clientId, null);		// 토큰 정보 초기화
-			accessToken = getToken(clientId, clientSecret); // 토큰 설정
+//			EasyCodefTokenMap.setToken(clientId, null);		// 토큰 정보 초기화
+//			accessToken = getToken(clientId, clientSecret); // 토큰 설정
 			responseMap = requestProduct(domain + urlPath, accessToken, bodyString);
 		} else if (EasyCodefConstant.ACCESS_DENIED.equals(responseMap.get("error")) || "CF-00403".equals(((HashMap<String, Object>)responseMap.get(EasyCodefConstant.RESULT)).get(EasyCodefConstant.CODE))) {	// 접근 권한이 없는 경우 - 오류코드 반환
 			EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.UNAUTHORIZED, EasyCodefConstant.ACCESS_DENIED); 
@@ -171,76 +171,119 @@ public class EasyCodefConnector {
 		}
 	}
 	
-	/**
-	 * Desc : 엑세스 토큰 반환
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:35:47 PM
-	 * @param clientId
-	 * @param clientSecret
-	 * @return
-	 * @throws InterruptedException
-	 */
-	private static String getToken(String clientId, String clientSecret) throws InterruptedException {
-		int i = 0;
-		String accessToken = EasyCodefTokenMap.getToken(clientId);
-		if(accessToken == null || "".equals(accessToken) || !checkToken(accessToken)) { //만료 조건 추가
-			while(i < REPEAT_COUNT) {	// 토큰 발급 요청은 최대 3회까지 재시도
-				HashMap<String, Object> tokenMap = publishToken(clientId, clientSecret);	// 토큰 발급 요청
-				if(tokenMap != null) {
-					String newToken = (String)tokenMap.get("access_token");
-					EasyCodefTokenMap.setToken(clientId, newToken);	// 토큰 저장
-					accessToken = newToken;
-				}
-				
-				if(accessToken != null || !"".equals(accessToken)) {
-					break;	// 정상 발급시 반복문 종료
-				}
-				
-				Thread.sleep(20);
-				i++;
-			}
-		}
-		
-		return accessToken;
-	}
+//	/**
+//	 * Desc : 엑세스 토큰 반환
+//	 * @Company : ©CODEF corp.
+//	 * @Author  : notfound404@codef.io
+//	 * @Date    : Jun 26, 2020 3:35:47 PM
+//	 * @param clientId
+//	 * @param clientSecret
+//	 * @return
+//	 * @throws InterruptedException
+//	 */
+//	private static String getToken(String clientId, String clientSecret) throws InterruptedException {
+//		int i = 0;
+//		String accessToken = EasyCodefTokenMap.getToken(clientId);
+//		if(accessToken == null || "".equals(accessToken) || !checkToken(accessToken)) { //만료 조건 추가
+//			while(i < REPEAT_COUNT) {	// 토큰 발급 요청은 최대 3회까지 재시도
+//				HashMap<String, Object> tokenMap = publishToken(clientId, clientSecret);	// 토큰 발급 요청
+//				if(tokenMap != null) {
+//					String newToken = (String)tokenMap.get("access_token");
+//					EasyCodefTokenMap.setToken(clientId, newToken);	// 토큰 저장
+//					accessToken = newToken;
+//				}
+//
+//				if(accessToken != null || !"".equals(accessToken)) {
+//					break;	// 정상 발급시 반복문 종료
+//				}
+//
+//				Thread.sleep(20);
+//				i++;
+//			}
+//		}
+//
+//		return accessToken;
+//	}
+
+    protected static String requestToken(String oauthToken) {
+        BufferedReader br = null;
+        try {
+            // 토큰 발급 URL (기존 publishToken과 동일하게 사용)
+            URL url = new URL(EasyCodefConstant.OAUTH_DOMAIN + EasyCodefConstant.GET_TOKEN);
+
+            // CODEF가 요구하는 기본 파라미터
+            String params = "grant_type=client_credentials&scope=read";
+
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            // 여기서 oauthToken은 "Base64(clientId:clientSecret)" 형태
+            con.setRequestProperty("Authorization", "Basic " + oauthToken);
+            con.setDoOutput(true);
+
+            // 요청 바디 전송
+            try (OutputStream os = con.getOutputStream()) {
+                os.write(params.getBytes("UTF-8"));
+                os.flush();
+            }
+
+            // 응답 읽기
+            br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+            StringBuilder responseStr = new StringBuilder();
+            String inputLine;
+            while ((inputLine = br.readLine()) != null) {
+                responseStr.append(inputLine);
+            }
+
+            // JSON → Map 변환 (기존 mapper 그대로 사용)
+            HashMap<String, Object> tokenMap =
+                    mapper.readValue(
+                            URLDecoder.decode(responseStr.toString(), "UTF-8"),
+                            new com.fasterxml.jackson.core.type.TypeReference<HashMap<String, Object>>() {}
+                    );
+
+            // access_token 값만 반환
+            return (String) tokenMap.get("access_token");
+        } catch (Exception e) {
+            // 실패 시 null 반환 (상위에서 처리)
+            return null;
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ignored) { }
+            }
+        }
+    }
 	
 	/**
 	 * Desc : CODEF 엑세스 토큰 발급 요청
 	 * @Company : ©CODEF corp.
 	 * @Author  : notfound404@codef.io
 	 * @Date    : Jun 26, 2020 3:36:01 PM
-	 * @param clientId
-	 * @param clientSecret
 	 * @return
 	 */
-	protected static HashMap<String, Object> publishToken(String clientId, String clientSecret) {
+	protected static String publishToken(String oauthToken) {
 		BufferedReader br = null;
 		try {
 			// HTTP 요청을 위한 URL 오브젝트 생성
 			URL url = new URL(EasyCodefConstant.OAUTH_DOMAIN + EasyCodefConstant.GET_TOKEN);
 			String params = "grant_type=client_credentials&scope=read";	// Oauth2.0 사용자 자격증명 방식(client_credentials) 토큰 요청 설정
-			
+
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("POST");
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			
-			// 클라이언트아이디, 시크릿코드 Base64 인코딩
-			String auth = clientId + ":" + clientSecret;
-			byte[] authEncBytes = Base64.encodeBase64(auth.getBytes());
-			String authStringEnc = new String(authEncBytes);
-			String authHeader = "Basic " + authStringEnc;
-			
-			con.setRequestProperty("Authorization", authHeader);
+
+			con.setRequestProperty("Authorization", oauthToken);
 			con.setDoInput(true);
 			con.setDoOutput(true);
-			
+
 			// 리퀘스트 바디 전송
 			OutputStream os = con.getOutputStream();
 			os.write(params.getBytes());
 			os.flush();
 			os.close();
-	
+
 			// 응답 코드 확인
 			int responseCode = con.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_OK) {	// 정상 응답
@@ -248,7 +291,7 @@ public class EasyCodefConnector {
 			} else {	 // 에러 발생
 				return null;
 			}
-			
+
 			// 응답 바디 read
 			String inputLine;
 			StringBuffer responseStr = new StringBuffer();
@@ -256,9 +299,9 @@ public class EasyCodefConnector {
 				responseStr.append(inputLine);
 			}
 			br.close();
-			
+
 			HashMap<String, Object> tokenMap = mapper.readValue(URLDecoder.decode(responseStr.toString(), "UTF-8"), new TypeReference<HashMap<String, Object>>(){});
-			return tokenMap;
+            return tokenMap.get("access_token").toString();
 		} catch (Exception e) {
 			return null;
 		} finally {
