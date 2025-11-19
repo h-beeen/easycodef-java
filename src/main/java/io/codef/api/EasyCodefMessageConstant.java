@@ -5,7 +5,7 @@ package io.codef.api;
  * io.codef.easycodef
  *   |_ EasyCodefMessageConstant.java
  * </pre>
- * 
+ *
  * Desc : EasyCodef에서 사용되는 메시지 코드 클래스
  * @Company : ©CODEF corp.
  * @Author  : notfound404@codef.io
@@ -39,20 +39,20 @@ public enum EasyCodefMessageConstant {
 	
 	
 	
-	private String code;
-	private String message;
+	private final String code;
+	private final String message;
 	private String extraMessage;
 	
-	private EasyCodefMessageConstant(String code, String message) {
+	EasyCodefMessageConstant(String code, String message) {
 		this.code = code;
 		this.message = message;
 	}
 
-	protected String getCode() {
+	public String getCode() {
 		return code;
 	}
 
-	protected String getMessage() {
+	public String getMessage() {
 		return message;
 	}
 
@@ -60,7 +60,7 @@ public enum EasyCodefMessageConstant {
 		this.extraMessage = extraMessage;
 	}
 
-	protected String getExtraMessage() {
+	public String getExtraMessage() {
 		return extraMessage;
 	}
 }

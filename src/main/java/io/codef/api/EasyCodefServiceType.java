@@ -12,18 +12,16 @@ package io.codef.api;
  * @Date    : Jun 26, 2020 3:40:36 PM
  */
 public enum EasyCodefServiceType {
-	SANDBOX(2),
 	DEMO(1),
 	API(0);
 	
-	private int serviceType;
+	private final int serviceType;
 	
-	private EasyCodefServiceType(int serviceType) {
+	EasyCodefServiceType(int serviceType) {
 		this.serviceType = serviceType;
 	}
 
-	protected int getServiceType() {
+	public int getServiceType() {
 		return serviceType;
 	}
-	
 }
