@@ -60,9 +60,8 @@ public class EasyCodefUtil {
 		Cipher cipher = Cipher.getInstance("RSA");
 		cipher.init(Cipher.ENCRYPT_MODE, key);
 		byte[] bytePlain = cipher.doFinal(plainText.getBytes());
-		String encrypted = Base64.getEncoder().encodeToString(bytePlain);
-	
-		return encrypted;
+
+        return Base64.getEncoder().encodeToString(bytePlain);
 	}
 	
 	/**
