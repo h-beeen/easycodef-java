@@ -81,17 +81,15 @@ public class EasyCodefUtil {
 		
 		return fileString;
 	}
-	
+
 	/**
 	 * 토큰 맵 변환
-	 * 
+	 *
 	 * @param request
 	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	public static HashMap<String, Object> getTokenMap(String token) throws JsonParseException, JsonMappingException, IOException {
+	public static HashMap<String, Object> getTokenMap(String token) throws IOException {
 
 		/** 클라이언트 식별 값, 요청 식별 값 추출을 위한 디코드 */
 		String[] split_string = token.split("\\.");
