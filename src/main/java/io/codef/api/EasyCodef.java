@@ -384,37 +384,7 @@ public class EasyCodef {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
-	public String requestToken(EasyCodefServiceType serviceType) throws JsonParseException, JsonMappingException {
-//		String clientId = null;
-//		String clientSecret = null;
-//
-//		if(serviceType.getServiceType() == 0) {
-//			clientId = properties.getClientId();
-//			clientSecret = properties.getClientSecret();
-//		} else if(serviceType.getServiceType() == 1) {
-//			clientId = properties.getDemoClientId();
-//			clientSecret = properties.getDemoClientSecret();
-//		} else {
-//			clientId = EasyCodefConstant.SANDBOX_CLIENT_ID;
-//			clientSecret = EasyCodefConstant.SANDBOX_CLIENT_SECRET;
-//		}
-//
-//		String accessToken = EasyCodefTokenMap.getToken(clientId); // 보유 중인 토큰이 있는 경우 반환
-//		if(accessToken != null) {
-//			HashMap<String, Object> tokenMap = EasyCodefUtil.getTokenMap(accessToken);
-//			if(EasyCodefUtil.checkValidity((int)(tokenMap.get("exp")))) {	// 토큰의 유효 기간 확인
-//				return accessToken;	// 정상 토큰인 경우 반환
-//			}
-//		}
-//
-//		HashMap<String, Object> tokenMap = EasyCodefConnector.publishToken(clientId, clientSecret);	// 보유 중인 토큰이 없거나 신규 발급 조건에 해당하는 경우 발급 후 반환(만료일시를 지났거나 한시간 이내로 도래한 경우 신규 발급)
-//		if(tokenMap != null) {
-//			accessToken = (String)tokenMap.get("access_token");
-//			EasyCodefTokenMap.setToken(clientId, accessToken);	// 발급 토큰 저장
-//			return accessToken;
-//		} else {
-//			return null;
-//		}
+	public String requestToken(EasyCodefServiceType serviceType) {
         EasyCodefToken tokenHolder = getOrCreateToken(serviceType);
         return tokenHolder
                 .validateAndRefreshToken()
@@ -433,29 +403,6 @@ public class EasyCodef {
 	 * @throws IOException
 	 */
 	public String requestNewToken(EasyCodefServiceType serviceType) throws JsonParseException, JsonMappingException, IOException {
-//		String clientId = null;
-//		String clientSecret = null;
-//
-//		if(serviceType.getServiceType() == 0) {
-//			clientId = properties.getClientId();
-//			clientSecret = properties.getClientSecret();
-//		} else if(serviceType.getServiceType() == 1) {
-//			clientId = properties.getDemoClientId();
-//			clientSecret = properties.getDemoClientSecret();
-//		} else {
-//			clientId = EasyCodefConstant.SANDBOX_CLIENT_ID;
-//			clientSecret = EasyCodefConstant.SANDBOX_CLIENT_SECRET;
-//		}
-//
-//		String accessToken = null;
-//		HashMap<String, Object> tokenMap = EasyCodefConnector.publishToken(clientId, clientSecret);	// 토큰 신규 발급
-//		if(tokenMap != null) {
-//			accessToken = (String)tokenMap.get("access_token");
-//			EasyCodefTokenMap.setToken(clientId, accessToken);	// 발급 토큰 저장
-//			return accessToken;
-//		} else {
-//			return null;
-//		}
         if (serviceType.getServiceType() == 0) {
             token = new EasyCodefToken(
                     properties.getClientId(), properties.getClientSecret()

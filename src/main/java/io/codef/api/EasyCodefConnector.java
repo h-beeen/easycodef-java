@@ -11,8 +11,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-import org.apache.commons.codec.binary.Base64;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -171,91 +169,6 @@ public class EasyCodefConnector {
 		}
 	}
 	
-//	/**
-//	 * Desc : 엑세스 토큰 반환
-//	 * @Company : ©CODEF corp.
-//	 * @Author  : notfound404@codef.io
-//	 * @Date    : Jun 26, 2020 3:35:47 PM
-//	 * @param clientId
-//	 * @param clientSecret
-//	 * @return
-//	 * @throws InterruptedException
-//	 */
-//	private static String getToken(String clientId, String clientSecret) throws InterruptedException {
-//		int i = 0;
-//		String accessToken = EasyCodefTokenMap.getToken(clientId);
-//		if(accessToken == null || "".equals(accessToken) || !checkToken(accessToken)) { //만료 조건 추가
-//			while(i < REPEAT_COUNT) {	// 토큰 발급 요청은 최대 3회까지 재시도
-//				HashMap<String, Object> tokenMap = publishToken(clientId, clientSecret);	// 토큰 발급 요청
-//				if(tokenMap != null) {
-//					String newToken = (String)tokenMap.get("access_token");
-//					EasyCodefTokenMap.setToken(clientId, newToken);	// 토큰 저장
-//					accessToken = newToken;
-//				}
-//
-//				if(accessToken != null || !"".equals(accessToken)) {
-//					break;	// 정상 발급시 반복문 종료
-//				}
-//
-//				Thread.sleep(20);
-//				i++;
-//			}
-//		}
-//
-//		return accessToken;
-//	}
-
-    protected static String requestToken(String oauthToken) {
-        BufferedReader br = null;
-        try {
-            // 토큰 발급 URL (기존 publishToken과 동일하게 사용)
-            URL url = new URL(EasyCodefConstant.OAUTH_DOMAIN + EasyCodefConstant.GET_TOKEN);
-
-            // CODEF가 요구하는 기본 파라미터
-            String params = "grant_type=client_credentials&scope=read";
-
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            // 여기서 oauthToken은 "Base64(clientId:clientSecret)" 형태
-            con.setRequestProperty("Authorization", "Basic " + oauthToken);
-            con.setDoOutput(true);
-
-            // 요청 바디 전송
-            try (OutputStream os = con.getOutputStream()) {
-                os.write(params.getBytes("UTF-8"));
-                os.flush();
-            }
-
-            // 응답 읽기
-            br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-            StringBuilder responseStr = new StringBuilder();
-            String inputLine;
-            while ((inputLine = br.readLine()) != null) {
-                responseStr.append(inputLine);
-            }
-
-            // JSON → Map 변환 (기존 mapper 그대로 사용)
-            HashMap<String, Object> tokenMap =
-                    mapper.readValue(
-                            URLDecoder.decode(responseStr.toString(), "UTF-8"),
-                            new com.fasterxml.jackson.core.type.TypeReference<HashMap<String, Object>>() {}
-                    );
-
-            // access_token 값만 반환
-            return (String) tokenMap.get("access_token");
-        } catch (Exception e) {
-            // 실패 시 null 반환 (상위에서 처리)
-            return null;
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException ignored) { }
-            }
-        }
-    }
-	
 	/**
 	 * Desc : CODEF 엑세스 토큰 발급 요청
 	 * @Company : ©CODEF corp.
@@ -312,21 +225,4 @@ public class EasyCodefConnector {
 			}
 		}
 	}
-
-	/**
-	 * 토큰 유효기간 확인
-	 * @param accessToken
-	 * @return
-	 */
-	private static boolean checkToken(String accessToken) {
-        HashMap<String, Object> tokenMap = null;
-        try {
-            tokenMap = EasyCodefUtil.getTokenMap(accessToken);
-        } catch (IOException e) {
-            // 확인 중 오류 발생 시
-            return false;
-        }
-        // 토큰의 유효 기간 확인
-        return EasyCodefUtil.checkValidity((int) (tokenMap.get("exp")));
-    }
 }
