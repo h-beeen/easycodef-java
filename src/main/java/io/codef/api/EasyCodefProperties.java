@@ -17,19 +17,13 @@ public class EasyCodefProperties {
 	private String demoClientId 	= "";
 	
 	//	데모 엑세스 토큰 발급을 위한 클라이언트 시크릿
-	private String demoClientSecret 	= "";	
-	
-	//	OAUTH2.0 데모 토큰
-	private String demoAccessToken = "";
+	private String demoClientSecret 	= "";
 	
 	//	정식 엑세스 토큰 발급을 위한 클라이언트 아이디
 	private String clientId 	= "";
 	
 	//	정식 엑세스 토큰 발급을 위한 클라이언트 시크릿
-	private String clientSecret 	= "";	
-	
-	//	OAUTH2.0 토큰
-	private String accessToken = "";
+	private String clientSecret 	= "";
 	
 	//	RSA암호화를 위한 퍼블릭키
 	private String publicKey 	= "";
@@ -84,17 +78,6 @@ public class EasyCodefProperties {
 	}
 
 	/**
-	 * Desc : 데모 접속 토큰 반환
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:37:30 PM
-	 * @return
-	 */
-	public String getDemoAccessToken() {
-		return demoAccessToken;
-	}
-
-	/**
 	 * Desc : 데모 클라이언트 시크릿 반환
 	 * @Company : ©CODEF corp.
 	 * @Author  : notfound404@codef.io
@@ -115,18 +98,6 @@ public class EasyCodefProperties {
 	 */
 	public String getClientSecret() {
 		return clientSecret;
-	}
-
-	/**
-	 * Desc : API 접속 토큰 반환
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:37:50 PM
-	 * @Version : 1.0.1
-	 * @return
-	 */
-	public String getAccessToken() {
-		return accessToken;
 	}
 
 	/**
@@ -151,28 +122,4 @@ public class EasyCodefProperties {
 	public void setPublicKey(String publicKey) {
 		this.publicKey = publicKey;
 	}
-
-	/**
-	 * Desc : 데모 접속 토큰 설정
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:38:14 PM
-	 * @param demoAccessToken
-	 */
-	public void setDemoAccessToken(String demoAccessToken) {
-		this.demoAccessToken = demoAccessToken;
-	}
-
-	/**
-	 * Desc : API 접속 토큰 설정
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:38:21 PM
-	 * @param accessToken
-	 */
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
-	
-	
 }
