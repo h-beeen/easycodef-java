@@ -17,6 +17,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.io.FileUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -91,7 +92,6 @@ public class EasyCodefUtil {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	@SuppressWarnings("unchecked")
 	public static HashMap<String, Object> getTokenMap(String token) throws JsonParseException, JsonMappingException, IOException {
 
 		/** 클라이언트 식별 값, 요청 식별 값 추출을 위한 디코드 */
@@ -100,7 +100,7 @@ public class EasyCodefUtil {
 		String tokenBody = new String(Base64.getDecoder().decode(base64EncodedBody));
 
 		/** 맵 변환 */
-		return new ObjectMapper().readValue(tokenBody, HashMap.class);
+        return new ObjectMapper().readValue(tokenBody, new TypeReference<HashMap<String, Object>>() {});
 	}
 	
 	/**
