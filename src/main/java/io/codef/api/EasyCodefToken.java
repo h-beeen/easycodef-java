@@ -1,6 +1,7 @@
 package io.codef.api;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.apache.commons.codec.binary.Base64;
@@ -12,17 +13,18 @@ public class EasyCodefToken {
     private LocalDateTime expiresAt;
 
     protected EasyCodefToken(String clientId, String clientSecret) {
-        final int VALIDITY_PERIOD_DAYS = 7;
-
         String auth = clientId + ":" + clientSecret;
         byte[] authEncBytes = Base64.encodeBase64(auth.getBytes());
         String authStringEnc = new String(authEncBytes);
 
         this.oauthToken = "Basic " + authStringEnc;
 
-        this.accessToken = EasyCodefConnector.publishToken(oauthToken);
+        HashMap<String, Object> tokenMap = EasyCodefConnector.publishToken(oauthToken);
 
-        this.expiresAt = LocalDateTime.now().plusDays(VALIDITY_PERIOD_DAYS);
+        this.accessToken = tokenMap.get("access_token").toString();
+
+        int exp = (int) tokenMap.get("expires_in");
+        this.expiresAt = LocalDateTime.now().plusSeconds(exp);
     }
 
     public EasyCodefToken validateAndRefreshToken() {
@@ -34,17 +36,18 @@ public class EasyCodefToken {
 
     private boolean isTokenExpiringSoon(LocalDateTime expiry) {
         return expiry.isBefore(LocalDateTime.now().plusHours(24));
-
     }
 
     private void refreshToken() {
-        this.accessToken = EasyCodefConnector.publishToken(oauthToken);
+        HashMap<String, Object> tokenMap = EasyCodefConnector.publishToken(oauthToken);
 
-        this.expiresAt = LocalDateTime.now().plusDays(7);
+        this.accessToken = tokenMap.get("access_token").toString();
+
+        int exp = (int) tokenMap.get("expires_in");
+        this.expiresAt = LocalDateTime.now().plusSeconds(exp);
     }
 
     public String getAccessToken() {
         return accessToken;
     }
 }
-

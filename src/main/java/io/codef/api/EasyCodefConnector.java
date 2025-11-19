@@ -176,7 +176,7 @@ public class EasyCodefConnector {
 	 * @Date    : Jun 26, 2020 3:36:01 PM
 	 * @return
 	 */
-	protected static String publishToken(String oauthToken) {
+	protected static HashMap<String, Object> publishToken(String oauthToken) {
 		BufferedReader br = null;
 		try {
 			// HTTP 요청을 위한 URL 오브젝트 생성
@@ -213,8 +213,7 @@ public class EasyCodefConnector {
 			}
 			br.close();
 
-			HashMap<String, Object> tokenMap = mapper.readValue(URLDecoder.decode(responseStr.toString(), "UTF-8"), new TypeReference<HashMap<String, Object>>(){});
-            return tokenMap.get("access_token").toString();
+			return mapper.readValue(URLDecoder.decode(responseStr.toString(), "UTF-8"), new TypeReference<HashMap<String, Object>>(){});
 		} catch (Exception e) {
 			return null;
 		} finally {
