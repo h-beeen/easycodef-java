@@ -30,8 +30,7 @@ import org.apache.http.util.EntityUtils;
  */
 public class EasyCodefConnector {
 	private static ObjectMapper mapper = new ObjectMapper();
-	private static final int REPEAT_COUNT = 3;
-	
+
 	/**
 	 * Desc : CODEF 상품 조회 요청
 	 * @Company : ©CODEF corp.
