@@ -1,7 +1,7 @@
 package io.codef.api;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.codec.binary.Base64;
@@ -19,7 +19,7 @@ public class EasyCodefToken {
 
         this.oauthToken = "Basic " + authStringEnc;
 
-        HashMap<String, Object> tokenMap = EasyCodefConnector.publishToken(oauthToken);
+        Map<String, Object> tokenMap = EasyCodefConnector.publishToken(oauthToken);
 
         this.accessToken = tokenMap.get("access_token").toString();
 
@@ -39,7 +39,7 @@ public class EasyCodefToken {
     }
 
     private void refreshToken() {
-        HashMap<String, Object> tokenMap = EasyCodefConnector.publishToken(oauthToken);
+        Map<String, Object> tokenMap = EasyCodefConnector.publishToken(oauthToken);
 
         this.accessToken = tokenMap.get("access_token").toString();
 

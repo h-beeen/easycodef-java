@@ -3,13 +3,14 @@ package io.codef.api;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <pre>
  * io.codef.easycodef
  *   |_ EasyCodefResponse.java
  * </pre>
- * 
+ *
  * Desc : 코드에프 응답 결과 클래스
  * @Company : ©CODEF corp.
  * @Author  : notfound404@codef.io
@@ -19,9 +20,9 @@ public class EasyCodefResponse extends HashMap<String, Object>{
 	
 	private static final long serialVersionUID = -4106296996913677632L;
 	
-	private HashMap<String,Object> result; 
+	private Map<String,Object> result;
 	private Object data;
-	
+
 	/**
 	 * Desc : EasyCodefResponse 생성자
 	 * @Company : ©CODEF corp.
@@ -46,18 +47,18 @@ public class EasyCodefResponse extends HashMap<String, Object>{
 	 * @param map
 	 */
 	@SuppressWarnings("unchecked")
-	protected EasyCodefResponse(HashMap<String, Object> map) {
+	protected EasyCodefResponse(Map<String, Object> map) {
 		Iterator<String> iter = map.keySet().iterator();
 		while(iter.hasNext()) {
 			String key = iter.next();
 			if(EasyCodefConstant.RESULT.equals(key)) {	// 결과 코드 정보
-				result = (HashMap<String, Object>) map.get(EasyCodefConstant.RESULT);
+				result = (Map<String, Object>) map.get(EasyCodefConstant.RESULT);
 				this.put(EasyCodefConstant.RESULT, result);
 			} else if(EasyCodefConstant.RESULT.equals(key)) { //결과 데이터 정보
 				try {
-					data = (HashMap<String, Object>) map.get(EasyCodefConstant.DATA);
+					data = (Map<String, Object>) map.get(EasyCodefConstant.DATA);
 				} catch (ClassCastException e) {
-					data = (List<HashMap<String, Object>>) map.get(EasyCodefConstant.DATA);
+					data = (List<Map<String, Object>>) map.get(EasyCodefConstant.DATA);
 				}
 				this.put(EasyCodefConstant.DATA, data);
 			}else {

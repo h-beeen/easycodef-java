@@ -6,6 +6,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -42,7 +43,7 @@ public class EasyCodefConnector {
 	 * @return
 	 * @throws InterruptedException
 	 */
-	protected static EasyCodefResponse execute(String urlPath, int serviceType, String accessToken, HashMap<String, Object> bodyMap) {
+	protected static EasyCodefResponse execute(String urlPath, int serviceType, String accessToken, Map<String, Object> bodyMap) {
 		/**	#1.토큰 체크	*/
 		String domain = (serviceType == 0) ? EasyCodefConstant.API_DOMAIN : EasyCodefConstant.DEMO_DOMAIN;
 
@@ -58,10 +59,10 @@ public class EasyCodefConnector {
 		}
 		
 		/**	#3.상품 조회 요청	*/
-		HashMap<String, Object> responseMap = requestProduct(domain + urlPath, accessToken, bodyString);
+		Map<String, Object> responseMap = requestProduct(domain + urlPath, accessToken, bodyString);
         Object result = responseMap.get(EasyCodefConstant.RESULT);
         if (EasyCodefConstant.ACCESS_DENIED.equals(responseMap.get("error")) ||
-                (result instanceof HashMap && "CF-00403".equals(((HashMap<?, ?>) result).get(EasyCodefConstant.CODE)))) {	// 접근 권한이 없는 경우 - 오류코드 반환
+                (result instanceof Map && "CF-00403".equals(((Map<?, ?>) result).get(EasyCodefConstant.CODE)))) {	// 접근 권한이 없는 경우 - 오류코드 반환
             return new EasyCodefResponse(EasyCodefMessageConstant.UNAUTHORIZED, EasyCodefConstant.ACCESS_DENIED);
 		}
 		
@@ -79,7 +80,7 @@ public class EasyCodefConnector {
 	 * @param bodyString
 	 * @return
 	 */
-	private static HashMap<String, Object> requestProduct(String urlPath, String token, String bodyString) {
+	private static Map<String, Object> requestProduct(String urlPath, String token, String bodyString) {
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpPost httpPost = new HttpPost(urlPath);
             httpPost.addHeader("Accept", "application/json");
@@ -114,7 +115,7 @@ public class EasyCodefConnector {
 	 * @Date    : Jun 26, 2020 3:36:01 PM
 	 * @return
 	 */
-	protected static HashMap<String, Object> publishToken(String oauthToken) {
+	protected static Map<String, Object> publishToken(String oauthToken) {
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpPost httpPost = new HttpPost(EasyCodefConstant.OAUTH_DOMAIN + EasyCodefConstant.GET_TOKEN);
             httpPost.addHeader("Authorization", oauthToken);

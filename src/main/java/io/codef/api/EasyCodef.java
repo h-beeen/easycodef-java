@@ -2,7 +2,7 @@ package io.codef.api;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -109,7 +109,7 @@ public class EasyCodef {
 	 * @throws JsonProcessingException
 	 * @throws InterruptedException
 	 */
-	public String requestProduct(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+	public String requestProduct(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
 		boolean validationFlag = true;
 		
 		/**	#1.필수 항목 체크 - 클라이언트 정보	*/
@@ -154,7 +154,7 @@ public class EasyCodef {
 	 * @throws JsonProcessingException
 	 * @throws InterruptedException
 	 */
-	public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+	public String requestCertification(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
 		boolean validationFlag = true;
 		
 		/**	#1.필수 항목 체크 - 클라이언트 정보	*/
@@ -237,7 +237,7 @@ public class EasyCodef {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private boolean checkTwoWayInfo(HashMap<String, Object> parameterMap) {
+	private boolean checkTwoWayInfo(Map<String, Object> parameterMap) {
 		if(!parameterMap.containsKey("is2Way") || !(parameterMap.get("is2Way") instanceof Boolean) || !(boolean)parameterMap.get("is2Way")){
 			return false;
 		}
@@ -246,7 +246,7 @@ public class EasyCodef {
 			return false;
 		}
 		
-		HashMap<String, Object> twoWayInfoMap = (HashMap<String, Object>)parameterMap.get("twoWayInfo");
+		Map<String, Object> twoWayInfoMap = (Map<String, Object>)parameterMap.get("twoWayInfo");
 		if(!twoWayInfoMap.containsKey("jobIndex") || !twoWayInfoMap.containsKey("threadIndex") || !twoWayInfoMap.containsKey("jti") || !twoWayInfoMap.containsKey("twoWayTimestamp")){
 			return false;
 		}
@@ -262,7 +262,7 @@ public class EasyCodef {
 	 * @param parameterMap
 	 * @return
 	 */
-	private boolean checkTwoWayKeyword(HashMap<String, Object> parameterMap) {
+	private boolean checkTwoWayKeyword(Map<String, Object> parameterMap) {
 		if(parameterMap != null && (parameterMap.containsKey("is2Way") || parameterMap.containsKey("twoWayInfo"))) {
 			return false;
 		}
@@ -283,7 +283,7 @@ public class EasyCodef {
 	 * @throws JsonProcessingException
 	 * @throws InterruptedException
 	 */
-	public String createAccount(EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+	public String createAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
 		return requestProduct(EasyCodefConstant.CREATE_ACCOUNT, serviceType, parameterMap);
 	}
 	
@@ -299,7 +299,7 @@ public class EasyCodef {
 	 * @throws JsonProcessingException
 	 * @throws InterruptedException
 	 */
-	public String addAccount(EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+	public String addAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
 		return requestProduct(EasyCodefConstant.ADD_ACCOUNT, serviceType, parameterMap);
 	}
 	
@@ -315,7 +315,7 @@ public class EasyCodef {
 	 * @throws JsonProcessingException
 	 * @throws InterruptedException
 	 */
-	public String updateAccount(EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+	public String updateAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
 		return requestProduct(EasyCodefConstant.UPDATE_ACCOUNT, serviceType, parameterMap);
 	}
 	
@@ -331,7 +331,7 @@ public class EasyCodef {
 	 * @throws JsonProcessingException
 	 * @throws InterruptedException
 	 */
-	public String deleteAccount(EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+	public String deleteAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
 		return requestProduct(EasyCodefConstant.DELETE_ACCOUNT, serviceType, parameterMap);
 	}
 	
@@ -347,7 +347,7 @@ public class EasyCodef {
 	 * @throws JsonProcessingException
 	 * @throws InterruptedException
 	 */
-	public String getAccountList(EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+	public String getAccountList(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
 		return requestProduct(EasyCodefConstant.GET_ACCOUNT_LIST, serviceType, parameterMap);
 	}
 	
