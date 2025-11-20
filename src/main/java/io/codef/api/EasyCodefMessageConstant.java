@@ -1,16 +1,5 @@
 package io.codef.api;
 
-/**
- * <pre>
- * io.codef.easycodef
- *   |_ EasyCodefMessageConstant.java
- * </pre>
- *
- * Desc : EasyCodef에서 사용되는 메시지 코드 클래스
- * @Company : ©CODEF corp.
- * @Author  : notfound404@codef.io
- * @Date    : Jun 26, 2020 3:36:41 PM
- */
 public enum EasyCodefMessageConstant {
 
 	OK("CF-00000", "성공"),
