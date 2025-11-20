@@ -18,18 +18,8 @@ public class EasyCodefConstant {
 	
 	/**	OAUTH 엑세스 토큰 발급 URL PATH	*/
 	protected static final String GET_TOKEN = "/oauth/token";
-	
-	
-	/**	샌드박스 서버 도메인	*/
-	protected static final String SANDBOX_DOMAIN = "https://sandbox.codef.io";
-	
-	/**	샌드박스 엑세스 토큰 발급을 위한 클라이언트 아이디	*/
-	protected static final String SANDBOX_CLIENT_ID 	= "ef27cfaa-10c1-4470-adac-60ba476273f9";
-	
-	/**	샌드박스 엑세스 토큰 발급을 위한 클라이언트 시크릿	*/
-	protected static final String SANDBOX_CLIENT_SECRET 	= "83160c33-9045-4915-86d8-809473cdf5c3";
-	
-	
+
+
 	/**	데모 서버 도메인	*/
 	protected static final String DEMO_DOMAIN = "https://development.codef.io";
 	

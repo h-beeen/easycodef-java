@@ -53,14 +53,10 @@ public class EasyCodefConnector {
 			domain = EasyCodefConstant.API_DOMAIN;
 			clientId = properties.getClientId();
 			clientSecret = properties.getClientSecret();
-		} else if(serviceType == 1) {
+		} else {
 			domain = EasyCodefConstant.DEMO_DOMAIN;
 			clientId = properties.getDemoClientId();
 			clientSecret = properties.getDemoClientSecret();
-		} else {
-			domain = EasyCodefConstant.SANDBOX_DOMAIN;
-			clientId = EasyCodefConstant.SANDBOX_CLIENT_ID;
-			clientSecret = EasyCodefConstant.SANDBOX_CLIENT_SECRET;
 		}
 		
 //		String accessToken = getToken(clientId, clientSecret); // 토큰 반환
@@ -90,7 +86,7 @@ public class EasyCodefConnector {
 		}
 		
 		/**	#4.상품 조회 결과 반환	*/
-		EasyCodefResponse response = new EasyCodefResponse(responseMap); 
+		EasyCodefResponse response = new EasyCodefResponse(responseMap);
 		return response;
 	}
 	

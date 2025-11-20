@@ -203,18 +203,11 @@ public class EasyCodef {
 			if(properties.getClientSecret() == null || "".equals(properties.getClientSecret().trim())) {
 				return false;
 			}
-		} else if(serviceType == 1) {
+		} else {
 			if(properties.getDemoClientId() == null || "".equals(properties.getDemoClientId().trim())) {
 				return false;
 			}
 			if(properties.getDemoClientSecret() == null || "".equals(properties.getDemoClientSecret().trim())) {
-				return false;
-			}
-		} else {
-			if(EasyCodefConstant.SANDBOX_CLIENT_ID == null || "".equals(EasyCodefConstant.SANDBOX_CLIENT_ID.trim())) {
-				return false;
-			}
-			if(EasyCodefConstant.SANDBOX_CLIENT_SECRET == null || "".equals(EasyCodefConstant.SANDBOX_CLIENT_SECRET.trim())) {
 				return false;
 			}
 		}
