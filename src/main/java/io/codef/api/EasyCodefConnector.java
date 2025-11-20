@@ -43,7 +43,6 @@ public class EasyCodefConnector {
 	 * @return
 	 * @throws InterruptedException
 	 */
-	@SuppressWarnings("unchecked")
 	protected static EasyCodefResponse execute(String urlPath, int serviceType, String accessToken, HashMap<String, Object> bodyMap) {
 		/**	#1.토큰 체크	*/
 		String domain = (serviceType == 0) ? EasyCodefConstant.API_DOMAIN : EasyCodefConstant.DEMO_DOMAIN;
@@ -52,7 +51,7 @@ public class EasyCodefConnector {
 		String bodyString;
 		try {
 			bodyString = mapper.writeValueAsString(bodyMap);
-			bodyString = URLEncoder.encode(bodyString, "UTF-8");
+			bodyString = URLEncoder.encode(bodyString, StandardCharsets.UTF_8.name());
 		} catch (JsonProcessingException e) {
             return new EasyCodefResponse(EasyCodefMessageConstant.INVALID_JSON);
 		} catch (UnsupportedEncodingException e) {
@@ -61,8 +60,9 @@ public class EasyCodefConnector {
 		
 		/**	#3.상품 조회 요청	*/
 		HashMap<String, Object> responseMap = requestProduct(domain + urlPath, accessToken, bodyString);
+        Object result = responseMap.get(EasyCodefConstant.RESULT);
         if (EasyCodefConstant.ACCESS_DENIED.equals(responseMap.get("error")) ||
-                "CF-00403".equals(((HashMap<String, Object>)responseMap.get(EasyCodefConstant.RESULT)).get(EasyCodefConstant.CODE))) {	// 접근 권한이 없는 경우 - 오류코드 반환
+                (result instanceof HashMap && "CF-00403".equals(((HashMap<?, ?>) result).get(EasyCodefConstant.CODE)))) {	// 접근 권한이 없는 경우 - 오류코드 반환
             return new EasyCodefResponse(EasyCodefMessageConstant.UNAUTHORIZED, EasyCodefConstant.ACCESS_DENIED);
 		}
 		
@@ -102,7 +102,7 @@ public class EasyCodefConnector {
 
             String responseBody = EntityUtils.toString(response.getEntity());
 
-            return mapper.readValue(URLDecoder.decode(responseBody, StandardCharsets.UTF_8.toString()), new  TypeReference<HashMap<String, Object>>() {});
+            return mapper.readValue(URLDecoder.decode(responseBody, StandardCharsets.UTF_8.name()), new  TypeReference<HashMap<String, Object>>() {});
         } catch (Exception e) {
             return new EasyCodefResponse(EasyCodefMessageConstant.LIBRARY_SENDER_ERROR, e.getMessage());
         }
@@ -133,7 +133,7 @@ public class EasyCodefConnector {
 
             String responseBody = EntityUtils.toString(response.getEntity());
 
-            return mapper.readValue(URLDecoder.decode(responseBody, StandardCharsets.UTF_8.toString()), new TypeReference<HashMap<String, Object>>() {});
+            return mapper.readValue(URLDecoder.decode(responseBody, StandardCharsets.UTF_8.name()), new TypeReference<HashMap<String, Object>>() {});
         } catch (Exception e) {
             return null;
         }
