@@ -42,15 +42,9 @@ public class EasyCodefConnector {
 	 * @throws InterruptedException
 	 */
 	@SuppressWarnings("unchecked")
-	protected static EasyCodefResponse execute(String urlPath, int serviceType, String accessToken, HashMap<String, Object> bodyMap) throws InterruptedException {
+	protected static EasyCodefResponse execute(String urlPath, int serviceType, String accessToken, HashMap<String, Object> bodyMap) {
 		/**	#1.토큰 체크	*/
-		String domain;
-
-		if(serviceType == 0) {
-			domain = EasyCodefConstant.API_DOMAIN;
-		} else {
-			domain = EasyCodefConstant.DEMO_DOMAIN;
-		}
+		String domain = (serviceType == 0) ? EasyCodefConstant.API_DOMAIN : EasyCodefConstant.DEMO_DOMAIN;
 
 		/**	#2.요청 파라미터 인코딩	*/
 		String bodyString;
@@ -65,7 +59,8 @@ public class EasyCodefConnector {
 		
 		/**	#3.상품 조회 요청	*/
 		HashMap<String, Object> responseMap = requestProduct(domain + urlPath, accessToken, bodyString);
-        if (EasyCodefConstant.ACCESS_DENIED.equals(responseMap.get("error")) || "CF-00403".equals(((HashMap<String, Object>)responseMap.get(EasyCodefConstant.RESULT)).get(EasyCodefConstant.CODE))) {	// 접근 권한이 없는 경우 - 오류코드 반환
+        if (EasyCodefConstant.ACCESS_DENIED.equals(responseMap.get("error")) ||
+                "CF-00403".equals(((HashMap<String, Object>)responseMap.get(EasyCodefConstant.RESULT)).get(EasyCodefConstant.CODE))) {	// 접근 권한이 없는 경우 - 오류코드 반환
             return new EasyCodefResponse(EasyCodefMessageConstant.UNAUTHORIZED, EasyCodefConstant.ACCESS_DENIED);
 		}
 		
