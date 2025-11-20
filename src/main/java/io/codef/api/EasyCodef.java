@@ -135,7 +135,7 @@ public class EasyCodef {
 		
 		/**	#4.상품 조회 요청	*/
         String accessToken = requestToken(serviceType);
-		EasyCodefResponse response = EasyCodefConnector.execute(productUrl, serviceType.getServiceType(), accessToken, parameterMap, properties);
+		EasyCodefResponse response = EasyCodefConnector.execute(productUrl, serviceType.getServiceType(), accessToken, parameterMap);
 		
 		/**	#5.결과 반환	*/
 		return mapper.writeValueAsString(response);
@@ -180,7 +180,7 @@ public class EasyCodef {
 		
 		/**	#4.상품 조회 요청	*/
         String accessToken = requestToken(serviceType);
-		EasyCodefResponse response = EasyCodefConnector.execute(productUrl, serviceType.getServiceType(), accessToken, parameterMap, properties);
+		EasyCodefResponse response = EasyCodefConnector.execute(productUrl, serviceType.getServiceType(), accessToken, parameterMap);
 		
 		/**	#5.결과 반환	*/
 		return mapper.writeValueAsString(response);

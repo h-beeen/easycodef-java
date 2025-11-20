@@ -38,58 +38,41 @@ public class EasyCodefConnector {
 	 * @param urlPath
 	 * @param serviceType
 	 * @param bodyMap
-	 * @param properties
 	 * @return
 	 * @throws InterruptedException
 	 */
 	@SuppressWarnings("unchecked")
-	protected static EasyCodefResponse execute(String urlPath, int serviceType, String accessToken, HashMap<String, Object> bodyMap, EasyCodefProperties properties) throws InterruptedException {
+	protected static EasyCodefResponse execute(String urlPath, int serviceType, String accessToken, HashMap<String, Object> bodyMap) throws InterruptedException {
 		/**	#1.토큰 체크	*/
 		String domain;
-		String clientId;
-		String clientSecret;
 
 		if(serviceType == 0) {
 			domain = EasyCodefConstant.API_DOMAIN;
-			clientId = properties.getClientId();
-			clientSecret = properties.getClientSecret();
 		} else {
 			domain = EasyCodefConstant.DEMO_DOMAIN;
-			clientId = properties.getDemoClientId();
-			clientSecret = properties.getDemoClientSecret();
 		}
-		
-//		String accessToken = getToken(clientId, clientSecret); // 토큰 반환
-		
+
 		/**	#2.요청 파라미터 인코딩	*/
 		String bodyString;
 		try {
 			bodyString = mapper.writeValueAsString(bodyMap);
 			bodyString = URLEncoder.encode(bodyString, "UTF-8");
 		} catch (JsonProcessingException e) {
-			EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.INVALID_JSON); 
-			return response;
+            return new EasyCodefResponse(EasyCodefMessageConstant.INVALID_JSON);
 		} catch (UnsupportedEncodingException e) {
-			EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.UNSUPPORTED_ENCODING); 
-			return response;
+            return new EasyCodefResponse(EasyCodefMessageConstant.UNSUPPORTED_ENCODING);
 		}
 		
 		/**	#3.상품 조회 요청	*/
 		HashMap<String, Object> responseMap = requestProduct(domain + urlPath, accessToken, bodyString);
-		if(EasyCodefConstant.INVALID_TOKEN.equals(responseMap.get("error")) || "CF-00401".equals(((HashMap<String, Object>)responseMap.get(EasyCodefConstant.RESULT)).get(EasyCodefConstant.CODE))){	// 액세스 토큰 유효기간 만료되었을 경우 토큰 재발급 후 상품 조회 요청 진행
-//			EasyCodefTokenMap.setToken(clientId, null);		// 토큰 정보 초기화
-//			accessToken = getToken(clientId, clientSecret); // 토큰 설정
-			responseMap = requestProduct(domain + urlPath, accessToken, bodyString);
-		} else if (EasyCodefConstant.ACCESS_DENIED.equals(responseMap.get("error")) || "CF-00403".equals(((HashMap<String, Object>)responseMap.get(EasyCodefConstant.RESULT)).get(EasyCodefConstant.CODE))) {	// 접근 권한이 없는 경우 - 오류코드 반환
-			EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.UNAUTHORIZED, EasyCodefConstant.ACCESS_DENIED); 
-			return response;
+        if (EasyCodefConstant.ACCESS_DENIED.equals(responseMap.get("error")) || "CF-00403".equals(((HashMap<String, Object>)responseMap.get(EasyCodefConstant.RESULT)).get(EasyCodefConstant.CODE))) {	// 접근 권한이 없는 경우 - 오류코드 반환
+            return new EasyCodefResponse(EasyCodefMessageConstant.UNAUTHORIZED, EasyCodefConstant.ACCESS_DENIED);
 		}
 		
 		/**	#4.상품 조회 결과 반환	*/
-		EasyCodefResponse response = new EasyCodefResponse(responseMap);
-		return response;
+        return new EasyCodefResponse(responseMap);
 	}
-	
+
 	/**
 	 * Desc : CODEF HTTP POST 요청
 	 * @Company : ©CODEF corp.
