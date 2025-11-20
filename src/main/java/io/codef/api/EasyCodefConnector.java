@@ -1,14 +1,10 @@
 package io.codef.api;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,7 +12,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -86,68 +81,31 @@ public class EasyCodefConnector {
 	 * @return
 	 */
 	private static HashMap<String, Object> requestProduct(String urlPath, String token, String bodyString) {
-		BufferedReader br = null;
-		try {
-			// HTTP 요청을 위한 URL 오브젝트 생성
-			URL url = new URL(urlPath);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			con.setDoOutput(true);
-			con.setRequestMethod("POST");
-			con.setRequestProperty("Accept", "application/json");
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+            HttpPost httpPost = new HttpPost(urlPath);
+            httpPost.addHeader("Accept", "application/json");
 
-			if (token != null && !"".equals(token)) {
-				con.setRequestProperty("Authorization", "Bearer " + token);		// 엑세스 토큰 헤더 설정
-			}
+            if (token != null && !"".equals(token)) {
+                httpPost.addHeader("Authorization", "Bearer " + token);
+            }
 
-			// 리퀘스트 바디 전송
-			OutputStream os = con.getOutputStream();
-			if (bodyString != null && !"".equals(bodyString)) {
-				os.write(bodyString.getBytes());
-			}
-			os.flush();
-			os.close();
+            if (bodyString != null && !"".equals(bodyString)) {
+                httpPost.setEntity(new StringEntity(bodyString, StandardCharsets.UTF_8));
+            }
 
-			// 응답 코드 확인
-			int responseCode = con.getResponseCode();
-			if (responseCode == HttpURLConnection.HTTP_OK) {
-				br = new BufferedReader(new InputStreamReader(con.getInputStream())); 
-			} else if (responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
-				EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.BAD_REQUEST, urlPath); 
-				return response;
-			} else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-				EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.UNAUTHORIZED, urlPath); 
-				return response; 
-			} else if (responseCode == HttpURLConnection.HTTP_FORBIDDEN) {
-				EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.FORBIDDEN, urlPath); 
-				return response; 
-			} else if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
-				EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.NOT_FOUND, urlPath); 
-				return response; 
-			} else {
-				EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.SERVER_ERROR, urlPath); 
-				return response;
-			}
-			
-			// 응답 바디 read
-			String inputLine;
-			StringBuffer responseStr = new StringBuffer();
-			while ((inputLine = br.readLine()) != null) {
-				responseStr.append(inputLine);
-			}
-			br.close();
-			
-			// 결과 반환
-			return mapper.readValue(URLDecoder.decode(responseStr.toString(), "UTF-8"), new TypeReference<HashMap<String, Object>>(){});	
-		} catch (Exception e) {
-			EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.LIBRARY_SENDER_ERROR, e.getMessage()); 
-			return response;
-		} finally {
-			if(br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {}
-			}
-		}
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+
+            int responseCode = response.getStatusLine().getStatusCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                return buildErrorResponse(responseCode);
+            }
+
+            String responseBody = EntityUtils.toString(response.getEntity());
+
+            return mapper.readValue(URLDecoder.decode(responseBody, StandardCharsets.UTF_8.toString()), new  TypeReference<HashMap<String, Object>>() {});
+        } catch (Exception e) {
+            return new EasyCodefResponse(EasyCodefMessageConstant.LIBRARY_SENDER_ERROR, e.getMessage());
+        }
 	}
 	
 	/**
@@ -164,7 +122,7 @@ public class EasyCodefConnector {
             httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
             String params = "grant_type=client_credentials&scope=read";
-            httpPost.setEntity(new StringEntity(params));
+            httpPost.setEntity(new StringEntity(params, StandardCharsets.UTF_8));
 
             CloseableHttpResponse response = httpClient.execute(httpPost);
 
@@ -175,9 +133,32 @@ public class EasyCodefConnector {
 
             String responseBody = EntityUtils.toString(response.getEntity());
 
-            return mapper.readValue(responseBody, new TypeReference<HashMap<String, Object>>() {});
+            return mapper.readValue(URLDecoder.decode(responseBody, StandardCharsets.UTF_8.toString()), new TypeReference<HashMap<String, Object>>() {});
         } catch (Exception e) {
             return null;
         }
 	}
+
+    private static EasyCodefResponse buildErrorResponse(int responseCode) {
+        EasyCodefMessageConstant messageConstant;
+
+        switch (responseCode) {
+            case HttpURLConnection.HTTP_BAD_REQUEST:
+                messageConstant = EasyCodefMessageConstant.BAD_REQUEST;
+                break;
+            case HttpURLConnection.HTTP_UNAUTHORIZED:
+                messageConstant = EasyCodefMessageConstant.UNAUTHORIZED;
+                break;
+            case HttpURLConnection.HTTP_FORBIDDEN:
+                messageConstant = EasyCodefMessageConstant.FORBIDDEN;
+                break;
+            case HttpURLConnection.HTTP_NOT_FOUND:
+                messageConstant = EasyCodefMessageConstant.NOT_FOUND;
+                break;
+            default:
+                messageConstant = EasyCodefMessageConstant.SERVER_ERROR;
+        }
+
+        return new EasyCodefResponse(messageConstant);
+    }
 }
