@@ -14,6 +14,13 @@ import java.util.HashMap;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 /**
  * <pre>
@@ -151,51 +158,26 @@ public class EasyCodefConnector {
 	 * @return
 	 */
 	protected static HashMap<String, Object> publishToken(String oauthToken) {
-		BufferedReader br = null;
-		try {
-			// HTTP 요청을 위한 URL 오브젝트 생성
-			URL url = new URL(EasyCodefConstant.OAUTH_DOMAIN + EasyCodefConstant.GET_TOKEN);
-			String params = "grant_type=client_credentials&scope=read";	// Oauth2.0 사용자 자격증명 방식(client_credentials) 토큰 요청 설정
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+            HttpPost httpPost = new HttpPost(EasyCodefConstant.OAUTH_DOMAIN + EasyCodefConstant.GET_TOKEN);
+            httpPost.addHeader("Authorization", oauthToken);
+            httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			con.setRequestMethod("POST");
-			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String params = "grant_type=client_credentials&scope=read";
+            httpPost.setEntity(new StringEntity(params));
 
-			con.setRequestProperty("Authorization", oauthToken);
-			con.setDoInput(true);
-			con.setDoOutput(true);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
 
-			// 리퀘스트 바디 전송
-			OutputStream os = con.getOutputStream();
-			os.write(params.getBytes());
-			os.flush();
-			os.close();
+            int responseCode = response.getStatusLine().getStatusCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                return null;
+            }
 
-			// 응답 코드 확인
-			int responseCode = con.getResponseCode();
-			if (responseCode == HttpURLConnection.HTTP_OK) {	// 정상 응답
-				br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			} else {	 // 에러 발생
-				return null;
-			}
+            String responseBody = EntityUtils.toString(response.getEntity());
 
-			// 응답 바디 read
-			String inputLine;
-			StringBuffer responseStr = new StringBuffer();
-			while ((inputLine = br.readLine()) != null) {
-				responseStr.append(inputLine);
-			}
-			br.close();
-
-			return mapper.readValue(URLDecoder.decode(responseStr.toString(), "UTF-8"), new TypeReference<HashMap<String, Object>>(){});
-		} catch (Exception e) {
-			return null;
-		} finally {
-			if(br != null) {
-				try {
-					br.close();
-				} catch (IOException e) { }
-			}
-		}
+            return mapper.readValue(responseBody, new TypeReference<HashMap<String, Object>>() {});
+        } catch (Exception e) {
+            return null;
+        }
 	}
 }
