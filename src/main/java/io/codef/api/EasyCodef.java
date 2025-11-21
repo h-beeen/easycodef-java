@@ -2,7 +2,9 @@ package io.codef.api;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,7 +35,7 @@ public class EasyCodef {
     private EasyCodefToken demoToken;
 
     private EasyCodefToken getOrCreateToken(EasyCodefServiceType serviceType) {
-        if (serviceType.getServiceType() == 0) {
+        if (Objects.equals(serviceType.getServiceType(), EasyCodefConstant.API_DOMAIN)) {
             if (token == null) {
                 token = new EasyCodefToken(
                         properties.getClientId(), properties.getClientSecret()
@@ -135,7 +137,8 @@ public class EasyCodef {
 		
 		/**	#4.상품 조회 요청	*/
         String accessToken = requestToken(serviceType);
-		EasyCodefResponse response = EasyCodefConnector.execute(productUrl, serviceType.getServiceType(), accessToken, parameterMap);
+        String urlPath = serviceType.getServiceType() + productUrl;
+		EasyCodefResponse response = EasyCodefConnector.requestProduct(urlPath, accessToken, parameterMap);
 		
 		/**	#5.결과 반환	*/
 		return mapper.writeValueAsString(response);
@@ -154,37 +157,38 @@ public class EasyCodef {
 	 * @throws JsonProcessingException
 	 * @throws InterruptedException
 	 */
-	public String requestCertification(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		boolean validationFlag = true;
-		
-		/**	#1.필수 항목 체크 - 클라이언트 정보	*/
-		validationFlag = checkClientInfo(serviceType.getServiceType());
-		if(!validationFlag) {
-			EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.EMPTY_CLIENT_INFO);
-			return mapper.writeValueAsString(response);
-		}
-		
-		/**	#2.필수 항목 체크 - 퍼블릭 키	*/
-		validationFlag = checkPublicKey();
-		if(!validationFlag) {
-			EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.EMPTY_PUBLIC_KEY);
-			return mapper.writeValueAsString(response);
-		}
-		
-		/**	#3.추가인증 파라미터 필수 입력 체크	*/
-		validationFlag = checkTwoWayInfo(parameterMap);
-		if(!validationFlag) {
-			EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.INVALID_2WAY_INFO);
-			return mapper.writeValueAsString(response);
-		}
-		
-		/**	#4.상품 조회 요청	*/
+    public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+        boolean validationFlag = true;
+
+        /**	#1.필수 항목 체크 - 클라이언트 정보	*/
+        validationFlag = checkClientInfo(serviceType.getServiceType());
+        if(!validationFlag) {
+            EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.EMPTY_CLIENT_INFO);
+            return mapper.writeValueAsString(response);
+        }
+
+        /**	#2.필수 항목 체크 - 퍼블릭 키	*/
+        validationFlag = checkPublicKey();
+        if(!validationFlag) {
+            EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.EMPTY_PUBLIC_KEY);
+            return mapper.writeValueAsString(response);
+        }
+
+        /**	#3.추가인증 파라미터 필수 입력 체크	*/
+        validationFlag = checkTwoWayInfo(parameterMap);
+        if(!validationFlag) {
+            EasyCodefResponse response = new EasyCodefResponse(EasyCodefMessageConstant.INVALID_2WAY_INFO);
+            return mapper.writeValueAsString(response);
+        }
+
+        /**	#4.상품 조회 요청	*/
         String accessToken = requestToken(serviceType);
-		EasyCodefResponse response = EasyCodefConnector.execute(productUrl, serviceType.getServiceType(), accessToken, parameterMap);
-		
-		/**	#5.결과 반환	*/
-		return mapper.writeValueAsString(response);
-	}
+        String urlPath = serviceType.getServiceType() + productUrl;
+        EasyCodefResponse response = EasyCodefConnector.requestProduct(urlPath, accessToken, parameterMap);
+
+        /**	#5.결과 반환	*/
+        return mapper.writeValueAsString(response);
+    }
 	
 	
 	/**
@@ -195,8 +199,8 @@ public class EasyCodef {
 	 * @param serviceType
 	 * @return
 	 */
-	private boolean checkClientInfo(int serviceType) {
-		if(serviceType == 0) {
+	private boolean checkClientInfo(String serviceType) {
+		if(Objects.equals(serviceType, EasyCodefConstant.API_DOMAIN)) {
 			if(properties.getClientId() == null || "".equals(properties.getClientId().trim())) {
 				return false;
 			}
@@ -396,7 +400,7 @@ public class EasyCodef {
 	 * @throws IOException
 	 */
 	public String requestNewToken(EasyCodefServiceType serviceType) throws JsonParseException, JsonMappingException, IOException {
-        if (serviceType.getServiceType() == 0) {
+        if (Objects.equals(serviceType.getServiceType(), EasyCodefConstant.API_DOMAIN)) {
             token = new EasyCodefToken(
                     properties.getClientId(), properties.getClientSecret()
             );
