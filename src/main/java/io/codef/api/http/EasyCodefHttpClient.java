@@ -1,4 +1,4 @@
-package io.codef.api;
+package io.codef.api.http;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -11,10 +11,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class ApacheEasyCodefHttpClient implements EasyCodefHttpClient {
+public class EasyCodefHttpClient implements HttpClient {
 
     @Override
-    public EasyCodefHttpResponse postJson(
+    public HttpResponse postJson(
             String url,
             Map<String, String> headers,
             String body
@@ -35,7 +35,7 @@ public class ApacheEasyCodefHttpClient implements EasyCodefHttpClient {
                 String responseBody =
                         response.getEntity() == null ? "" :
                                 EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-                return new EasyCodefHttpResponse(statusCode, responseBody);
+                return new HttpResponse(statusCode, responseBody);
             }
         }
     }

@@ -1,10 +1,10 @@
-package io.codef.api;
+package io.codef.api.http;
 
 import java.io.IOException;
 import java.util.Map;
 
-public interface EasyCodefHttpClient {
-    EasyCodefHttpResponse postJson (
+public interface HttpClient {
+    HttpResponse postJson (
             String url,
             Map<String, String> headers,
             String body

@@ -9,17 +9,19 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.impl.client.HttpClientBuilder;
+import io.codef.api.http.EasyCodefHttpClient;
+import io.codef.api.http.HttpResponse;
+import io.codef.api.http.HttpClient;
 
 public class EasyCodefConnector {
 	private static final ObjectMapper mapper = new ObjectMapper();
-    private static final EasyCodefHttpClient httpClient = new ApacheEasyCodefHttpClient();
+    private static final HttpClient httpClient = new EasyCodefHttpClient();
 
     private EasyCodefConnector() {}
 
 	private static Map<String, Object> execute(String url, Map<String, String> headers, String body) {
         try {
-            EasyCodefHttpResponse httpResponse = httpClient.postJson(url, headers, body);
+            HttpResponse httpResponse = httpClient.postJson(url, headers, body);
 
             int statusCode = httpResponse.getStatusCode();
             if (statusCode != HttpURLConnection.HTTP_OK) {
@@ -41,6 +43,15 @@ public class EasyCodefConnector {
         }
 	}
 
+    protected static Map<String, Object> publishToken(String oauthToken) {
+        String url = EasyCodefConstant.OAUTH_DOMAIN + EasyCodefConstant.GET_TOKEN;
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", oauthToken);
+
+        return execute(url, headers, null);
+    }
+
 	protected static EasyCodefResponse requestProduct(String urlPath, String accessToken, Map<String, Object> bodyMap) {
         String jsonString = JSON.toJSONString(bodyMap);
 
@@ -51,15 +62,6 @@ public class EasyCodefConnector {
         Map<String, Object> response = execute(urlPath, headers, jsonString);
         return new EasyCodefResponse(response);
     }
-
-	protected static Map<String, Object> publishToken(String oauthToken) {
-        String url = EasyCodefConstant.OAUTH_DOMAIN + EasyCodefConstant.GET_TOKEN;
-
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", oauthToken);
-
-        return execute(url, headers, null);
-	}
 
     private static EasyCodefResponse buildErrorResponse(int responseCode) {
         EasyCodefMessageConstant messageConstant;
