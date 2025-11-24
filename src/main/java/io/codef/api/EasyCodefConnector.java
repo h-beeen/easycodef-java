@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.codef.api.constants.CodefHost;
 import io.codef.api.constants.CodefPath;
 import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.error.EasyCodefError;
 import io.codef.api.http.EasyCodefHttpClient;
 import io.codef.api.dto.HttpResponse;
 import io.codef.api.http.HttpClient;

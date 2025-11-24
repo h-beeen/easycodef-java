@@ -1,6 +1,8 @@
 package io.codef.api;
 
+import io.codef.api.constants.EasyCodefConstant;
 import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.error.EasyCodefError;
 
 import java.util.Collections;
 import java.util.HashMap;
