@@ -146,10 +146,8 @@ public class EasyCodef {
 	}
 
 	public String requestToken(EasyCodefServiceType serviceType) {
-        EasyCodefToken tokenHolder = getOrCreateToken(serviceType);
-        return tokenHolder
-                .validateAndRefreshToken()
-                .getAccessToken();
+        EasyCodefToken token = getOrCreateToken(serviceType).validateAndRefreshToken();
+        return token.getAccessToken();
 	}
 
 	public String requestNewToken(EasyCodefServiceType serviceType) throws JsonParseException, JsonMappingException, IOException {

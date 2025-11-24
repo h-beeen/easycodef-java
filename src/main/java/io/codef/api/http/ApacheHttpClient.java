@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class EasyCodefHttpClient implements HttpClient {
+public class ApacheHttpClient implements HttpClient {
 
     @Override
     public HttpResponse postJson(

@@ -9,7 +9,7 @@ import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
 import io.codef.api.dto.HttpResponse;
 import io.codef.api.http.HttpClient;
-import io.codef.api.http.EasyCodefHttpClient;
+import io.codef.api.http.ApacheHttpClient;
 
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class EasyCodefConnector {
 
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final HttpClient httpClient = new EasyCodefHttpClient();
+    private static final HttpClient httpClient = new ApacheHttpClient();
 
     private EasyCodefConnector() {
     }
