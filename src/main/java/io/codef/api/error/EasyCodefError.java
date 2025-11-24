@@ -28,7 +28,6 @@ public enum EasyCodefError {
 
     private final String code;
     private final String message;
-    private String extraMessage;
 
     EasyCodefError(String code, String message) {
         this.code = code;
@@ -41,10 +40,6 @@ public enum EasyCodefError {
 
     public String getMessage() {
         return this.message;
-    }
-
-    public String getExtraMessage() {
-        return this.extraMessage;
     }
 
     private static final Map<Integer, EasyCodefError> HTTP_ERROR_MAP;

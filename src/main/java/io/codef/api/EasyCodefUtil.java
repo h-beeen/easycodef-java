@@ -35,8 +35,7 @@ public class EasyCodefUtil {
 		File file = new File(filePath);
 		
 		byte[] fileContent = FileUtils.readFileToByteArray(file);
-		String fileString = Base64.getEncoder().encodeToString(fileContent);
-		
-		return fileString;
+
+        return Base64.getEncoder().encodeToString(fileContent);
 	}
 }

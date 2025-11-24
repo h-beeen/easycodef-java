@@ -46,7 +46,7 @@ public class ResponseHandler {
     }
 
     public static EasyCodefResponse fromError(EasyCodefError error) {
-        return fromError(error, "");
+        return fromError(error, null);
     }
 
     public static EasyCodefResponse fromError(EasyCodefError error, String extraMessage) {
@@ -57,12 +57,12 @@ public class ResponseHandler {
         String resolvedExtraMessage =
                 (extraMessage != null && !extraMessage.isEmpty())
                         ? extraMessage
-                        : error.getExtraMessage(); // 현재는 null이지만, 구조 유지
+                        : "";
 
         EasyCodefResponse.Result result = new EasyCodefResponse.Result(
-                error.getCode(),              // e.g. "CF-00400"
-                resolvedExtraMessage,         // e.g. "/v1/kr/card/0010"
-                error.getMessage(),           // 정의된 한글 메시지
+                error.getCode(),
+                resolvedExtraMessage,
+                error.getMessage(),
                 null
         );
 

@@ -61,7 +61,7 @@ public class EasyCodefConnector {
     protected static Map<String, Object> publishToken(String oauthToken) {
         String url = CodefHost.OAUTH_DOMAIN + CodefPath.GET_TOKEN;
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", oauthToken);
 
         return execute(url, headers, null);
@@ -74,7 +74,7 @@ public class EasyCodefConnector {
     ) {
         String jsonString = JSON.toJSONString(bodyMap);
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + accessToken);
         headers.put("Content-Type", "application/json");
 
