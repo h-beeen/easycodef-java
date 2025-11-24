@@ -9,6 +9,8 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -38,4 +40,17 @@ public class EasyCodefUtil {
 
         return Base64.getEncoder().encodeToString(fileContent);
 	}
+
+    public static Map<String, String> createAuthorizationHeaders(String token) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", token);
+        return headers;
+    }
+
+    public static Map<String, String> createBearerTokenHeaders(String accessToken) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + accessToken);
+        headers.put("Content-Type", "application/json");
+        return headers;
+    }
 }

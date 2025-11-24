@@ -2,8 +2,8 @@ package io.codef.api;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Optional;
 
+import io.codef.api.dto.EasyCodefResponse;
 import org.apache.commons.codec.binary.Base64;
 
 public class EasyCodefToken {
@@ -19,18 +19,38 @@ public class EasyCodefToken {
 
         this.oauthToken = "Basic " + authStringEnc;
 
-        Map<String, Object> tokenMap = EasyCodefConnector.publishToken(oauthToken);
+        EasyCodefResponse response = EasyCodefConnector.publishToken(oauthToken);
+        initializeTokenFromResponse(response);
+    }
 
-        this.accessToken = tokenMap.get("access_token").toString();
+    @SuppressWarnings("unchecked")
+    private void initializeTokenFromResponse(EasyCodefResponse response) {
+        if (response == null || response.getData() == null) {
+            return;
+        }
 
-        int exp = (int) tokenMap.get("expires_in");
-        this.expiresAt = LocalDateTime.now().plusSeconds(exp);
+        // 토큰 응답은 data에 직접 토큰 정보가 포함됨
+        if (response.getData() instanceof Map) {
+            Map<String, Object> tokenMap = (Map<String, Object>) response.getData();
+
+            Object accessTokenObj = tokenMap.get("access_token");
+            Object expiresInObj = tokenMap.get("expires_in");
+
+            if (accessTokenObj != null) {
+                this.accessToken = accessTokenObj.toString();
+            }
+
+            if (expiresInObj != null) {
+                int exp = ((Number) expiresInObj).intValue();
+                this.expiresAt = LocalDateTime.now().plusSeconds(exp);
+            }
+        }
     }
 
     public EasyCodefToken validateAndRefreshToken() {
-        Optional.of(expiresAt).filter(this::isTokenExpiringSoon)
-                .ifPresent(expiry -> refreshToken());
-
+        if (expiresAt != null && isTokenExpiringSoon(expiresAt)) {
+            refreshToken();
+        }
         return this;
     }
 
@@ -39,12 +59,8 @@ public class EasyCodefToken {
     }
 
     private void refreshToken() {
-        Map<String, Object> tokenMap = EasyCodefConnector.publishToken(oauthToken);
-
-        this.accessToken = tokenMap.get("access_token").toString();
-
-        int exp = (int) tokenMap.get("expires_in");
-        this.expiresAt = LocalDateTime.now().plusSeconds(exp);
+        EasyCodefResponse response = EasyCodefConnector.publishToken(oauthToken);
+        initializeTokenFromResponse(response);
     }
 
     public String getAccessToken() {

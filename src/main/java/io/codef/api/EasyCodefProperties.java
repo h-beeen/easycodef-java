@@ -2,19 +2,14 @@ package io.codef.api;
 
 public class EasyCodefProperties {
 	
-	//	데모 엑세스 토큰 발급을 위한 클라이언트 아이디
 	private String demoClientId 	= "";
 	
-	//	데모 엑세스 토큰 발급을 위한 클라이언트 시크릿
 	private String demoClientSecret 	= "";
 	
-	//	정식 엑세스 토큰 발급을 위한 클라이언트 아이디
 	private String clientId 	= "";
 	
-	//	정식 엑세스 토큰 발급을 위한 클라이언트 시크릿
 	private String clientSecret 	= "";
 	
-	//	RSA암호화를 위한 퍼블릭키
 	private String publicKey 	= "";
 
 

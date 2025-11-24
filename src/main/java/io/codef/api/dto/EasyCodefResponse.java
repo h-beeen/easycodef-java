@@ -2,9 +2,6 @@ package io.codef.api.dto;
 
 public class EasyCodefResponse {
 
-    public static final String RESULT = "result";
-    public static final String DATA   = "data";
-
     private final Result result;
     private final Object data;
 

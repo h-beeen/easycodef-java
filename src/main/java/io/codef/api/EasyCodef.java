@@ -62,7 +62,7 @@ public class EasyCodef {
 		return mapper.writeValueAsString(response);
 	}
 
-    public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+    public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws JsonProcessingException {
         if (checkClientInfo(serviceType.getServiceType())) {
             EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.EMPTY_CLIENT_INFO);
             return mapper.writeValueAsString(response);
@@ -150,7 +150,7 @@ public class EasyCodef {
         return token.getAccessToken();
 	}
 
-	public String requestNewToken(EasyCodefServiceType serviceType) throws JsonParseException, JsonMappingException, IOException {
+	public String requestNewToken(EasyCodefServiceType serviceType) {
         if (Objects.equals(serviceType.getServiceType(), CodefHost.API_DOMAIN)) {
             token = new EasyCodefToken(
                     properties.getClientId(), properties.getClientSecret()

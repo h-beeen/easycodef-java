@@ -5,12 +5,17 @@ import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseHandler {
 
-    private ResponseHandler() { }
+    public static EasyCodefResponse fromTokenResponse(Map<String, Object> tokenMap) {
+        if (tokenMap == null || tokenMap.isEmpty()) {
+            return fromError(EasyCodefError.LIBRARY_SENDER_ERROR, "Empty token response");
+        }
+
+        return new EasyCodefResponse(null, tokenMap);
+    }
 
     @SuppressWarnings("unchecked")
     public static EasyCodefResponse fromRawMap(Map<String, Object> map) {
@@ -67,31 +72,5 @@ public class ResponseHandler {
         );
 
         return new EasyCodefResponse(result, Collections.<String, Object>emptyMap());
-    }
-
-    public static Map<String, Object> toMap(EasyCodefResponse response) {
-        Map<String, Object> map = new HashMap<>();
-
-        if (response == null) {
-            return map;
-        }
-
-        Map<String, Object> resultMap = new HashMap<>();
-        if (response.getResult() != null) {
-            resultMap.put(EasyCodefConstant.CODE, response.getResult().getCode());
-            resultMap.put(EasyCodefConstant.MESSAGE, response.getResult().getMessage());
-            resultMap.put(EasyCodefConstant.EXTRA_MESSAGE, response.getResult().getExtraMessage());
-            resultMap.put(EasyCodefConstant.TRANSACTION_ID, response.getResult().getTransactionId());
-        }
-
-        map.put(EasyCodefConstant.RESULT, resultMap);
-
-        Object data = response.getData();
-        if (data == null) {
-            data = Collections.<String, Object>emptyMap();
-        }
-        map.put(EasyCodefConstant.DATA, data);
-
-        return map;
     }
 }
