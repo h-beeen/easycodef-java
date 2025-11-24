@@ -9,6 +9,8 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.codef.api.constants.CodefHost;
+import io.codef.api.constants.CodefPath;
 import io.codef.api.http.EasyCodefHttpClient;
 import io.codef.api.http.HttpResponse;
 import io.codef.api.http.HttpClient;
@@ -44,7 +46,7 @@ public class EasyCodefConnector {
 	}
 
     protected static Map<String, Object> publishToken(String oauthToken) {
-        String url = EasyCodefConstant.OAUTH_DOMAIN + EasyCodefConstant.GET_TOKEN;
+        String url = CodefHost.OAUTH_DOMAIN + CodefPath.GET_TOKEN;
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", oauthToken);

@@ -10,6 +10,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.codef.api.constants.CodefHost;
+import io.codef.api.constants.CodefPath;
 
 /**
  * <pre>
@@ -33,24 +35,6 @@ public class EasyCodef {
 
     private EasyCodefToken token;
     private EasyCodefToken demoToken;
-
-    private EasyCodefToken getOrCreateToken(EasyCodefServiceType serviceType) {
-        if (Objects.equals(serviceType.getServiceType(), EasyCodefConstant.API_DOMAIN)) {
-            if (token == null) {
-                token = new EasyCodefToken(
-                        properties.getClientId(), properties.getClientSecret()
-                );
-            }
-            return token;
-        } else {
-            if (demoToken == null) {
-                demoToken = new EasyCodefToken(
-                        properties.getDemoClientId(), properties.getDemoClientSecret()
-                );
-            }
-            return demoToken;
-        }
-    }
 
 	/**
 	 * Desc : 정식서버 사용을 위한 클라이언트 정보 설정
@@ -200,7 +184,7 @@ public class EasyCodef {
 	 * @return
 	 */
 	private boolean checkClientInfo(String serviceType) {
-		if(Objects.equals(serviceType, EasyCodefConstant.API_DOMAIN)) {
+		if(Objects.equals(serviceType, CodefHost.API_DOMAIN)) {
 			if(properties.getClientId() == null || "".equals(properties.getClientId().trim())) {
 				return false;
 			}
@@ -288,7 +272,7 @@ public class EasyCodef {
 	 * @throws InterruptedException
 	 */
 	public String createAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		return requestProduct(EasyCodefConstant.CREATE_ACCOUNT, serviceType, parameterMap);
+		return requestProduct(CodefPath.CREATE_ACCOUNT, serviceType, parameterMap);
 	}
 	
 	/**
@@ -304,7 +288,7 @@ public class EasyCodef {
 	 * @throws InterruptedException
 	 */
 	public String addAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		return requestProduct(EasyCodefConstant.ADD_ACCOUNT, serviceType, parameterMap);
+		return requestProduct(CodefPath.ADD_ACCOUNT, serviceType, parameterMap);
 	}
 	
 	/**
@@ -320,7 +304,7 @@ public class EasyCodef {
 	 * @throws InterruptedException
 	 */
 	public String updateAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		return requestProduct(EasyCodefConstant.UPDATE_ACCOUNT, serviceType, parameterMap);
+		return requestProduct(CodefPath.UPDATE_ACCOUNT, serviceType, parameterMap);
 	}
 	
 	/**
@@ -336,7 +320,7 @@ public class EasyCodef {
 	 * @throws InterruptedException
 	 */
 	public String deleteAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		return requestProduct(EasyCodefConstant.DELETE_ACCOUNT, serviceType, parameterMap);
+		return requestProduct(CodefPath.DELETE_ACCOUNT, serviceType, parameterMap);
 	}
 	
 	/**
@@ -352,7 +336,7 @@ public class EasyCodef {
 	 * @throws InterruptedException
 	 */
 	public String getAccountList(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		return requestProduct(EasyCodefConstant.GET_ACCOUNT_LIST, serviceType, parameterMap);
+		return requestProduct(CodefPath.GET_ACCOUNT_LIST, serviceType, parameterMap);
 	}
 	
 	/**
@@ -367,7 +351,7 @@ public class EasyCodef {
 	 * @throws InterruptedException
 	 */
 	public String getConnectedIdList(EasyCodefServiceType serviceType) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		return requestProduct(EasyCodefConstant.GET_CID_LIST, serviceType, null);
+		return requestProduct(CodefPath.GET_CID_LIST, serviceType, null);
 	}
 	
 	/**
@@ -400,7 +384,7 @@ public class EasyCodef {
 	 * @throws IOException
 	 */
 	public String requestNewToken(EasyCodefServiceType serviceType) throws JsonParseException, JsonMappingException, IOException {
-        if (Objects.equals(serviceType.getServiceType(), EasyCodefConstant.API_DOMAIN)) {
+        if (Objects.equals(serviceType.getServiceType(), CodefHost.API_DOMAIN)) {
             token = new EasyCodefToken(
                     properties.getClientId(), properties.getClientSecret()
             );
@@ -412,4 +396,22 @@ public class EasyCodef {
             return demoToken.getAccessToken();
         }
 	}
+
+    private EasyCodefToken getOrCreateToken(EasyCodefServiceType serviceType) {
+        if (Objects.equals(serviceType.getServiceType(), CodefHost.API_DOMAIN)) {
+            if (token == null) {
+                token = new EasyCodefToken(
+                        properties.getClientId(), properties.getClientSecret()
+                );
+            }
+            return token;
+        } else {
+            if (demoToken == null) {
+                demoToken = new EasyCodefToken(
+                        properties.getDemoClientId(), properties.getDemoClientSecret()
+                );
+            }
+            return demoToken;
+        }
+    }
 }

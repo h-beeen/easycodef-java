@@ -1,8 +1,10 @@
 package io.codef.api;
 
+import io.codef.api.constants.CodefHost;
+
 public enum EasyCodefServiceType {
-	DEMO(EasyCodefConstant.DEMO_DOMAIN),
-	API(EasyCodefConstant.API_DOMAIN);
+	DEMO(CodefHost.DEMO_DOMAIN),
+	API(CodefHost.API_DOMAIN);
 	
 	private final String serviceType;
 	
