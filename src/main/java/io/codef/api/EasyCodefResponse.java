@@ -1,149 +1,126 @@
 package io.codef.api;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
-/**
- * <pre>
- * io.codef.easycodef
- *   |_ EasyCodefResponse.java
- * </pre>
- *
- * Desc : 코드에프 응답 결과 클래스
- * @Company : ©CODEF corp.
- * @Author  : notfound404@codef.io
- * @Date    : Jun 26, 2020 3:38:30 PM
- */
-public class EasyCodefResponse extends HashMap<String, Object>{
-	
-	private static final long serialVersionUID = -4106296996913677632L;
-	
-	private Map<String,Object> result;
-	private Object data;
+public final class EasyCodefResponse {
 
-	/**
-	 * Desc : EasyCodefResponse 생성자
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:38:37 PM
-	 */
-	protected EasyCodefResponse() {
-		result = new HashMap<String,Object>();
-		data = new HashMap<String, Object>();
-		
-		this.put(EasyCodefConstant.RESULT, result);
-		this.put(EasyCodefConstant.DATA, data);
-		
-		this.setResultMessage(EasyCodefMessageConstant.OK.getCode(), EasyCodefMessageConstant.OK.getMessage(), "");
-	}
-	
-	/**
-	 * Desc : EasyCodefResponse 생성자
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:39:55 PM
-	 * @param map
-	 */
-	@SuppressWarnings("unchecked")
-	protected EasyCodefResponse(Map<String, Object> map) {
-		Iterator<String> iter = map.keySet().iterator();
-		while(iter.hasNext()) {
-			String key = iter.next();
-			if(EasyCodefConstant.RESULT.equals(key)) {	// 결과 코드 정보
-				result = (Map<String, Object>) map.get(EasyCodefConstant.RESULT);
-				this.put(EasyCodefConstant.RESULT, result);
-			} else if(EasyCodefConstant.RESULT.equals(key)) { //결과 데이터 정보
-				try {
-					data = (Map<String, Object>) map.get(EasyCodefConstant.DATA);
-				} catch (ClassCastException e) {
-					data = (List<Map<String, Object>>) map.get(EasyCodefConstant.DATA);
-				}
-				this.put(EasyCodefConstant.DATA, data);
-			}else {
-				this.put(key, map.get(key));	// 사용자 정의 파라미터가 존재하는 경우 응답부에 추가 설정
-			}
-		}
-		
-		
-	}
-	
-	/**
-	 * Desc : EasyCodefResponse 생성자
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:40:00 PM
-	 * @param message
-	 */
-	protected EasyCodefResponse(EasyCodefMessageConstant message) {
-		result = new HashMap<String,Object>();
-		data = new HashMap<String, Object>();
-		
-		this.put(EasyCodefConstant.RESULT, result);
-		this.put(EasyCodefConstant.DATA, data);
-		
-		this.setResultMessage(message.getCode(), message.getMessage(), "");
-	}
-	
-	/**
-	 * Desc : EasyCodefResponse 생성자
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:40:06 PM
-	 * @param message
-	 * @param extraMessage
-	 */
-	protected EasyCodefResponse(EasyCodefMessageConstant message, String extraMessage) {
-		result = new HashMap<String,Object>();
-		data = new HashMap<String, Object>();
-		
-		this.put(EasyCodefConstant.RESULT, result);
-		this.put(EasyCodefConstant.DATA, data);
-		
-		this.setResultMessage(message.getCode(), message.getMessage(), extraMessage);
-	}
+    public static final String RESULT = "result";
+    public static final String DATA   = "data";
 
-	
-	/**
-	 * Desc : 요청 수행 결과 코드 설정 
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:40:12 PM
-	 * @param errCode
-	 * @param errMsg
-	 * @param extraMsg
-	 */
-	protected void setResultMessage(String errCode, String errMsg, String extraMsg) {
-		this.result.put(EasyCodefConstant.CODE, errCode);
-		this.result.put(EasyCodefConstant.MESSAGE, errMsg);
-		this.result.put(EasyCodefConstant.EXTRA_MESSAGE, extraMsg);
-	}
-	
-	/**
-	 * Desc : 요청 수행 결과 코드 설정 
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:40:18 PM
-	 * @param message
-	 */
-	protected void setResultMessage(EasyCodefMessageConstant message) {
-		this.result.put(EasyCodefConstant.CODE, message.getCode());
-		this.result.put(EasyCodefConstant.MESSAGE, message.getMessage());
-		this.result.put(EasyCodefConstant.EXTRA_MESSAGE, message.getExtraMessage());
-	}
-	
-	
+    private final Result result;
+    private final Object data;
 
-	/**
-	 * Desc : Override toString 
-	 * @Company : ©CODEF corp.
-	 * @Author  : notfound404@codef.io
-	 * @Date    : Jun 26, 2020 3:40:26 PM
-	 * @return
-	 */
-	@Override
-	public String toString() {
-		return "EasyCodefResponse [result=" + result + ", data=" + data + "]";
-	}
+    public EasyCodefResponse(Result result, Object data) {
+        this.result = result;
+        this.data = data;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    /**
+     * 편의 메서드: 결과 코드
+     */
+    public String code() {
+        return (result != null) ? result.getCode() : null;
+    }
+
+    /**
+     * 편의 메서드: 트랜잭션 ID
+     */
+    public String transactionId() {
+        return (result != null) ? result.getTransactionId() : null;
+    }
+
+    @Override
+    public String toString() {
+        return "EasyCodefResponse{" +
+                "result=" + result +
+                ", data=" + data +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EasyCodefResponse)) return false;
+        EasyCodefResponse that = (EasyCodefResponse) o;
+        return Objects.equals(result, that.result) &&
+                Objects.equals(data, that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(result, data);
+    }
+
+    /**
+     * result 영역 값 객체
+     */
+    public static final class Result {
+
+        private final String code;
+        private final String extraMessage;
+        private final String message;
+        private final String transactionId;
+
+        public Result(
+                String code,
+                String extraMessage,
+                String message,
+                String transactionId
+        ) {
+            this.code = code;
+            this.extraMessage = extraMessage;
+            this.message = message;
+            this.transactionId = transactionId;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getExtraMessage() {
+            return extraMessage;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public String getTransactionId() {
+            return transactionId;
+        }
+
+        @Override
+        public String toString() {
+            return "Result{" +
+                    "code='" + code + '\'' +
+                    ", extraMessage='" + extraMessage + '\'' +
+                    ", message='" + message + '\'' +
+                    ", transactionId='" + transactionId + '\'' +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Result)) return false;
+            Result result = (Result) o;
+            return Objects.equals(code, result.code) &&
+                    Objects.equals(extraMessage, result.extraMessage) &&
+                    Objects.equals(message, result.message) &&
+                    Objects.equals(transactionId, result.transactionId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(code, extraMessage, message, transactionId);
+        }
+    }
 }

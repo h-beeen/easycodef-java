@@ -27,7 +27,8 @@ public class EasyCodefConnector {
 
             int statusCode = httpResponse.getStatusCode();
             if (statusCode != HttpURLConnection.HTTP_OK) {
-                return buildErrorResponse(statusCode);
+                EasyCodefResponse errorResponse = buildErrorResponse(statusCode);
+                return ResponseHandler.toMap(errorResponse);
             }
 
             String responseBody = httpResponse.getBody();
@@ -38,10 +39,9 @@ public class EasyCodefConnector {
                     new TypeReference<Map<String, Object>>() {}
             );
         } catch (Exception e) {
-            return new EasyCodefResponse(
-                    EasyCodefMessageConstant.LIBRARY_SENDER_ERROR,
-                    e.getMessage()
-            );
+            EasyCodefResponse errorResponse =
+                    ResponseHandler.fromError(EasyCodefError.LIBRARY_SENDER_ERROR, e.getMessage());
+            return ResponseHandler.toMap(errorResponse);
         }
 	}
 
@@ -62,29 +62,29 @@ public class EasyCodefConnector {
         headers.put("Content-Type", "application/json");
 
         Map<String, Object> response = execute(urlPath, headers, jsonString);
-        return new EasyCodefResponse(response);
+        return ResponseHandler.fromRawMap(response);
     }
 
     private static EasyCodefResponse buildErrorResponse(int responseCode) {
-        EasyCodefMessageConstant messageConstant;
+        EasyCodefError messageConstant;
 
         switch (responseCode) {
             case HttpURLConnection.HTTP_BAD_REQUEST:
-                messageConstant = EasyCodefMessageConstant.BAD_REQUEST;
+                messageConstant = EasyCodefError.BAD_REQUEST;
                 break;
             case HttpURLConnection.HTTP_UNAUTHORIZED:
-                messageConstant = EasyCodefMessageConstant.UNAUTHORIZED;
+                messageConstant = EasyCodefError.UNAUTHORIZED;
                 break;
             case HttpURLConnection.HTTP_FORBIDDEN:
-                messageConstant = EasyCodefMessageConstant.FORBIDDEN;
+                messageConstant = EasyCodefError.FORBIDDEN;
                 break;
             case HttpURLConnection.HTTP_NOT_FOUND:
-                messageConstant = EasyCodefMessageConstant.NOT_FOUND;
+                messageConstant = EasyCodefError.NOT_FOUND;
                 break;
             default:
-                messageConstant = EasyCodefMessageConstant.SERVER_ERROR;
+                messageConstant = EasyCodefError.SERVER_ERROR;
         }
 
-        return new EasyCodefResponse(messageConstant);
+        return ResponseHandler.fromError(messageConstant);
     }
 }

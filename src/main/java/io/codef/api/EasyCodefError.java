@@ -1,9 +1,7 @@
 package io.codef.api;
 
-public enum EasyCodefMessageConstant {
+public enum EasyCodefError {
 
-	OK("CF-00000", "성공"),
-	
 	INVALID_JSON("CF-00002", "json형식이 올바르지 않습니다."),
 	INVALID_PARAMETER("CF-00007", "요청 파라미터가 올바르지 않습니다."),
 	UNSUPPORTED_ENCODING("CF-00009", "지원하지 않는 형식으로 인코딩된 문자열입니다."),
@@ -32,7 +30,7 @@ public enum EasyCodefMessageConstant {
 	private final String message;
 	private String extraMessage;
 	
-	EasyCodefMessageConstant(String code, String message) {
+	EasyCodefError(String code, String message) {
 		this.code = code;
 		this.message = message;
 	}
@@ -43,10 +41,6 @@ public enum EasyCodefMessageConstant {
 
 	public String getMessage() {
 		return message;
-	}
-
-	protected void setExtraMessage(String extraMessage) {
-		this.extraMessage = extraMessage;
 	}
 
 	public String getExtraMessage() {
