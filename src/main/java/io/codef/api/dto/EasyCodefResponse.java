@@ -1,4 +1,4 @@
-package io.codef.api;
+package io.codef.api.dto;
 
 import java.util.Objects;
 

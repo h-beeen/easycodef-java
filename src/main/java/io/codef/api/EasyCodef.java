@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.codef.api.constants.CodefHost;
 import io.codef.api.constants.CodefPath;
+import io.codef.api.dto.EasyCodefResponse;
 
 
 public class EasyCodef {

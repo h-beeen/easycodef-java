@@ -1,5 +1,7 @@
 package io.codef.api.http;
 
+import io.codef.api.dto.HttpResponse;
+
 import java.io.IOException;
 import java.util.Map;
 

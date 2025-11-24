@@ -1,5 +1,6 @@
 package io.codef.api.http;
 
+import io.codef.api.dto.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
