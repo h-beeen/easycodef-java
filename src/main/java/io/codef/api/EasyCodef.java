@@ -12,10 +12,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.codef.api.constants.CodefHost;
 import io.codef.api.constants.CodefPath;
-import io.codef.api.constants.EasyCodefServiceType;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
-
 
 public class EasyCodef {
 	
@@ -42,24 +40,19 @@ public class EasyCodef {
 	}
 
 	public String requestProduct(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		boolean validationFlag = true;
-		
-		validationFlag = checkClientInfo(serviceType.getServiceType());
-		if(!validationFlag) {
+		if(checkClientInfo(serviceType.getServiceType())) {
             EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.EMPTY_CLIENT_INFO);
-			return mapper.writeValueAsString(response);
+            return mapper.writeValueAsString(response);
 		}
 		
-		validationFlag = checkPublicKey();
-		if(!validationFlag) {
+		if(checkPublicKey()) {
             EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.EMPTY_PUBLIC_KEY);
-			return mapper.writeValueAsString(response);
+            return mapper.writeValueAsString(response);
 		}
 
-		validationFlag = checkTwoWayKeyword(parameterMap);
-		if(!validationFlag) {
-            EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.INVALID_2WAY_INFO);
-			return mapper.writeValueAsString(response);
+		if(!checkTwoWayKeyword(parameterMap)) {
+            EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.INVALID_2WAY_KEYWORD);
+            return mapper.writeValueAsString(response);
 		}
 
         String accessToken = requestToken(serviceType);
@@ -70,22 +63,17 @@ public class EasyCodef {
 	}
 
     public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-        boolean validationFlag = true;
-
-        validationFlag = checkClientInfo(serviceType.getServiceType());
-        if(!validationFlag) {
+        if (checkClientInfo(serviceType.getServiceType())) {
             EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.EMPTY_CLIENT_INFO);
             return mapper.writeValueAsString(response);
         }
 
-        validationFlag = checkPublicKey();
-        if(!validationFlag) {
+        if (checkPublicKey()) {
             EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.EMPTY_PUBLIC_KEY);
             return mapper.writeValueAsString(response);
         }
 
-        validationFlag = checkTwoWayInfo(parameterMap);
-        if(!validationFlag) {
+        if (!checkTwoWayInfo(parameterMap)) {
             EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.INVALID_2WAY_INFO);
             return mapper.writeValueAsString(response);
         }
@@ -100,19 +88,19 @@ public class EasyCodef {
 	private boolean checkClientInfo(String serviceType) {
 		if(Objects.equals(serviceType, CodefHost.API_DOMAIN)) {
 			if(properties.getClientId() == null || properties.getClientId().trim().isEmpty()) {
-				return false;
+				return true;
 			}
-            return properties.getClientSecret() != null && !properties.getClientSecret().trim().isEmpty();
+            return properties.getClientSecret() == null || properties.getClientSecret().trim().isEmpty();
 		} else {
 			if(properties.getDemoClientId() == null || properties.getDemoClientId().trim().isEmpty()) {
-				return false;
+				return true;
 			}
-            return properties.getDemoClientSecret() != null && !properties.getDemoClientSecret().trim().isEmpty();
+            return properties.getDemoClientSecret() == null || properties.getDemoClientSecret().trim().isEmpty();
 		}
     }
 
 	private boolean checkPublicKey() {
-        return properties.getPublicKey() != null && !properties.getPublicKey().trim().isEmpty();
+        return properties.getPublicKey() == null || properties.getPublicKey().trim().isEmpty();
     }
 
 	@SuppressWarnings("unchecked")

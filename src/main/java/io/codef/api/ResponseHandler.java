@@ -5,11 +5,9 @@ import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public final class ResponseHandler {
+public class ResponseHandler {
 
     private ResponseHandler() { }
 
@@ -29,11 +27,7 @@ public final class ResponseHandler {
             if (EasyCodefConstant.RESULT.equals(key)) {
                 resultMap = (Map<String, Object>) value;
             } else if (EasyCodefConstant.DATA.equals(key)) {
-                if (value instanceof Map || value instanceof List) {
-                    data = value;
-                } else {
-                    data = value;
-                }
+                data = value;
             }
         }
 
@@ -62,41 +56,15 @@ public final class ResponseHandler {
         String resolvedExtraMessage =
                 (extraMessage != null && !extraMessage.isEmpty())
                         ? extraMessage
-                        : error.getExtraMessage();
+                        : error.getExtraMessage(); // 현재는 null이지만, 구조 유지
 
         EasyCodefResponse.Result result = new EasyCodefResponse.Result(
-                error.getCode(),
-                resolvedExtraMessage,
-                error.getMessage(),
+                error.getCode(),         // "CF-00014"
+                resolvedExtraMessage,    // ""  (fromError(error) 호출시)
+                error.getMessage(),      // "상품 요청을 위해서는 클라이언트 정보가 필요합니다...."
                 null
         );
 
         return new EasyCodefResponse(result, Collections.<String, Object>emptyMap());
-    }
-
-    public static Map<String, Object> toMap(EasyCodefResponse response) {
-        Map<String, Object> map = new HashMap<>();
-
-        if (response == null) {
-            return map;
-        }
-
-        Map<String, Object> resultMap = new HashMap<>();
-        if (response.getResult() != null) {
-            resultMap.put(EasyCodefResponse.RESULT, response.getResult().getCode());
-            resultMap.put(EasyCodefConstant.MESSAGE, response.getResult().getMessage());
-            resultMap.put(EasyCodefConstant.EXTRA_MESSAGE, response.getResult().getExtraMessage());
-            resultMap.put(EasyCodefConstant.TRANSACTION_ID, response.getResult().getTransactionId());
-        }
-
-        map.put(EasyCodefResponse.RESULT, resultMap);
-        map.put(EasyCodefResponse.DATA, response.getData());
-
-        return map;
-    }
-
-    public static boolean isSuccess(EasyCodefResponse response) {
-        return response != null &&
-                "CF-00000".equals(response.code());
     }
 }
