@@ -7,7 +7,6 @@ import io.codef.api.constants.CodefHost;
 import io.codef.api.constants.CodefPath;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
-import io.codef.api.error.EasyCodefException;
 import io.codef.api.dto.HttpResponse;
 import io.codef.api.http.HttpClient;
 import io.codef.api.http.EasyCodefHttpClient;
@@ -39,7 +38,10 @@ public class EasyCodefConnector {
 
             if (statusCode != HttpURLConnection.HTTP_OK) {
                 EasyCodefError error = EasyCodefError.fromHttpStatus(statusCode);
-                throw EasyCodefException.of(error, responseBody);
+                EasyCodefResponse errorResponse =
+                        ResponseHandler.fromError(error, url);
+
+                return ResponseHandler.toMap(errorResponse);
             }
 
             String decoded = URLDecoder.decode(responseBody, StandardCharsets.UTF_8.name());
@@ -49,7 +51,10 @@ public class EasyCodefConnector {
                     new TypeReference<Map<String, Object>>() {}
             );
         } catch (Exception e) {
-            throw EasyCodefException.of(EasyCodefError.LIBRARY_SENDER_ERROR, e);
+            EasyCodefResponse errorResponse =
+                    ResponseHandler.fromError(EasyCodefError.LIBRARY_SENDER_ERROR, e.getMessage());
+
+            return ResponseHandler.toMap(errorResponse);
         }
     }
 

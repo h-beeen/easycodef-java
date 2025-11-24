@@ -5,6 +5,7 @@ import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseHandler {
@@ -59,12 +60,38 @@ public class ResponseHandler {
                         : error.getExtraMessage(); // 현재는 null이지만, 구조 유지
 
         EasyCodefResponse.Result result = new EasyCodefResponse.Result(
-                error.getCode(),         // "CF-00014"
-                resolvedExtraMessage,    // ""  (fromError(error) 호출시)
-                error.getMessage(),      // "상품 요청을 위해서는 클라이언트 정보가 필요합니다...."
+                error.getCode(),              // e.g. "CF-00400"
+                resolvedExtraMessage,         // e.g. "/v1/kr/card/0010"
+                error.getMessage(),           // 정의된 한글 메시지
                 null
         );
 
         return new EasyCodefResponse(result, Collections.<String, Object>emptyMap());
+    }
+
+    public static Map<String, Object> toMap(EasyCodefResponse response) {
+        Map<String, Object> map = new HashMap<>();
+
+        if (response == null) {
+            return map;
+        }
+
+        Map<String, Object> resultMap = new HashMap<>();
+        if (response.getResult() != null) {
+            resultMap.put(EasyCodefConstant.CODE, response.getResult().getCode());
+            resultMap.put(EasyCodefConstant.MESSAGE, response.getResult().getMessage());
+            resultMap.put(EasyCodefConstant.EXTRA_MESSAGE, response.getResult().getExtraMessage());
+            resultMap.put(EasyCodefConstant.TRANSACTION_ID, response.getResult().getTransactionId());
+        }
+
+        map.put(EasyCodefConstant.RESULT, resultMap);
+
+        Object data = response.getData();
+        if (data == null) {
+            data = Collections.<String, Object>emptyMap();
+        }
+        map.put(EasyCodefConstant.DATA, data);
+
+        return map;
     }
 }
