@@ -1,6 +1,4 @@
-package io.codef.api;
-
-import io.codef.api.constants.CodefHost;
+package io.codef.api.constants;
 
 public enum EasyCodefServiceType {
 	DEMO(CodefHost.DEMO_DOMAIN),

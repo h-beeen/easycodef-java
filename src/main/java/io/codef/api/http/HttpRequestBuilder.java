@@ -1,6 +1,7 @@
-package io.codef.api;
+package io.codef.api.http;
 
 import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.EasyCodefConnector;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,7 @@ public class HttpRequestBuilder {
     private String body;
     private boolean isTokenRequest = false;
 
-    HttpRequestBuilder(String url) {
+    public HttpRequestBuilder(String url) {
         this.url = url;
     }
 
@@ -34,19 +35,19 @@ public class HttpRequestBuilder {
         return EasyCodefConnector.execute(this);
     }
 
-    String getUrl() {
+    public String getUrl() {
         return url;
     }
 
-    Map<String, String> getHeaders() {
+    public Map<String, String> getHeaders() {
         return headers;
     }
 
-    String getBody() {
+    public String getBody() {
         return body;
     }
 
-    boolean isTokenRequest() {
+    public boolean isTokenRequest() {
         return isTokenRequest;
     }
 }

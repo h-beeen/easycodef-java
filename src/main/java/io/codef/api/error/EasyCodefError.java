@@ -42,17 +42,16 @@ public enum EasyCodefError {
         return this.message;
     }
 
-    private static final Map<Integer, EasyCodefError> HTTP_ERROR_MAP;
+    private static final Map<Integer, EasyCodefError> HTTP_ERROR_MAP = createErrorMap();
 
-    static {
+    private static Map<Integer, EasyCodefError> createErrorMap() {
         Map<Integer, EasyCodefError> map = new HashMap<>();
         map.put(HttpURLConnection.HTTP_BAD_REQUEST, BAD_REQUEST);
         map.put(HttpURLConnection.HTTP_UNAUTHORIZED, UNAUTHORIZED);
         map.put(HttpURLConnection.HTTP_FORBIDDEN, FORBIDDEN);
         map.put(HttpURLConnection.HTTP_NOT_FOUND, NOT_FOUND);
         map.put(HttpURLConnection.HTTP_BAD_METHOD, METHOD_NOT_ALLOWED);
-
-        HTTP_ERROR_MAP = Collections.unmodifiableMap(map);
+        return Collections.unmodifiableMap(map);
     }
 
     public static EasyCodefError fromHttpStatus(int statusCode) {

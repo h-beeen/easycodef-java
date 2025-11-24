@@ -18,14 +18,6 @@ public class EasyCodefResponse {
         return data;
     }
 
-    public String code() {
-        return (result != null) ? result.getCode() : null;
-    }
-
-    public String transactionId() {
-        return (result != null) ? result.getTransactionId() : null;
-    }
-
     public static class Result {
         private final String code;
         private final String extraMessage;
