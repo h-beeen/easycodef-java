@@ -24,24 +24,22 @@ public class EasyCodefConnector {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final HttpClient httpClient = new ApacheHttpClient();
 
-    private static EasyCodefResponse execute(String url, Map<String, String> headers, String body, boolean isTokenRequest) {
+    private EasyCodefConnector() {
+    }
+
+    private static HttpRequestBuilder request(String url) {
+        return new HttpRequestBuilder(url);
+    }
+
+    static EasyCodefResponse execute(HttpRequestBuilder builder) {
         try {
-            HttpResponse httpResponse = httpClient.postJson(url, headers, body);
-
-            if (httpResponse.getStatusCode() != HttpURLConnection.HTTP_OK) {
-                EasyCodefError error = EasyCodefError.fromHttpStatus(httpResponse.getStatusCode());
-                return ResponseHandler.fromError(error, url);
-            }
-
-            String decoded = URLDecoder.decode(httpResponse.getBody(), StandardCharsets.UTF_8);
-            Map<String, Object> responseMap = mapper.readValue(
-                    decoded,
-                    new TypeReference<Map<String, Object>>() {}
+            HttpResponse httpResponse = httpClient.postJson(
+                    builder.getUrl(),
+                    builder.getHeaders(),
+                    builder.getBody()
             );
+            return processResponse(httpResponse, builder.isTokenRequest());
 
-            return isTokenRequest
-                    ? ResponseHandler.fromTokenResponse(responseMap)
-                    : ResponseHandler.fromRawMap(responseMap);
         } catch (JsonProcessingException e) {
             return ResponseHandler.fromError(EasyCodefError.INVALID_JSON, e.getMessage());
         } catch (UnsupportedEncodingException e) {
@@ -51,15 +49,43 @@ public class EasyCodefConnector {
         }
     }
 
-    protected static EasyCodefResponse publishToken(String oauthToken) {
-        String url = CodefHost.OAUTH_DOMAIN + CodefPath.GET_TOKEN;
-        Map<String, String> headers = EasyCodefUtil.createAuthorizationHeaders(oauthToken);
-        return execute(url, headers, null, true);
+    private static EasyCodefResponse processResponse(
+            HttpResponse httpResponse,
+            boolean isTokenRequest
+    ) throws IOException {
+        if (httpResponse.getStatusCode() != HttpURLConnection.HTTP_OK) {
+            EasyCodefError error = EasyCodefError.fromHttpStatus(httpResponse.getStatusCode());
+            return ResponseHandler.fromError(error);
+        }
+
+        String decoded = URLDecoder.decode(httpResponse.getBody(), StandardCharsets.UTF_8);
+        Map<String, Object> responseMap = mapper.readValue(
+                decoded,
+                new TypeReference<Map<String, Object>>() {
+                }
+        );
+
+        return isTokenRequest
+                ? ResponseHandler.fromTokenResponse(responseMap)
+                : ResponseHandler.fromRawMap(responseMap);
     }
 
-    protected static EasyCodefResponse requestProduct(String urlPath, String accessToken, Map<String, Object> bodyMap) {
-        String jsonString = JSON.toJSONString(bodyMap);
-        Map<String, String> headers = EasyCodefUtil.createBearerTokenHeaders(accessToken);
-        return execute(urlPath, headers, jsonString, false);
+    protected static EasyCodefResponse publishToken(String oauthToken) {
+        return request(CodefHost.OAUTH_DOMAIN + CodefPath.GET_TOKEN)
+                .header("Authorization", oauthToken)
+                .asTokenRequest()
+                .execute();
+    }
+
+    protected static EasyCodefResponse requestProduct(
+            String urlPath,
+            String accessToken,
+            Map<String, Object> bodyMap
+    ) {
+        return request(urlPath)
+                .header("Authorization", "Bearer " + accessToken)
+                .header("Content-Type", "application/json")
+                .body(JSON.toJSONString(bodyMap))
+                .execute();
     }
 }
