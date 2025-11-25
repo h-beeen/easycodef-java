@@ -20,7 +20,7 @@ public class EasyCodefToken {
     protected EasyCodefToken(String clientId, String clientSecret) {
         this.oauthToken = createOAuthToken(clientId, clientSecret);
 
-        EasyCodefResponse response = EasyCodefConnector.publishToken(oauthToken);
+        EasyCodefResponse response = EasyCodefApiClient.publishToken(oauthToken);
         initializeToken(response);
     }
 
@@ -60,7 +60,7 @@ public class EasyCodefToken {
     }
 
     private void refreshToken() {
-        EasyCodefResponse response = EasyCodefConnector.publishToken(oauthToken);
+        EasyCodefResponse response = EasyCodefApiClient.publishToken(oauthToken);
         initializeToken(response);
     }
 }

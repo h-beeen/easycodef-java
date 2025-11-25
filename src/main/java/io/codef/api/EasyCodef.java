@@ -46,7 +46,7 @@ public class EasyCodef {
 
         String accessToken = requestToken(serviceType);
         String urlPath = serviceType.getServiceType() + productUrl;
-		EasyCodefResponse response = EasyCodefConnector.requestProduct(urlPath, accessToken, parameterMap);
+		EasyCodefResponse response = EasyCodefApiClient.requestProduct(urlPath, accessToken, parameterMap);
 
 		return mapper().writeValueAsString(response);
 	}
@@ -64,7 +64,7 @@ public class EasyCodef {
 
         String accessToken = requestToken(serviceType);
         String urlPath = serviceType.getServiceType() + productUrl;
-        EasyCodefResponse response = EasyCodefConnector.requestProduct(urlPath, accessToken, parameterMap);
+        EasyCodefResponse response = EasyCodefApiClient.requestProduct(urlPath, accessToken, parameterMap);
 
         return mapper().writeValueAsString(response);
     }
