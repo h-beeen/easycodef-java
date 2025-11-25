@@ -5,17 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.codef.api.constants.CodefPath;
 import io.codef.api.constants.EasyCodefServiceType;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
 
+import static io.codef.api.EasyCodefUtil.mapper;
+import static io.codef.api.EasyCodefUtil.mapTypeRef;
+
 public class EasyCodef {
 
-    private final ObjectMapper MAPPER = new ObjectMapper();
-    private final TypeReference<Map<String, Object>> MAP_TYPE_REF = new TypeReference<Map<String, Object>>() {};
 	private final EasyCodefProperties properties = new EasyCodefProperties();
     private final EasyCodefTokenManager tokenManager = new EasyCodefTokenManager(properties);
 
@@ -38,37 +37,37 @@ public class EasyCodef {
 	public String requestProduct(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
         EasyCodefResponse validationError = validateCommonRequirements(serviceType);
         if (validationError != null) {
-            return MAPPER.writeValueAsString(validationError);
+            return mapper().writeValueAsString(validationError);
         }
 
 		if(!checkTwoWayKeyword(parameterMap)) {
             EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.INVALID_2WAY_KEYWORD);
-            return MAPPER.writeValueAsString(response);
+            return mapper().writeValueAsString(response);
 		}
 
         String accessToken = requestToken(serviceType);
         String urlPath = serviceType.getServiceType() + productUrl;
 		EasyCodefResponse response = EasyCodefConnector.requestProduct(urlPath, accessToken, parameterMap);
 
-		return MAPPER.writeValueAsString(response);
+		return mapper().writeValueAsString(response);
 	}
 
     public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws JsonProcessingException {
         EasyCodefResponse validationError = validateCommonRequirements(serviceType);
         if (validationError != null) {
-            return MAPPER.writeValueAsString(validationError);
+            return mapper().writeValueAsString(validationError);
         }
 
         if (!checkTwoWayInfo(parameterMap)) {
             EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.INVALID_2WAY_INFO);
-            return MAPPER.writeValueAsString(response);
+            return mapper().writeValueAsString(response);
         }
 
         String accessToken = requestToken(serviceType);
         String urlPath = serviceType.getServiceType() + productUrl;
         EasyCodefResponse response = EasyCodefConnector.requestProduct(urlPath, accessToken, parameterMap);
 
-        return MAPPER.writeValueAsString(response);
+        return mapper().writeValueAsString(response);
     }
 
     private EasyCodefResponse validateCommonRequirements(EasyCodefServiceType serviceType) {
@@ -95,7 +94,7 @@ public class EasyCodef {
         }
 
         try {
-            Map<String, Object> twoWayInfoMap = MAPPER.convertValue(twoWayInfoObj, MAP_TYPE_REF);
+            Map<String, Object> twoWayInfoMap = mapper().convertValue(twoWayInfoObj, mapTypeRef());
 
             return twoWayInfoMap.containsKey("jobIndex")
                     && twoWayInfoMap.containsKey("threadIndex")

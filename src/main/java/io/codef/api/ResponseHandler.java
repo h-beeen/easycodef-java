@@ -1,8 +1,6 @@
 package io.codef.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.codef.api.constants.CodefPath;
 import io.codef.api.constants.EasyCodefConstant;
 import io.codef.api.dto.EasyCodefResponse;
@@ -16,11 +14,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
+import static io.codef.api.EasyCodefUtil.mapper;
+import static io.codef.api.EasyCodefUtil.mapTypeRef;
+
 public class ResponseHandler {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final Map<String, Object> EMPTY_MAP = Collections.emptyMap();
-    private static final TypeReference<Map<String, Object>> MAP_TYPE_REF = new TypeReference<Map<String, Object>>() {};
 
     protected static EasyCodefResponse processResponse(HttpResponse httpResponse, String url) {
         if (httpResponse.getStatusCode() != HttpURLConnection.HTTP_OK) {
@@ -30,7 +29,7 @@ public class ResponseHandler {
 
         try {
             String decoded = URLDecoder.decode(httpResponse.getBody(), StandardCharsets.UTF_8.name());
-            Map<String, Object> responseMap = MAPPER.readValue(decoded, MAP_TYPE_REF);
+            Map<String, Object> responseMap = mapper().readValue(decoded, mapTypeRef());
 
             return isTokenRequest(url) ? fromTokenResponse(responseMap) : fromProductResponse(responseMap);
 
@@ -80,7 +79,7 @@ public class ResponseHandler {
         }
 
         try {
-            Map<String, Object> resultMap = MAPPER.convertValue(resultObj, MAP_TYPE_REF);
+            Map<String, Object> resultMap = mapper().convertValue(resultObj, mapTypeRef());
             return new EasyCodefResponse.Result(
                     getStringValue(resultMap, EasyCodefConstant.CODE),
                     getStringValue(resultMap, EasyCodefConstant.EXTRA_MESSAGE),

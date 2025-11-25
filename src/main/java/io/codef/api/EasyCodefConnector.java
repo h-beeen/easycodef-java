@@ -1,7 +1,6 @@
 package io.codef.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.codef.api.constants.CodefHost;
 import io.codef.api.constants.CodefPath;
 import io.codef.api.dto.EasyCodefResponse;
@@ -14,9 +13,10 @@ import io.codef.api.http.HttpRequestBuilder;
 import java.io.IOException;
 import java.util.Map;
 
+import static io.codef.api.EasyCodefUtil.mapper;
+
 public class EasyCodefConnector {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final HttpClient httpClient = new ApacheHttpClient();
 
     protected static EasyCodefResponse execute(HttpRequestBuilder builder) {
@@ -46,7 +46,7 @@ public class EasyCodefConnector {
             Map<String, Object> bodyMap
     ) {
         try {
-            String jsonBody = MAPPER.writeValueAsString(bodyMap);
+            String jsonBody = mapper().writeValueAsString(bodyMap);
             HttpRequestBuilder requestBuilder = HttpRequestBuilder.builder()
                     .url(urlPath)
                     .header("Authorization", "Bearer " + accessToken)

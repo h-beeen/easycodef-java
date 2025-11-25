@@ -4,36 +4,34 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.codef.api.constants.EasyCodefConstant;
 import io.codef.api.dto.EasyCodefResponse;
 import org.apache.commons.codec.binary.Base64;
 
-public class EasyCodefToken {
+import static io.codef.api.EasyCodefUtil.mapper;
+import static io.codef.api.EasyCodefUtil.mapTypeRef;
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final TypeReference<Map<String, Object>> MAP_TYPE_REF = new TypeReference<Map<String, Object>>() {};
+public class EasyCodefToken {
 
     private final String oauthToken;
     private String accessToken;
     private LocalDateTime expiresAt;
 
-    EasyCodefToken(String clientId, String clientSecret) {
+    protected EasyCodefToken(String clientId, String clientSecret) {
         this.oauthToken = createOAuthToken(clientId, clientSecret);
 
         EasyCodefResponse response = EasyCodefConnector.publishToken(oauthToken);
         initializeToken(response);
     }
 
-    EasyCodefToken validateAndRefreshToken() {
+    protected EasyCodefToken validateAndRefreshToken() {
         Optional.of(expiresAt).filter(this::isTokenExpiringSoon)
                 .ifPresent(expiry -> refreshToken());
 
         return this;
     }
 
-    String getAccessToken() {
+    protected String getAccessToken() {
         return accessToken;
     }
 
@@ -46,7 +44,7 @@ public class EasyCodefToken {
     private void initializeToken(EasyCodefResponse response) {
         Object data = response.getData();
 
-        Map<String, Object> tokenMap = MAPPER.convertValue(data, MAP_TYPE_REF);
+        Map<String, Object> tokenMap = mapper().convertValue(data, mapTypeRef());
 
         Optional.ofNullable(tokenMap.get(EasyCodefConstant.ACCESS_TOKEN))
                 .map(String::valueOf)
