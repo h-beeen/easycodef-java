@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.codef.api.constants.CodefPath;
 import io.codef.api.constants.CodefServiceType;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
 
 import static io.codef.api.EasyCodefValidator.*;
+import static io.codef.api.ResponseHandler.handleErrorResponse;
+import static io.codef.api.constants.CodefPath.CREATE_ACCOUNT;
 import static io.codef.api.util.JsonUtil.mapper;
 
 public class EasyCodef {
@@ -40,7 +41,7 @@ public class EasyCodef {
         }
 
 		if(!checkTwoWayKeyword(parameterMap)) {
-            EasyCodefResponse response = ResponseHandler.handleErrorResponse(EasyCodefError.INVALID_2WAY_KEYWORD);
+            EasyCodefResponse response = handleErrorResponse(EasyCodefError.INVALID_2WAY_KEYWORD);
             return mapper().writeValueAsString(response);
 		}
 
@@ -58,7 +59,7 @@ public class EasyCodef {
         }
 
         if (!checkTwoWayInfo(parameterMap)) {
-            EasyCodefResponse response = ResponseHandler.handleErrorResponse(EasyCodefError.INVALID_2WAY_INFO);
+            EasyCodefResponse response = handleErrorResponse(EasyCodefError.INVALID_2WAY_INFO);
             return mapper().writeValueAsString(response);
         }
 
@@ -70,7 +71,7 @@ public class EasyCodef {
     }
 
 	public String createAccount(CodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {
-		return requestProduct(CodefPath.CREATE_ACCOUNT, serviceType, parameterMap);
+		return requestProduct(CREATE_ACCOUNT, serviceType, parameterMap);
 	}
 
 	public String requestToken(CodefServiceType serviceType) {

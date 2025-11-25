@@ -1,9 +1,10 @@
 package io.codef.api.error;
 
-import java.net.HttpURLConnection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.net.HttpURLConnection.*;
 
 public enum EasyCodefError {
 
@@ -46,11 +47,11 @@ public enum EasyCodefError {
 
     private static Map<Integer, EasyCodefError> createErrorMap() {
         Map<Integer, EasyCodefError> map = new HashMap<>();
-        map.put(HttpURLConnection.HTTP_BAD_REQUEST, BAD_REQUEST);
-        map.put(HttpURLConnection.HTTP_UNAUTHORIZED, UNAUTHORIZED);
-        map.put(HttpURLConnection.HTTP_FORBIDDEN, FORBIDDEN);
-        map.put(HttpURLConnection.HTTP_NOT_FOUND, NOT_FOUND);
-        map.put(HttpURLConnection.HTTP_BAD_METHOD, METHOD_NOT_ALLOWED);
+        map.put(HTTP_BAD_REQUEST, BAD_REQUEST);
+        map.put(HTTP_UNAUTHORIZED, UNAUTHORIZED);
+        map.put(HTTP_FORBIDDEN, FORBIDDEN);
+        map.put(HTTP_NOT_FOUND, NOT_FOUND);
+        map.put(HTTP_BAD_METHOD, METHOD_NOT_ALLOWED);
         return Collections.unmodifiableMap(map);
     }
 

@@ -2,18 +2,13 @@ package io.codef.api;
 
 import io.codef.api.constants.CodefServiceType;
 import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.error.EasyCodefError;
 
 import java.util.Map;
 
+import static io.codef.api.ResponseHandler.handleErrorResponse;
 import static io.codef.api.constants.CodefConstant.*;
-import static io.codef.api.constants.CodefConstant.IS_2WAY;
-import static io.codef.api.constants.CodefConstant.JTI;
-import static io.codef.api.constants.CodefConstant.THREAD_INDEX;
-import static io.codef.api.constants.CodefConstant.TWO_WAY_INFO;
-import static io.codef.api.constants.CodefConstant.TWO_WAY_TIMESTAMP;
-import static io.codef.api.util.JsonUtil.mapTypeRef;
-import static io.codef.api.util.JsonUtil.mapper;
+import static io.codef.api.error.EasyCodefError.*;
+import static io.codef.api.util.JsonUtil.*;
 
 public class EasyCodefValidator {
 
@@ -21,11 +16,11 @@ public class EasyCodefValidator {
 
     protected static EasyCodefResponse validateCommonRequirements(EasyCodefProperties properties, CodefServiceType serviceType) {
         if (properties.checkClientInfo(serviceType)) {
-            return ResponseHandler.handleErrorResponse(EasyCodefError.EMPTY_CLIENT_INFO);
+            return handleErrorResponse(EMPTY_CLIENT_INFO);
         }
 
         if (properties.checkPublicKey()) {
-            return ResponseHandler.handleErrorResponse(EasyCodefError.EMPTY_PUBLIC_KEY);
+            return handleErrorResponse(EMPTY_PUBLIC_KEY);
         }
 
         return null;

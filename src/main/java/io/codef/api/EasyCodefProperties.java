@@ -43,15 +43,15 @@ public class EasyCodefProperties {
         return isNullOrEmpty(publicKey);
     }
 
-    private boolean isNullOrEmpty(String value) {
-        return value == null || value.trim().isEmpty();
-    }
-
     protected String getClientIdByServiceType(CodefServiceType serviceType) {
         return serviceType.isApiService() ? clientId : demoClientId;
     }
 
     protected String getClientSecretByServiceType(CodefServiceType serviceType) {
         return serviceType.isApiService() ? clientSecret : demoClientSecret;
+    }
+
+    private boolean isNullOrEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }

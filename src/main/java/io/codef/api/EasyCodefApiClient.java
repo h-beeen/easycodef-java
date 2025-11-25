@@ -1,15 +1,16 @@
 package io.codef.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.codef.api.constants.CodefHost;
-import io.codef.api.constants.CodefPath;
 import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.error.EasyCodefError;
 import io.codef.api.http.HttpRequestBuilder;
 
 import java.util.Map;
 
 import static io.codef.api.EasyCodefConnector.execute;
+import static io.codef.api.ResponseHandler.handleErrorResponse;
+import static io.codef.api.constants.CodefHost.OAUTH_DOMAIN;
+import static io.codef.api.constants.CodefPath.GET_TOKEN;
+import static io.codef.api.error.EasyCodefError.INVALID_JSON;
 import static io.codef.api.util.JsonUtil.mapper;
 
 public class EasyCodefApiClient {
@@ -18,7 +19,7 @@ public class EasyCodefApiClient {
 
     protected static EasyCodefResponse publishToken(String oauthToken) {
         HttpRequestBuilder httpRequestBuilder = HttpRequestBuilder.builder()
-                .url(CodefHost.OAUTH_DOMAIN + CodefPath.GET_TOKEN)
+                .url(OAUTH_DOMAIN + GET_TOKEN)
                 .header("Authorization", oauthToken);
         return execute(httpRequestBuilder);
     }
@@ -37,7 +38,7 @@ public class EasyCodefApiClient {
                     .body(jsonBody);
             return execute(requestBuilder);
         } catch (JsonProcessingException e) {
-            return ResponseHandler.handleErrorResponse(EasyCodefError.INVALID_JSON, e.getMessage());
+            return handleErrorResponse(INVALID_JSON, e.getMessage());
         }
     }
 }
