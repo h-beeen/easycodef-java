@@ -3,6 +3,7 @@ package io.codef.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.codef.api.constants.CodefPath;
 import io.codef.api.constants.EasyCodefConstant;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.dto.HttpResponse;
@@ -21,7 +22,7 @@ public class ResponseHandler {
     private static final Map<String, Object> EMPTY_MAP = Collections.emptyMap();
     private static final TypeReference<Map<String, Object>> MAP_TYPE_REF = new TypeReference<Map<String, Object>>() {};
 
-    protected static EasyCodefResponse processResponse(HttpResponse httpResponse, boolean isTokenRequest) {
+    protected static EasyCodefResponse processResponse(HttpResponse httpResponse, String url) {
         if (httpResponse.getStatusCode() != HttpURLConnection.HTTP_OK) {
             EasyCodefError error = EasyCodefError.fromHttpStatus(httpResponse.getStatusCode());
             return fromError(error);
@@ -31,7 +32,7 @@ public class ResponseHandler {
             String decoded = URLDecoder.decode(httpResponse.getBody(), StandardCharsets.UTF_8.name());
             Map<String, Object> responseMap = MAPPER.readValue(decoded, MAP_TYPE_REF);
 
-            return isTokenRequest ? fromTokenResponse(responseMap) : fromProductResponse(responseMap);
+            return isTokenRequest(url) ? fromTokenResponse(responseMap) : fromProductResponse(responseMap);
 
         } catch (UnsupportedEncodingException e) {
             return fromError(EasyCodefError.UNSUPPORTED_ENCODING, e.getMessage());
@@ -40,6 +41,10 @@ public class ResponseHandler {
         } catch (Exception e) {
             return fromError(EasyCodefError.LIBRARY_SENDER_ERROR, e.getMessage());
         }
+    }
+
+    private static boolean isTokenRequest(String url) {
+        return url.contains(CodefPath.GET_TOKEN);
     }
 
     private static EasyCodefResponse fromTokenResponse(Map<String, Object> tokenMap) {

@@ -10,7 +10,6 @@ public class HttpRequestBuilder {
     private final String url;
     private final Map<String, String> headers = new HashMap<>();
     private String body;
-    private boolean isTokenRequest = false;
 
     public HttpRequestBuilder(String url) {
         this.url = url;
@@ -23,11 +22,6 @@ public class HttpRequestBuilder {
 
     public HttpRequestBuilder body(String body) {
         this.body = body;
-        return this;
-    }
-
-    public HttpRequestBuilder asTokenRequest() {
-        this.isTokenRequest = true;
         return this;
     }
 
@@ -45,9 +39,5 @@ public class HttpRequestBuilder {
 
     public String getBody() {
         return body;
-    }
-
-    public boolean isTokenRequest() {
-        return isTokenRequest;
     }
 }
