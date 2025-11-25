@@ -22,7 +22,7 @@ public class EasyCodefConnector {
                     builder.getHeaders(),
                     builder.getBody()
             );
-            return ResponseHandler.processResponse(httpResponse, builder.getUrl());
+            return ResponseHandler.processResponse(httpResponse);
 
         } catch (IOException e) {
             return ResponseHandler.handleErrorResponse(EasyCodefError.LIBRARY_SENDER_ERROR, e.getMessage());

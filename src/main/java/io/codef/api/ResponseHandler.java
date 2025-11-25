@@ -1,7 +1,6 @@
 package io.codef.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.codef.api.constants.CodefPath;
 import io.codef.api.constants.CodefConstant;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.dto.HttpResponse;
@@ -23,7 +22,7 @@ public class ResponseHandler {
 
     private ResponseHandler() {}
 
-    protected static EasyCodefResponse processResponse(HttpResponse httpResponse, String url) {
+    protected static EasyCodefResponse processResponse(HttpResponse httpResponse) {
         if (httpResponse.getStatusCode() != HttpURLConnection.HTTP_OK) {
             EasyCodefError error = EasyCodefError.fromHttpStatus(httpResponse.getStatusCode());
             return handleErrorResponse(error);
