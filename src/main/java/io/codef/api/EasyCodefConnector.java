@@ -34,7 +34,8 @@ public class EasyCodefConnector {
     }
 
     protected static EasyCodefResponse publishToken(String oauthToken) {
-        HttpRequestBuilder httpRequestBuilder = new HttpRequestBuilder(CodefHost.OAUTH_DOMAIN + CodefPath.GET_TOKEN)
+        HttpRequestBuilder httpRequestBuilder = HttpRequestBuilder.builder()
+                .url(CodefHost.OAUTH_DOMAIN + CodefPath.GET_TOKEN)
                 .header("Authorization", oauthToken);
         return execute(httpRequestBuilder);
     }
@@ -46,7 +47,8 @@ public class EasyCodefConnector {
     ) {
         try {
             String jsonBody = MAPPER.writeValueAsString(bodyMap);
-            HttpRequestBuilder requestBuilder = new HttpRequestBuilder(urlPath)
+            HttpRequestBuilder requestBuilder = HttpRequestBuilder.builder()
+                    .url(urlPath)
                     .header("Authorization", "Bearer " + accessToken)
                     .header("Content-Type", "application/json")
                     .body(jsonBody);

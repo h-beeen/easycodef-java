@@ -4,12 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequestBuilder {
-    private final String url;
     private final Map<String, String> headers = new HashMap<>();
+    private String url;
     private String body;
 
-    public HttpRequestBuilder(String url) {
+    public static HttpRequestBuilder builder() {
+        return new HttpRequestBuilder();
+    }
+
+    public HttpRequestBuilder url(String url) {
         this.url = url;
+        return this;
     }
 
     public HttpRequestBuilder header(String key, String value) {
