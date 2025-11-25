@@ -19,11 +19,7 @@ public class EasyCodefConnector {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final HttpClient httpClient = new ApacheHttpClient();
 
-    private static HttpRequestBuilder request(String url) {
-        return new HttpRequestBuilder(url);
-    }
-
-    public static EasyCodefResponse execute(HttpRequestBuilder builder) {
+    protected static EasyCodefResponse execute(HttpRequestBuilder builder) {
         try {
             HttpResponse httpResponse = httpClient.postJson(
                     builder.getUrl(),
@@ -38,9 +34,9 @@ public class EasyCodefConnector {
     }
 
     protected static EasyCodefResponse publishToken(String oauthToken) {
-        return request(CodefHost.OAUTH_DOMAIN + CodefPath.GET_TOKEN)
-                .header("Authorization", oauthToken)
-                .execute();
+        HttpRequestBuilder httpRequestBuilder = new HttpRequestBuilder(CodefHost.OAUTH_DOMAIN + CodefPath.GET_TOKEN)
+                .header("Authorization", oauthToken);
+        return execute(httpRequestBuilder);
     }
 
     protected static EasyCodefResponse requestProduct(
@@ -50,11 +46,11 @@ public class EasyCodefConnector {
     ) {
         try {
             String jsonBody = MAPPER.writeValueAsString(bodyMap);
-            return request(urlPath)
+            HttpRequestBuilder requestBuilder = new HttpRequestBuilder(urlPath)
                     .header("Authorization", "Bearer " + accessToken)
                     .header("Content-Type", "application/json")
-                    .body(jsonBody)
-                    .execute();
+                    .body(jsonBody);
+            return execute(requestBuilder);
         } catch (JsonProcessingException e) {
             return ResponseHandler.fromError(EasyCodefError.INVALID_JSON, e.getMessage());
         }

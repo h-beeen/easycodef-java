@@ -1,8 +1,5 @@
 package io.codef.api.http;
 
-import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.EasyCodefConnector;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,10 +20,6 @@ public class HttpRequestBuilder {
     public HttpRequestBuilder body(String body) {
         this.body = body;
         return this;
-    }
-
-    public EasyCodefResponse execute() {
-        return EasyCodefConnector.execute(this);
     }
 
     public String getUrl() {
