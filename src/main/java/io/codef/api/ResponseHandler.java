@@ -1,5 +1,6 @@
 package io.codef.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.codef.api.constants.EasyCodefConstant;
@@ -7,7 +8,7 @@ import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.dto.HttpResponse;
 import io.codef.api.error.EasyCodefError;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -16,91 +17,78 @@ import java.util.Map;
 
 public class ResponseHandler {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final Map<String, Object> EMPTY_MAP = Collections.emptyMap();
+    private static final TypeReference<Map<String, Object>> MAP_TYPE_REF = new TypeReference<Map<String, Object>>() {};
 
-    protected static EasyCodefResponse processResponse(
-            HttpResponse httpResponse,
-            boolean isTokenRequest
-    ) throws IOException {
+    protected static EasyCodefResponse processResponse(HttpResponse httpResponse, boolean isTokenRequest) {
         if (httpResponse.getStatusCode() != HttpURLConnection.HTTP_OK) {
             EasyCodefError error = EasyCodefError.fromHttpStatus(httpResponse.getStatusCode());
-            return ResponseHandler.fromError(error);
+            return fromError(error);
         }
 
-        String decoded = URLDecoder.decode(httpResponse.getBody(), StandardCharsets.UTF_8.name());
-        Map<String, Object> responseMap = mapper.readValue(
-                decoded,
-                new TypeReference<Map<String, Object>>() {
-                }
-        );
+        try {
+            String decoded = URLDecoder.decode(httpResponse.getBody(), StandardCharsets.UTF_8.name());
+            Map<String, Object> responseMap = MAPPER.readValue(decoded, MAP_TYPE_REF);
 
-        return isTokenRequest
-                ? ResponseHandler.fromTokenResponse(responseMap)
-                : ResponseHandler.fromRawMap(responseMap);
+            return isTokenRequest ? fromTokenResponse(responseMap) : fromProductResponse(responseMap);
+
+        } catch (UnsupportedEncodingException e) {
+            return fromError(EasyCodefError.UNSUPPORTED_ENCODING, e.getMessage());
+        } catch (JsonProcessingException e) {
+            return fromError(EasyCodefError.INVALID_JSON, e.getMessage());
+        } catch (Exception e) {
+            return fromError(EasyCodefError.LIBRARY_SENDER_ERROR, e.getMessage());
+        }
     }
 
-    public static EasyCodefResponse fromTokenResponse(Map<String, Object> tokenMap) {
-        if (tokenMap == null || tokenMap.isEmpty()) {
-            return fromError(EasyCodefError.LIBRARY_SENDER_ERROR, "Empty token response");
-        }
-
+    private static EasyCodefResponse fromTokenResponse(Map<String, Object> tokenMap) {
         return new EasyCodefResponse(null, tokenMap);
     }
 
-    @SuppressWarnings("unchecked")
-    public static EasyCodefResponse fromRawMap(Map<String, Object> map) {
-        if (map == null) {
-            return new EasyCodefResponse(null, null);
-        }
-
-        Map<String, Object> resultMap = null;
-        Object data = null;
-
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-
-            if (EasyCodefConstant.RESULT.equals(key)) {
-                resultMap = (Map<String, Object>) value;
-            } else if (EasyCodefConstant.DATA.equals(key)) {
-                data = value;
-            }
-        }
-
-        EasyCodefResponse.Result result = null;
-        if (resultMap != null) {
-            result = new EasyCodefResponse.Result(
-                    (String) resultMap.get(EasyCodefConstant.CODE),
-                    (String) resultMap.get(EasyCodefConstant.EXTRA_MESSAGE),
-                    (String) resultMap.get(EasyCodefConstant.MESSAGE),
-                    (String) resultMap.get(EasyCodefConstant.TRANSACTION_ID)
-            );
-        }
+    private static EasyCodefResponse fromProductResponse(Map<String, Object> map) {
+        EasyCodefResponse.Result result = parseResult(map.get(EasyCodefConstant.RESULT));
+        Object data = map.get(EasyCodefConstant.DATA);
 
         return new EasyCodefResponse(result, data);
     }
 
-    public static EasyCodefResponse fromError(EasyCodefError error) {
-        return fromError(error, null);
+
+    protected static EasyCodefResponse fromError(EasyCodefError error) {
+        return fromError(error, "");
     }
 
-    public static EasyCodefResponse fromError(EasyCodefError error, String extraMessage) {
-        if (error == null) {
-            return new EasyCodefResponse(null, Collections.<String, Object>emptyMap());
-        }
-
-        String resolvedExtraMessage =
-                (extraMessage != null && !extraMessage.isEmpty())
-                        ? extraMessage
-                        : "";
-
+    protected static EasyCodefResponse fromError(EasyCodefError error, String extraMessage) {
         EasyCodefResponse.Result result = new EasyCodefResponse.Result(
                 error.getCode(),
-                resolvedExtraMessage,
+                extraMessage,
                 error.getMessage(),
                 null
         );
 
-        return new EasyCodefResponse(result, Collections.<String, Object>emptyMap());
+        return new EasyCodefResponse(result, EMPTY_MAP);
+    }
+
+    private static EasyCodefResponse.Result parseResult(Object resultObj) {
+        if (!(resultObj instanceof Map)) {
+            return null;
+        }
+
+        try {
+            Map<String, Object> resultMap = MAPPER.convertValue(resultObj, MAP_TYPE_REF);
+            return new EasyCodefResponse.Result(
+                    getStringValue(resultMap, EasyCodefConstant.CODE),
+                    getStringValue(resultMap, EasyCodefConstant.EXTRA_MESSAGE),
+                    getStringValue(resultMap, EasyCodefConstant.MESSAGE),
+                    getStringValue(resultMap, EasyCodefConstant.TRANSACTION_ID)
+            );
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private static String getStringValue(Map<String, Object> map, String key) {
+        Object value = map.get(key);
+        return value != null ? String.valueOf(value) : null;
     }
 }
