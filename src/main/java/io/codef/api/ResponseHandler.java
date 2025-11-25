@@ -21,6 +21,8 @@ public class ResponseHandler {
 
     private static final Map<String, Object> EMPTY_MAP = Collections.emptyMap();
 
+    private ResponseHandler() {}
+
     protected static EasyCodefResponse processResponse(HttpResponse httpResponse, String url) {
         if (httpResponse.getStatusCode() != HttpURLConnection.HTTP_OK) {
             EasyCodefError error = EasyCodefError.fromHttpStatus(httpResponse.getStatusCode());
@@ -31,7 +33,9 @@ public class ResponseHandler {
             String decoded = URLDecoder.decode(httpResponse.getBody(), StandardCharsets.UTF_8.name());
             Map<String, Object> responseMap = mapper().readValue(decoded, mapTypeRef());
 
-            return isTokenRequest(url) ? handleTokenResponse(responseMap) : handleProductResponse(responseMap);
+            return responseMap.containsKey(CodefConstant.ACCESS_TOKEN)
+                    ? handleTokenResponse(responseMap)     // access_token 있으면 토큰
+                    : handleProductResponse(responseMap);
 
         } catch (UnsupportedEncodingException e) {
             return handleErrorResponse(EasyCodefError.UNSUPPORTED_ENCODING, e.getMessage());
@@ -40,10 +44,6 @@ public class ResponseHandler {
         } catch (Exception e) {
             return handleErrorResponse(EasyCodefError.LIBRARY_SENDER_ERROR, e.getMessage());
         }
-    }
-
-    private static boolean isTokenRequest(String url) {
-        return url.contains(CodefPath.GET_TOKEN);
     }
 
     private static EasyCodefResponse handleTokenResponse(Map<String, Object> tokenMap) {
