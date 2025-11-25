@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.codef.api.constants.CodefHost;
 import io.codef.api.constants.CodefPath;
@@ -14,12 +15,11 @@ import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
 
 public class EasyCodef {
-	
-	private final ObjectMapper mapper = new ObjectMapper();
-	private final EasyCodefProperties properties = new EasyCodefProperties();
 
-    private EasyCodefToken token;
-    private EasyCodefToken demoToken;
+    private final ObjectMapper MAPPER = new ObjectMapper();
+    private final TypeReference<Map<String, Object>> MAP_TYPE_REF = new TypeReference<Map<String, Object>>() {};
+	private final EasyCodefProperties properties = new EasyCodefProperties();
+    private final EasyCodefTokenManager tokenManager = new EasyCodefTokenManager(properties);
 
 	public void setClientInfo(String clientId, String clientSecret) {
 		properties.setClientInfo(clientId, clientSecret);
@@ -38,81 +38,74 @@ public class EasyCodef {
 	}
 
 	public String requestProduct(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		if(checkClientInfo(serviceType.getServiceType())) {
-            EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.EMPTY_CLIENT_INFO);
-            return mapper.writeValueAsString(response);
-		}
-		
-		if(checkPublicKey()) {
-            EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.EMPTY_PUBLIC_KEY);
-            return mapper.writeValueAsString(response);
-		}
+        EasyCodefResponse validationError = validateCommonRequirements(serviceType);
+        if (validationError != null) {
+            return MAPPER.writeValueAsString(validationError);
+        }
 
 		if(!checkTwoWayKeyword(parameterMap)) {
             EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.INVALID_2WAY_KEYWORD);
-            return mapper.writeValueAsString(response);
+            return MAPPER.writeValueAsString(response);
 		}
 
         String accessToken = requestToken(serviceType);
         String urlPath = serviceType.getServiceType() + productUrl;
 		EasyCodefResponse response = EasyCodefConnector.requestProduct(urlPath, accessToken, parameterMap);
 
-		return mapper.writeValueAsString(response);
+		return MAPPER.writeValueAsString(response);
 	}
 
     public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws JsonProcessingException {
-        if (checkClientInfo(serviceType.getServiceType())) {
-            EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.EMPTY_CLIENT_INFO);
-            return mapper.writeValueAsString(response);
-        }
-
-        if (checkPublicKey()) {
-            EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.EMPTY_PUBLIC_KEY);
-            return mapper.writeValueAsString(response);
+        EasyCodefResponse validationError = validateCommonRequirements(serviceType);
+        if (validationError != null) {
+            return MAPPER.writeValueAsString(validationError);
         }
 
         if (!checkTwoWayInfo(parameterMap)) {
             EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.INVALID_2WAY_INFO);
-            return mapper.writeValueAsString(response);
+            return MAPPER.writeValueAsString(response);
         }
 
         String accessToken = requestToken(serviceType);
         String urlPath = serviceType.getServiceType() + productUrl;
         EasyCodefResponse response = EasyCodefConnector.requestProduct(urlPath, accessToken, parameterMap);
 
-        return mapper.writeValueAsString(response);
-    }
-	
-	private boolean checkClientInfo(String serviceType) {
-		if(Objects.equals(serviceType, CodefHost.API_DOMAIN)) {
-			if(properties.getClientId() == null || properties.getClientId().trim().isEmpty()) {
-				return true;
-			}
-            return properties.getClientSecret() == null || properties.getClientSecret().trim().isEmpty();
-		} else {
-			if(properties.getDemoClientId() == null || properties.getDemoClientId().trim().isEmpty()) {
-				return true;
-			}
-            return properties.getDemoClientSecret() == null || properties.getDemoClientSecret().trim().isEmpty();
-		}
+        return MAPPER.writeValueAsString(response);
     }
 
-	private boolean checkPublicKey() {
-        return properties.getPublicKey() == null || properties.getPublicKey().trim().isEmpty();
+    private EasyCodefResponse validateCommonRequirements(EasyCodefServiceType serviceType) {
+        if (properties.checkClientInfo(serviceType)) {
+            return ResponseHandler.fromError(EasyCodefError.EMPTY_CLIENT_INFO);
+        }
+
+        if (properties.checkPublicKey()) {
+            return ResponseHandler.fromError(EasyCodefError.EMPTY_PUBLIC_KEY);
+        }
+
+        return null;
     }
 
-	@SuppressWarnings("unchecked")
 	private boolean checkTwoWayInfo(Map<String, Object> parameterMap) {
-		if(!parameterMap.containsKey("is2Way") || !(parameterMap.get("is2Way") instanceof Boolean) || !(boolean)parameterMap.get("is2Way")){
-			return false;
-		}
-		
-		if(!parameterMap.containsKey("twoWayInfo")) {
-			return false;
-		}
-		
-		Map<String, Object> twoWayInfoMap = (Map<String, Object>)parameterMap.get("twoWayInfo");
-        return twoWayInfoMap.containsKey("jobIndex") && twoWayInfoMap.containsKey("threadIndex") && twoWayInfoMap.containsKey("jti") && twoWayInfoMap.containsKey("twoWayTimestamp");
+        Object is2WayObj = parameterMap.get("is2Way");
+        if (!(is2WayObj instanceof Boolean) || !((Boolean) is2WayObj)) {
+            return false;
+        }
+
+        Object twoWayInfoObj = parameterMap.get("twoWayInfo");
+        if (!(twoWayInfoObj instanceof Map)) {
+            return false;
+        }
+
+        try {
+            Map<String, Object> twoWayInfoMap = MAPPER.convertValue(twoWayInfoObj, MAP_TYPE_REF);
+
+            return twoWayInfoMap.containsKey("jobIndex")
+                    && twoWayInfoMap.containsKey("threadIndex")
+                    && twoWayInfoMap.containsKey("jti")
+                    && twoWayInfoMap.containsKey("twoWayTimestamp");
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
 	private boolean checkTwoWayKeyword(Map<String, Object> parameterMap) {
@@ -124,39 +117,10 @@ public class EasyCodef {
 	}
 
 	public String requestToken(EasyCodefServiceType serviceType) {
-        EasyCodefToken token = getOrCreateToken(serviceType).validateAndRefreshToken();
-        return token.getAccessToken();
+        return tokenManager.getAccessToken(serviceType);
 	}
 
 	public String requestNewToken(EasyCodefServiceType serviceType) {
-        if (Objects.equals(serviceType.getServiceType(), CodefHost.API_DOMAIN)) {
-            token = new EasyCodefToken(
-                    properties.getClientId(), properties.getClientSecret()
-            );
-            return token.getAccessToken();
-        } else {
-            demoToken = new EasyCodefToken(
-                    properties.getDemoClientId(), properties.getDemoClientSecret()
-            );
-            return demoToken.getAccessToken();
-        }
+        return tokenManager.getNewAccessToken(serviceType);
 	}
-
-    private EasyCodefToken getOrCreateToken(EasyCodefServiceType serviceType) {
-        if (Objects.equals(serviceType.getServiceType(), CodefHost.API_DOMAIN)) {
-            if (token == null) {
-                token = new EasyCodefToken(
-                        properties.getClientId(), properties.getClientSecret()
-                );
-            }
-            return token;
-        } else {
-            if (demoToken == null) {
-                demoToken = new EasyCodefToken(
-                        properties.getDemoClientId(), properties.getDemoClientSecret()
-                );
-            }
-            return demoToken;
-        }
-    }
 }
