@@ -1,13 +1,14 @@
 package io.codef.api;
 
 import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.error.EasyCodefError;
 import io.codef.api.dto.HttpResponse;
 import io.codef.api.http.HttpClient;
 import io.codef.api.http.ApacheHttpClient;
 import io.codef.api.http.HttpRequestBuilder;
 
-import java.io.IOException;
+import static io.codef.api.ResponseHandler.handleErrorResponse;
+import static io.codef.api.ResponseHandler.processResponse;
+import static io.codef.api.error.EasyCodefError.LIBRARY_SENDER_ERROR;
 
 public class EasyCodefConnector {
 
@@ -16,16 +17,16 @@ public class EasyCodefConnector {
     private EasyCodefConnector() {}
 
     protected static EasyCodefResponse execute(HttpRequestBuilder builder) {
-        try {
-            HttpResponse httpResponse = httpClient.postJson(
-                    builder.getUrl(),
-                    builder.getHeaders(),
-                    builder.getBody()
-            );
-            return ResponseHandler.processResponse(httpResponse);
+        HttpResponse httpResponse = httpClient.postJson(
+                builder.getUrl(),
+                builder.getHeaders(),
+                builder.getBody()
+        );
 
-        } catch (IOException e) {
-            return ResponseHandler.handleErrorResponse(EasyCodefError.LIBRARY_SENDER_ERROR, e.getMessage());
+        if (httpResponse.getStatusCode() == -1) {
+            return handleErrorResponse(LIBRARY_SENDER_ERROR, httpResponse.getBody());
         }
+
+        return processResponse(httpResponse);
     }
 }

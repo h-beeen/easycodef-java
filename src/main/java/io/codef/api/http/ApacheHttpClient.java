@@ -19,7 +19,7 @@ public class ApacheHttpClient implements HttpClient {
             String url,
             Map<String, String> headers,
             String body
-    ) throws IOException {
+    ) {
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpPost httpPost = new HttpPost(url);
 
@@ -36,6 +36,8 @@ public class ApacheHttpClient implements HttpClient {
                                 EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
                 return new HttpResponse(statusCode, responseBody);
             }
+        } catch (IOException e) {
+            return new HttpResponse(-1, e.getMessage());
         }
     }
 }
