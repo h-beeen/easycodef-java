@@ -123,26 +123,6 @@ public class EasyCodef {
 		return requestProduct(CodefPath.CREATE_ACCOUNT, serviceType, parameterMap);
 	}
 
-	public String addAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		return requestProduct(CodefPath.ADD_ACCOUNT, serviceType, parameterMap);
-	}
-
-	public String updateAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		return requestProduct(CodefPath.UPDATE_ACCOUNT, serviceType, parameterMap);
-	}
-
-	public String deleteAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		return requestProduct(CodefPath.DELETE_ACCOUNT, serviceType, parameterMap);
-	}
-
-	public String getAccountList(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		return requestProduct(CodefPath.GET_ACCOUNT_LIST, serviceType, parameterMap);
-	}
-
-	public String getConnectedIdList(EasyCodefServiceType serviceType) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
-		return requestProduct(CodefPath.GET_CID_LIST, serviceType, null);
-	}
-
 	public String requestToken(EasyCodefServiceType serviceType) {
         EasyCodefToken token = getOrCreateToken(serviceType).validateAndRefreshToken();
         return token.getAccessToken();
