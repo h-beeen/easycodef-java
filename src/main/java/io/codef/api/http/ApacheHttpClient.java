@@ -23,9 +23,7 @@ public class ApacheHttpClient implements HttpClient {
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpPost httpPost = new HttpPost(url);
 
-            if (headers != null) {
-                headers.forEach(httpPost::setHeader);
-            }
+            headers.forEach(httpPost::setHeader);
 
             if (body != null && !body.isEmpty()) {
                 httpPost.setEntity(new StringEntity(body, StandardCharsets.UTF_8));
