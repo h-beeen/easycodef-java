@@ -14,7 +14,7 @@ public class EasyCodefValidator {
 
     private EasyCodefValidator() {}
 
-    protected static EasyCodefResponse validateCommonRequirements(EasyCodefProperties properties, CodefServiceType serviceType) {
+    protected static EasyCodefResponse validateRequest(EasyCodefProperties properties, CodefServiceType serviceType) {
         if (properties.checkClientInfo(serviceType)) {
             return handleErrorResponse(EMPTY_CLIENT_INFO);
         }
@@ -28,22 +28,18 @@ public class EasyCodefValidator {
 
     protected static boolean checkTwoWayInfo(Map<String, Object> parameterMap) {
         Object is2WayObj = parameterMap.get(IS_2WAY);
-        if (!(is2WayObj instanceof Boolean) || !((Boolean) is2WayObj)) {
+        if (!Boolean.TRUE.equals(is2WayObj)) {
             return false;
         }
 
         Object twoWayInfoObj = parameterMap.get(TWO_WAY_INFO);
 
-        try {
-            Map<String, Object> twoWayInfoMap = mapper().convertValue(twoWayInfoObj, mapTypeRef());
+        Map<String, Object> twoWayInfoMap = mapper().convertValue(twoWayInfoObj, mapTypeRef());
 
-            return twoWayInfoMap.containsKey(JOB_INDEX)
-                    && twoWayInfoMap.containsKey(THREAD_INDEX)
-                    && twoWayInfoMap.containsKey(JTI)
-                    && twoWayInfoMap.containsKey(TWO_WAY_TIMESTAMP);
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        return twoWayInfoMap.containsKey(JOB_INDEX)
+                && twoWayInfoMap.containsKey(THREAD_INDEX)
+                && twoWayInfoMap.containsKey(JTI)
+                && twoWayInfoMap.containsKey(TWO_WAY_TIMESTAMP);
     }
 
     protected static boolean checkTwoWayKeyword(Map<String, Object> parameterMap) {

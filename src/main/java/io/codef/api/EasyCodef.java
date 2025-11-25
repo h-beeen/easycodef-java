@@ -35,7 +35,7 @@ public class EasyCodef {
 	}
 
 	public String requestProduct(String productUrl, CodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {
-        EasyCodefResponse validationError = validateCommonRequirements(properties, serviceType);
+        EasyCodefResponse validationError = validateRequest(properties, serviceType);
         if (validationError != null) {
             return mapper().writeValueAsString(validationError);
         }
@@ -53,7 +53,7 @@ public class EasyCodef {
 	}
 
     public String requestCertification(String productUrl, CodefServiceType serviceType, HashMap<String, Object> parameterMap) throws JsonProcessingException {
-        EasyCodefResponse validationError = validateCommonRequirements(properties, serviceType);
+        EasyCodefResponse validationError = validateRequest(properties, serviceType);
         if (validationError != null) {
             return mapper().writeValueAsString(validationError);
         }
