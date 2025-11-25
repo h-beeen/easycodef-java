@@ -12,6 +12,7 @@ import io.codef.api.error.EasyCodefError;
 
 import static io.codef.api.EasyCodefUtil.mapper;
 import static io.codef.api.EasyCodefUtil.mapTypeRef;
+import static io.codef.api.constants.CodefConstant.*;
 
 public class EasyCodef {
 
@@ -34,7 +35,7 @@ public class EasyCodef {
 		return properties.getPublicKey();
 	}
 
-	public String requestProduct(String productUrl, CodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+	public String requestProduct(String productUrl, CodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {
         EasyCodefResponse validationError = validateCommonRequirements(serviceType);
         if (validationError != null) {
             return mapper().writeValueAsString(validationError);
@@ -83,12 +84,12 @@ public class EasyCodef {
     }
 
 	private boolean checkTwoWayInfo(Map<String, Object> parameterMap) {
-        Object is2WayObj = parameterMap.get("is2Way");
+        Object is2WayObj = parameterMap.get(IS_2WAY);
         if (!(is2WayObj instanceof Boolean) || !((Boolean) is2WayObj)) {
             return false;
         }
 
-        Object twoWayInfoObj = parameterMap.get("twoWayInfo");
+        Object twoWayInfoObj = parameterMap.get(TWO_WAY_INFO);
         if (!(twoWayInfoObj instanceof Map)) {
             return false;
         }
@@ -96,10 +97,10 @@ public class EasyCodef {
         try {
             Map<String, Object> twoWayInfoMap = mapper().convertValue(twoWayInfoObj, mapTypeRef());
 
-            return twoWayInfoMap.containsKey("jobIndex")
-                    && twoWayInfoMap.containsKey("threadIndex")
-                    && twoWayInfoMap.containsKey("jti")
-                    && twoWayInfoMap.containsKey("twoWayTimestamp");
+            return twoWayInfoMap.containsKey(JOB_INDEX)
+                    && twoWayInfoMap.containsKey(THREAD_INDEX)
+                    && twoWayInfoMap.containsKey(JTI)
+                    && twoWayInfoMap.containsKey(TWO_WAY_TIMESTAMP);
         } catch (IllegalArgumentException e) {
             return false;
         }
@@ -109,7 +110,7 @@ public class EasyCodef {
         return parameterMap == null || (!parameterMap.containsKey("is2Way") && !parameterMap.containsKey("twoWayInfo"));
     }
 
-	public String createAccount(CodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+	public String createAccount(CodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {
 		return requestProduct(CodefPath.CREATE_ACCOUNT, serviceType, parameterMap);
 	}
 
