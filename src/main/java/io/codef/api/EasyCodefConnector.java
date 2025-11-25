@@ -29,7 +29,7 @@ public class EasyCodefConnector {
             return ResponseHandler.processResponse(httpResponse, builder.getUrl());
 
         } catch (IOException e) {
-            return ResponseHandler.fromError(EasyCodefError.LIBRARY_SENDER_ERROR, e.getMessage());
+            return ResponseHandler.handleErrorResponse(EasyCodefError.LIBRARY_SENDER_ERROR, e.getMessage());
         }
     }
 
@@ -54,7 +54,7 @@ public class EasyCodefConnector {
                     .body(jsonBody);
             return execute(requestBuilder);
         } catch (JsonProcessingException e) {
-            return ResponseHandler.fromError(EasyCodefError.INVALID_JSON, e.getMessage());
+            return ResponseHandler.handleErrorResponse(EasyCodefError.INVALID_JSON, e.getMessage());
         }
     }
 }

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
-import io.codef.api.constants.EasyCodefConstant;
+import io.codef.api.constants.CodefConstant;
 import io.codef.api.dto.EasyCodefResponse;
 import org.apache.commons.codec.binary.Base64;
 
@@ -46,11 +46,11 @@ public class EasyCodefToken {
 
         Map<String, Object> tokenMap = mapper().convertValue(data, mapTypeRef());
 
-        Optional.ofNullable(tokenMap.get(EasyCodefConstant.ACCESS_TOKEN))
+        Optional.ofNullable(tokenMap.get(CodefConstant.ACCESS_TOKEN))
                 .map(String::valueOf)
                 .ifPresent(token -> this.accessToken = token);
 
-        Optional.ofNullable(tokenMap.get(EasyCodefConstant.EXPIRES_IN))
+        Optional.ofNullable(tokenMap.get(CodefConstant.EXPIRES_IN))
                 .map(v -> Integer.parseInt(String.valueOf(v)))
                 .ifPresent(exp -> this.expiresAt = LocalDateTime.now().plusSeconds(exp));
     }

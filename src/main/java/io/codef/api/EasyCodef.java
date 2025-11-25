@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.codef.api.constants.CodefPath;
-import io.codef.api.constants.EasyCodefServiceType;
+import io.codef.api.constants.CodefServiceType;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
 
@@ -34,14 +34,14 @@ public class EasyCodef {
 		return properties.getPublicKey();
 	}
 
-	public String requestProduct(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+	public String requestProduct(String productUrl, CodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
         EasyCodefResponse validationError = validateCommonRequirements(serviceType);
         if (validationError != null) {
             return mapper().writeValueAsString(validationError);
         }
 
 		if(!checkTwoWayKeyword(parameterMap)) {
-            EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.INVALID_2WAY_KEYWORD);
+            EasyCodefResponse response = ResponseHandler.handleErrorResponse(EasyCodefError.INVALID_2WAY_KEYWORD);
             return mapper().writeValueAsString(response);
 		}
 
@@ -52,14 +52,14 @@ public class EasyCodef {
 		return mapper().writeValueAsString(response);
 	}
 
-    public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws JsonProcessingException {
+    public String requestCertification(String productUrl, CodefServiceType serviceType, HashMap<String, Object> parameterMap) throws JsonProcessingException {
         EasyCodefResponse validationError = validateCommonRequirements(serviceType);
         if (validationError != null) {
             return mapper().writeValueAsString(validationError);
         }
 
         if (!checkTwoWayInfo(parameterMap)) {
-            EasyCodefResponse response = ResponseHandler.fromError(EasyCodefError.INVALID_2WAY_INFO);
+            EasyCodefResponse response = ResponseHandler.handleErrorResponse(EasyCodefError.INVALID_2WAY_INFO);
             return mapper().writeValueAsString(response);
         }
 
@@ -70,13 +70,13 @@ public class EasyCodef {
         return mapper().writeValueAsString(response);
     }
 
-    private EasyCodefResponse validateCommonRequirements(EasyCodefServiceType serviceType) {
+    private EasyCodefResponse validateCommonRequirements(CodefServiceType serviceType) {
         if (properties.checkClientInfo(serviceType)) {
-            return ResponseHandler.fromError(EasyCodefError.EMPTY_CLIENT_INFO);
+            return ResponseHandler.handleErrorResponse(EasyCodefError.EMPTY_CLIENT_INFO);
         }
 
         if (properties.checkPublicKey()) {
-            return ResponseHandler.fromError(EasyCodefError.EMPTY_PUBLIC_KEY);
+            return ResponseHandler.handleErrorResponse(EasyCodefError.EMPTY_PUBLIC_KEY);
         }
 
         return null;
@@ -109,15 +109,15 @@ public class EasyCodef {
         return parameterMap == null || (!parameterMap.containsKey("is2Way") && !parameterMap.containsKey("twoWayInfo"));
     }
 
-	public String createAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
+	public String createAccount(CodefServiceType serviceType, Map<String, Object> parameterMap) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
 		return requestProduct(CodefPath.CREATE_ACCOUNT, serviceType, parameterMap);
 	}
 
-	public String requestToken(EasyCodefServiceType serviceType) {
+	public String requestToken(CodefServiceType serviceType) {
         return tokenManager.getAccessToken(serviceType);
 	}
 
-	public String requestNewToken(EasyCodefServiceType serviceType) {
+	public String requestNewToken(CodefServiceType serviceType) {
         return tokenManager.getNewAccessToken(serviceType);
 	}
 }

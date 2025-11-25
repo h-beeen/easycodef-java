@@ -2,7 +2,7 @@ package io.codef.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.codef.api.constants.CodefPath;
-import io.codef.api.constants.EasyCodefConstant;
+import io.codef.api.constants.CodefConstant;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.dto.HttpResponse;
 import io.codef.api.error.EasyCodefError;
@@ -24,21 +24,21 @@ public class ResponseHandler {
     protected static EasyCodefResponse processResponse(HttpResponse httpResponse, String url) {
         if (httpResponse.getStatusCode() != HttpURLConnection.HTTP_OK) {
             EasyCodefError error = EasyCodefError.fromHttpStatus(httpResponse.getStatusCode());
-            return fromError(error);
+            return handleErrorResponse(error);
         }
 
         try {
             String decoded = URLDecoder.decode(httpResponse.getBody(), StandardCharsets.UTF_8.name());
             Map<String, Object> responseMap = mapper().readValue(decoded, mapTypeRef());
 
-            return isTokenRequest(url) ? fromTokenResponse(responseMap) : fromProductResponse(responseMap);
+            return isTokenRequest(url) ? handleTokenResponse(responseMap) : handleProductResponse(responseMap);
 
         } catch (UnsupportedEncodingException e) {
-            return fromError(EasyCodefError.UNSUPPORTED_ENCODING, e.getMessage());
+            return handleErrorResponse(EasyCodefError.UNSUPPORTED_ENCODING, e.getMessage());
         } catch (JsonProcessingException e) {
-            return fromError(EasyCodefError.INVALID_JSON, e.getMessage());
+            return handleErrorResponse(EasyCodefError.INVALID_JSON, e.getMessage());
         } catch (Exception e) {
-            return fromError(EasyCodefError.LIBRARY_SENDER_ERROR, e.getMessage());
+            return handleErrorResponse(EasyCodefError.LIBRARY_SENDER_ERROR, e.getMessage());
         }
     }
 
@@ -46,23 +46,23 @@ public class ResponseHandler {
         return url.contains(CodefPath.GET_TOKEN);
     }
 
-    private static EasyCodefResponse fromTokenResponse(Map<String, Object> tokenMap) {
+    private static EasyCodefResponse handleTokenResponse(Map<String, Object> tokenMap) {
         return new EasyCodefResponse(null, tokenMap);
     }
 
-    private static EasyCodefResponse fromProductResponse(Map<String, Object> map) {
-        EasyCodefResponse.Result result = parseResult(map.get(EasyCodefConstant.RESULT));
-        Object data = map.get(EasyCodefConstant.DATA);
+    private static EasyCodefResponse handleProductResponse(Map<String, Object> map) {
+        EasyCodefResponse.Result result = parseResult(map.get(CodefConstant.RESULT));
+        Object data = map.get(CodefConstant.DATA);
 
         return new EasyCodefResponse(result, data);
     }
 
 
-    protected static EasyCodefResponse fromError(EasyCodefError error) {
-        return fromError(error, "");
+    protected static EasyCodefResponse handleErrorResponse(EasyCodefError error) {
+        return handleErrorResponse(error, "");
     }
 
-    protected static EasyCodefResponse fromError(EasyCodefError error, String extraMessage) {
+    protected static EasyCodefResponse handleErrorResponse(EasyCodefError error, String extraMessage) {
         EasyCodefResponse.Result result = new EasyCodefResponse.Result(
                 error.getCode(),
                 extraMessage,
@@ -81,10 +81,10 @@ public class ResponseHandler {
         try {
             Map<String, Object> resultMap = mapper().convertValue(resultObj, mapTypeRef());
             return new EasyCodefResponse.Result(
-                    getStringValue(resultMap, EasyCodefConstant.CODE),
-                    getStringValue(resultMap, EasyCodefConstant.EXTRA_MESSAGE),
-                    getStringValue(resultMap, EasyCodefConstant.MESSAGE),
-                    getStringValue(resultMap, EasyCodefConstant.TRANSACTION_ID)
+                    getStringValue(resultMap, CodefConstant.CODE),
+                    getStringValue(resultMap, CodefConstant.EXTRA_MESSAGE),
+                    getStringValue(resultMap, CodefConstant.MESSAGE),
+                    getStringValue(resultMap, CodefConstant.TRANSACTION_ID)
             );
         } catch (IllegalArgumentException e) {
             return null;

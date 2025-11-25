@@ -1,12 +1,12 @@
 package io.codef.api.constants;
 
-public enum EasyCodefServiceType {
+public enum CodefServiceType {
 	DEMO(CodefHost.DEMO_DOMAIN),
 	API(CodefHost.API_DOMAIN);
 	
 	private final String serviceType;
 	
-	EasyCodefServiceType(String serviceType) {
+	CodefServiceType(String serviceType) {
 		this.serviceType = serviceType;
 	}
 

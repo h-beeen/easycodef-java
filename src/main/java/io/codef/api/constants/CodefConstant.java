@@ -1,6 +1,6 @@
 package io.codef.api.constants;
 
-public class EasyCodefConstant {
+public class CodefConstant {
 
 	public static final String RESULT = "result";
 
