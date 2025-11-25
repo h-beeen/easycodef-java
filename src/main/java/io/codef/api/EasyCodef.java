@@ -3,12 +3,10 @@ package io.codef.api;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.codef.api.constants.CodefHost;
 import io.codef.api.constants.CodefPath;
 import io.codef.api.constants.EasyCodefServiceType;
 import io.codef.api.dto.EasyCodefResponse;

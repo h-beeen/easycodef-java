@@ -34,21 +34,17 @@ public class EasyCodefProperties {
 	}
 
     protected boolean checkClientInfo(EasyCodefServiceType serviceType) {
-        if(serviceType.isApiService()) {
-            if(clientId == null || clientId.trim().isEmpty()) {
-                return true;
-            }
-            return clientSecret == null || clientSecret.trim().isEmpty();
-        } else {
-            if(demoClientId == null || demoClientId.trim().isEmpty()) {
-                return true;
-            }
-            return demoClientSecret == null || demoClientSecret.trim().isEmpty();
-        }
+        String id = getClientIdByServiceType(serviceType);
+        String secret = getClientSecretByServiceType(serviceType);
+        return isNullOrEmpty(id) || isNullOrEmpty(secret);
     }
 
     protected boolean checkPublicKey() {
-        return publicKey == null || publicKey.trim().isEmpty();
+        return isNullOrEmpty(publicKey);
+    }
+
+    private boolean isNullOrEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 
     protected String getClientIdByServiceType(EasyCodefServiceType serviceType) {
