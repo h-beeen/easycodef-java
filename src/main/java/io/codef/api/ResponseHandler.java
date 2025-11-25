@@ -14,8 +14,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
-import static io.codef.api.EasyCodefUtil.mapper;
-import static io.codef.api.EasyCodefUtil.mapTypeRef;
+import static io.codef.api.util.JsonUtil.mapper;
+import static io.codef.api.util.JsonUtil.mapTypeRef;
 
 public class ResponseHandler {
 

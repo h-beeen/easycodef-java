@@ -1,4 +1,4 @@
-package io.codef.api;
+package io.codef.api.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,21 +9,15 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-import java.util.Map;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 
 public class EasyCodefUtil {
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final TypeReference<Map<String, Object>> MAP_TYPE_REF = new TypeReference<Map<String, Object>>() {};
 
 	public static String encryptRSA(String plainText, String publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		byte[] bytePublicKey = Base64.getDecoder().decode(publicKey);
@@ -44,12 +38,4 @@ public class EasyCodefUtil {
 
         return Base64.getEncoder().encodeToString(fileContent);
 	}
-
-    protected static ObjectMapper mapper() {
-        return MAPPER;
-    }
-
-    protected static TypeReference<Map<String, Object>> mapTypeRef() {
-        return MAP_TYPE_REF;
-    }
 }

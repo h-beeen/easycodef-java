@@ -13,7 +13,7 @@ import io.codef.api.http.HttpRequestBuilder;
 import java.io.IOException;
 import java.util.Map;
 
-import static io.codef.api.EasyCodefUtil.mapper;
+import static io.codef.api.util.JsonUtil.mapper;
 
 public class EasyCodefConnector {
 

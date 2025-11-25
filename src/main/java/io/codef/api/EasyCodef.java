@@ -1,6 +1,5 @@
 package io.codef.api;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,8 +9,8 @@ import io.codef.api.constants.CodefServiceType;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
 
-import static io.codef.api.EasyCodefUtil.mapper;
-import static io.codef.api.EasyCodefUtil.mapTypeRef;
+import static io.codef.api.util.JsonUtil.mapper;
+import static io.codef.api.util.JsonUtil.mapTypeRef;
 import static io.codef.api.constants.CodefConstant.*;
 
 public class EasyCodef {

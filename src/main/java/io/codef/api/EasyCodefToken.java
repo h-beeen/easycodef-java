@@ -8,8 +8,8 @@ import io.codef.api.constants.CodefConstant;
 import io.codef.api.dto.EasyCodefResponse;
 import org.apache.commons.codec.binary.Base64;
 
-import static io.codef.api.EasyCodefUtil.mapper;
-import static io.codef.api.EasyCodefUtil.mapTypeRef;
+import static io.codef.api.util.JsonUtil.mapper;
+import static io.codef.api.util.JsonUtil.mapTypeRef;
 
 public class EasyCodefToken {
 
