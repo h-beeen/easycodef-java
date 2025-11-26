@@ -40,8 +40,8 @@ public class ResponseHandler {
         JSONObject jsonResponse = JSON.parseObject(responseBody);
 
         Map<String, Object> tokenMap = new HashMap<>();
-        tokenMap.put("access_token", jsonResponse.getString("access_token"));
-        tokenMap.put("expires_in", jsonResponse.getString("expires_in"));
+        tokenMap.put(ACCESS_TOKEN, jsonResponse.getString(ACCESS_TOKEN));
+        tokenMap.put(EXPIRES_IN, jsonResponse.getString(EXPIRES_IN));
 
         return new EasyCodefResponse(null, tokenMap);
     }
