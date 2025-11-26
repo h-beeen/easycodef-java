@@ -9,6 +9,10 @@ public enum CodefError {
     EMPTY_CLIENT_INFO("상품 요청을 위해서는 클라이언트 정보가 필요합니다. 클라이언트 아이디와 시크릿 정보를 설정하세요."),
     EMPTY_PUBLIC_KEY("상품 요청을 위해서는 퍼블릭키가 필요합니다."),
 
+    PARSE_ERROR(
+            "An exception occurred because the client could not parse the server response in the expected format, possibly due to incorrect headers or body format."
+    ),
+
     RSA_ENCRYPTION_ERROR("RSA 암호화 과정에서 오류가 발생했습니다. PublicKey 값을 확인해 주세요."),
 
     INVALID_2WAY_INFO("2WAY 요청 처리를 위한 정보가 올바르지 않습니다. 응답으로 받은 항목을 그대로 2way요청 항목에 포함해야 합니다."),
