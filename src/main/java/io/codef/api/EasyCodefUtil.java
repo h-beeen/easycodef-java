@@ -1,4 +1,4 @@
-package io.codef.api.util;
+package io.codef.api;
 
 import java.io.File;
 import java.io.IOException;

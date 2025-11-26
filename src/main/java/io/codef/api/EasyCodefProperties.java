@@ -1,7 +1,5 @@
 package io.codef.api;
 
-import io.codef.api.constants.CodefServiceType;
-
 public class EasyCodefProperties {
 	
 	private String demoClientId 	= "";
@@ -33,7 +31,7 @@ public class EasyCodefProperties {
 		this.publicKey = publicKey;
 	}
 
-    protected boolean checkClientInfo(CodefServiceType serviceType) {
+    protected boolean checkClientInfo(EasyCodefServiceType serviceType) {
         String id = getClientIdByServiceType(serviceType);
         String secret = getClientSecretByServiceType(serviceType);
         return isNullOrEmpty(id) || isNullOrEmpty(secret);
@@ -43,11 +41,11 @@ public class EasyCodefProperties {
         return isNullOrEmpty(publicKey);
     }
 
-    protected String getClientIdByServiceType(CodefServiceType serviceType) {
+    protected String getClientIdByServiceType(EasyCodefServiceType serviceType) {
         return serviceType.isApiService() ? clientId : demoClientId;
     }
 
-    protected String getClientSecretByServiceType(CodefServiceType serviceType) {
+    protected String getClientSecretByServiceType(EasyCodefServiceType serviceType) {
         return serviceType.isApiService() ? clientSecret : demoClientSecret;
     }
 

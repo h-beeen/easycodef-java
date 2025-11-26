@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.codef.api.constants.CodefServiceType;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
 
@@ -32,7 +31,7 @@ public class EasyCodef {
 		return properties.getPublicKey();
 	}
 
-	public String requestProduct(String productUrl, CodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {
+	public String requestProduct(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {
         EasyCodefResponse validationError = EasyCodefValidator.validateRequest(properties, serviceType);
         if (validationError != null) {
             return mapper().writeValueAsString(validationError);
@@ -50,7 +49,7 @@ public class EasyCodef {
 		return mapper().writeValueAsString(response);
 	}
 
-    public String requestCertification(String productUrl, CodefServiceType serviceType, HashMap<String, Object> parameterMap) throws JsonProcessingException {
+    public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws JsonProcessingException {
         EasyCodefResponse validationError = EasyCodefValidator.validateRequest(properties, serviceType);
         if (validationError != null) {
             return mapper().writeValueAsString(validationError);
@@ -68,15 +67,15 @@ public class EasyCodef {
         return mapper().writeValueAsString(response);
     }
 
-	public String createAccount(CodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {
+	public String createAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {
 		return requestProduct(CREATE_ACCOUNT, serviceType, parameterMap);
 	}
 
-	public String requestToken(CodefServiceType serviceType) {
+	public String requestToken(EasyCodefServiceType serviceType) {
         return tokenManager.getAccessToken(serviceType);
 	}
 
-	public String requestNewToken(CodefServiceType serviceType) {
+	public String requestNewToken(EasyCodefServiceType serviceType) {
         return tokenManager.getNewAccessToken(serviceType);
 	}
 }

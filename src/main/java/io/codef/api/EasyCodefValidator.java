@@ -1,6 +1,5 @@
 package io.codef.api;
 
-import io.codef.api.constants.CodefServiceType;
 import io.codef.api.dto.EasyCodefResponse;
 
 import java.util.Map;
@@ -14,7 +13,7 @@ public class EasyCodefValidator {
 
     private EasyCodefValidator() {}
 
-    protected static EasyCodefResponse validateRequest(EasyCodefProperties properties, CodefServiceType serviceType) {
+    protected static EasyCodefResponse validateRequest(EasyCodefProperties properties, EasyCodefServiceType serviceType) {
         if (properties.checkClientInfo(serviceType)) {
             return handleErrorResponse(EMPTY_CLIENT_INFO);
         }
