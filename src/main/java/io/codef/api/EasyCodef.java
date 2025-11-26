@@ -5,7 +5,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.error.EasyCodefError;
+import io.codef.api.error.CodefError;
+import io.codef.api.error.CodefException;
 
 import static io.codef.api.constants.CodefPath.CREATE_ACCOUNT;
 import static io.codef.api.util.JsonUtil.mapper;
@@ -32,14 +33,10 @@ public class EasyCodef {
 	}
 
 	public String requestProduct(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {
-        EasyCodefResponse validationError = EasyCodefValidator.validateRequest(properties, serviceType);
-        if (validationError != null) {
-            return mapper().writeValueAsString(validationError);
-        }
+        EasyCodefValidator.validateRequest(properties, serviceType);
 
 		if(!EasyCodefValidator.checkTwoWayKeyword(parameterMap)) {
-            EasyCodefResponse response = ResponseHandler.handleErrorResponse(EasyCodefError.INVALID_2WAY_KEYWORD);
-            return mapper().writeValueAsString(response);
+            throw CodefException.from(CodefError.INVALID_2WAY_KEYWORD);
 		}
 
         String accessToken = requestToken(serviceType);
@@ -50,14 +47,10 @@ public class EasyCodef {
 	}
 
     public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws JsonProcessingException {
-        EasyCodefResponse validationError = EasyCodefValidator.validateRequest(properties, serviceType);
-        if (validationError != null) {
-            return mapper().writeValueAsString(validationError);
-        }
+        EasyCodefValidator.validateRequest(properties, serviceType);
 
         if (!EasyCodefValidator.checkTwoWayInfo(parameterMap)) {
-            EasyCodefResponse response = ResponseHandler.handleErrorResponse(EasyCodefError.INVALID_2WAY_INFO);
-            return mapper().writeValueAsString(response);
+            throw CodefException.from(CodefError.INVALID_2WAY_INFO);
         }
 
         String accessToken = requestToken(serviceType);

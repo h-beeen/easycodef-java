@@ -2,11 +2,12 @@ package io.codef.api;
 
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.dto.HttpResponse;
+import io.codef.api.error.CodefException;
 import io.codef.api.http.HttpClient;
 import io.codef.api.http.HttpClientFactory;
 import io.codef.api.http.HttpRequestBuilder;
 
-import static io.codef.api.error.EasyCodefError.LIBRARY_SENDER_ERROR;
+import static io.codef.api.error.CodefError.IO_ERROR;
 
 public class EasyCodefConnector {
 
@@ -21,7 +22,7 @@ public class EasyCodefConnector {
         );
 
         if (httpResponse.getStatusCode() == -1) {
-            return ResponseHandler.handleErrorResponse(LIBRARY_SENDER_ERROR, httpResponse.getBody());
+            throw CodefException.from(IO_ERROR);
         }
 
         return ResponseHandler.processResponse(httpResponse);

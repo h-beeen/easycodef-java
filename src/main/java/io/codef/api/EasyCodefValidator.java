@@ -1,28 +1,25 @@
 package io.codef.api;
 
-import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.error.CodefException;
 
 import java.util.Map;
 
-import static io.codef.api.ResponseHandler.handleErrorResponse;
 import static io.codef.api.constants.CodefConstant.*;
-import static io.codef.api.error.EasyCodefError.*;
+import static io.codef.api.error.CodefError.*;
 import static io.codef.api.util.JsonUtil.*;
 
 public class EasyCodefValidator {
 
     private EasyCodefValidator() {}
 
-    protected static EasyCodefResponse validateRequest(EasyCodefProperties properties, EasyCodefServiceType serviceType) {
+    protected static void validateRequest(EasyCodefProperties properties, EasyCodefServiceType serviceType) {
         if (properties.checkClientInfo(serviceType)) {
-            return handleErrorResponse(EMPTY_CLIENT_INFO);
+            throw CodefException.from(EMPTY_CLIENT_INFO);
         }
 
         if (properties.checkPublicKey()) {
-            return handleErrorResponse(EMPTY_PUBLIC_KEY);
+            throw CodefException.from(EMPTY_PUBLIC_KEY);
         }
-
-        return null;
     }
 
     protected static boolean checkTwoWayInfo(Map<String, Object> parameterMap) {
