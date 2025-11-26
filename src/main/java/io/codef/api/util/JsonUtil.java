@@ -2,7 +2,6 @@ package io.codef.api.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.Map;
 
 public class JsonUtil {
