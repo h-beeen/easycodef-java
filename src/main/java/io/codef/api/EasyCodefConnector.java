@@ -6,8 +6,6 @@ import io.codef.api.http.HttpClient;
 import io.codef.api.http.HttpClientFactory;
 import io.codef.api.http.HttpRequestBuilder;
 
-import static io.codef.api.ResponseHandler.handleErrorResponse;
-import static io.codef.api.ResponseHandler.processResponse;
 import static io.codef.api.error.EasyCodefError.LIBRARY_SENDER_ERROR;
 
 public class EasyCodefConnector {
@@ -23,9 +21,9 @@ public class EasyCodefConnector {
         );
 
         if (httpResponse.getStatusCode() == -1) {
-            return handleErrorResponse(LIBRARY_SENDER_ERROR, httpResponse.getBody());
+            return ResponseHandler.handleErrorResponse(LIBRARY_SENDER_ERROR, httpResponse.getBody());
         }
 
-        return processResponse(httpResponse);
+        return ResponseHandler.processResponse(httpResponse);
     }
 }

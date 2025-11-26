@@ -8,8 +8,6 @@ import io.codef.api.constants.CodefServiceType;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.EasyCodefError;
 
-import static io.codef.api.EasyCodefValidator.*;
-import static io.codef.api.ResponseHandler.handleErrorResponse;
 import static io.codef.api.constants.CodefPath.CREATE_ACCOUNT;
 import static io.codef.api.util.JsonUtil.mapper;
 
@@ -35,13 +33,13 @@ public class EasyCodef {
 	}
 
 	public String requestProduct(String productUrl, CodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {
-        EasyCodefResponse validationError = validateRequest(properties, serviceType);
+        EasyCodefResponse validationError = EasyCodefValidator.validateRequest(properties, serviceType);
         if (validationError != null) {
             return mapper().writeValueAsString(validationError);
         }
 
-		if(!checkTwoWayKeyword(parameterMap)) {
-            EasyCodefResponse response = handleErrorResponse(EasyCodefError.INVALID_2WAY_KEYWORD);
+		if(!EasyCodefValidator.checkTwoWayKeyword(parameterMap)) {
+            EasyCodefResponse response = ResponseHandler.handleErrorResponse(EasyCodefError.INVALID_2WAY_KEYWORD);
             return mapper().writeValueAsString(response);
 		}
 
@@ -53,13 +51,13 @@ public class EasyCodef {
 	}
 
     public String requestCertification(String productUrl, CodefServiceType serviceType, HashMap<String, Object> parameterMap) throws JsonProcessingException {
-        EasyCodefResponse validationError = validateRequest(properties, serviceType);
+        EasyCodefResponse validationError = EasyCodefValidator.validateRequest(properties, serviceType);
         if (validationError != null) {
             return mapper().writeValueAsString(validationError);
         }
 
-        if (!checkTwoWayInfo(parameterMap)) {
-            EasyCodefResponse response = handleErrorResponse(EasyCodefError.INVALID_2WAY_INFO);
+        if (!EasyCodefValidator.checkTwoWayInfo(parameterMap)) {
+            EasyCodefResponse response = ResponseHandler.handleErrorResponse(EasyCodefError.INVALID_2WAY_INFO);
             return mapper().writeValueAsString(response);
         }
 

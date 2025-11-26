@@ -6,15 +6,16 @@ import io.codef.api.dto.HttpResponse;
 import io.codef.api.error.EasyCodefError;
 
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
 import static io.codef.api.constants.CodefConstant.*;
 import static io.codef.api.error.EasyCodefError.*;
-import static io.codef.api.util.JsonUtil.*;
-import static java.net.HttpURLConnection.HTTP_OK;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static io.codef.api.util.JsonUtil.mapTypeRef;
+import static io.codef.api.util.JsonUtil.mapper;
 
 public class ResponseHandler {
 
@@ -23,13 +24,13 @@ public class ResponseHandler {
     private ResponseHandler() {}
 
     protected static EasyCodefResponse processResponse(HttpResponse httpResponse) {
-        if (httpResponse.getStatusCode() != HTTP_OK) {
-            EasyCodefError error = fromHttpStatus(httpResponse.getStatusCode());
+        if (httpResponse.getStatusCode() != HttpURLConnection.HTTP_OK) {
+            EasyCodefError error = EasyCodefError.fromHttpStatus(httpResponse.getStatusCode());
             return handleErrorResponse(error);
         }
 
         try {
-            String decoded = URLDecoder.decode(httpResponse.getBody(), UTF_8.name());
+            String decoded = URLDecoder.decode(httpResponse.getBody(), StandardCharsets.UTF_8.name());
             Map<String, Object> responseMap = mapper().readValue(decoded, mapTypeRef());
 
             return responseMap.containsKey(ACCESS_TOKEN)

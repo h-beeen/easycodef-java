@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
-import io.codef.api.constants.CodefConstant;
 import io.codef.api.dto.EasyCodefResponse;
 import org.apache.commons.codec.binary.Base64;
 

@@ -6,8 +6,6 @@ import io.codef.api.http.HttpRequestBuilder;
 
 import java.util.Map;
 
-import static io.codef.api.EasyCodefConnector.execute;
-import static io.codef.api.ResponseHandler.handleErrorResponse;
 import static io.codef.api.constants.CodefHost.OAUTH_DOMAIN;
 import static io.codef.api.constants.CodefPath.GET_TOKEN;
 import static io.codef.api.error.EasyCodefError.INVALID_JSON;
@@ -21,7 +19,7 @@ public class EasyCodefApiClient {
         HttpRequestBuilder httpRequestBuilder = HttpRequestBuilder.builder()
                 .url(OAUTH_DOMAIN + GET_TOKEN)
                 .header("Authorization", oauthToken);
-        return execute(httpRequestBuilder);
+        return EasyCodefConnector.execute(httpRequestBuilder);
     }
 
     protected static EasyCodefResponse requestProduct(
@@ -36,9 +34,9 @@ public class EasyCodefApiClient {
                     .header("Authorization", "Bearer " + accessToken)
                     .header("Content-Type", "application/json")
                     .body(jsonBody);
-            return execute(requestBuilder);
+            return EasyCodefConnector.execute(requestBuilder);
         } catch (JsonProcessingException e) {
-            return handleErrorResponse(INVALID_JSON, e.getMessage());
+            return ResponseHandler.handleErrorResponse(INVALID_JSON, e.getMessage());
         }
     }
 }
