@@ -17,12 +17,6 @@ public class EasyCodefTokenManager {
         return token.getAccessToken();
     }
 
-    public String getNewAccessToken(EasyCodefServiceType serviceType) {
-        EasyCodefToken newToken = createNewToken();
-        tokens.put(serviceType, newToken);
-        return newToken.getAccessToken();
-    }
-
     private EasyCodefToken getOrCreateToken(EasyCodefServiceType serviceType) {
         EasyCodefToken token = tokens.get(serviceType);
         if (token == null) {
