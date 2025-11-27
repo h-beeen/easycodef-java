@@ -1,12 +1,12 @@
 package io.codef.api;
 
+import com.alibaba.fastjson2.JSON;
 import io.codef.api.error.CodefException;
 
 import java.util.Map;
 
 import static io.codef.api.constants.CodefConstant.*;
 import static io.codef.api.error.CodefError.*;
-import static io.codef.api.util.JsonUtil.*;
 
 public class EasyCodefValidator {
 
@@ -29,8 +29,9 @@ public class EasyCodefValidator {
         }
 
         Object twoWayInfoObj = parameterMap.get(TWO_WAY_INFO);
+        String jsonString = JSON.toJSONString(twoWayInfoObj);
 
-        Map<String, Object> twoWayInfoMap = mapper().convertValue(twoWayInfoObj, mapTypeRef());
+        Map<String, Object> twoWayInfoMap = JSON.parseObject(jsonString);
 
         return twoWayInfoMap.containsKey(JOB_INDEX)
                 && twoWayInfoMap.containsKey(THREAD_INDEX)

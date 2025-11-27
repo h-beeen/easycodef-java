@@ -1,14 +1,12 @@
 package io.codef.api;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
 
+import com.alibaba.fastjson2.JSONObject;
 import io.codef.api.dto.EasyCodefResponse;
 import org.apache.commons.codec.binary.Base64;
 
 import static io.codef.api.constants.CodefConstant.*;
-import static io.codef.api.util.JsonUtil.*;
 
 public class EasyCodefToken {
 
@@ -24,8 +22,9 @@ public class EasyCodefToken {
     }
 
     protected EasyCodefToken validateAndRefreshToken() {
-        Optional.of(expiresAt).filter(this::isTokenExpiringSoon)
-                .ifPresent(expiry -> refreshToken());
+        if (expiresAt == null || isTokenExpiringSoon(expiresAt)) {
+            refreshToken();
+        }
 
         return this;
     }
@@ -41,17 +40,17 @@ public class EasyCodefToken {
     }
 
     private void initializeToken(EasyCodefResponse response) {
-        Object data = response.getData();
+        JSONObject jsonObject = response.getData(JSONObject.class);
 
-        Map<String, Object> tokenMap = mapper().convertValue(data, mapTypeRef());
+        Object accessToken = jsonObject.get(ACCESS_TOKEN);
+        Object expiresIn = jsonObject.get(EXPIRES_IN);
 
-        Optional.ofNullable(tokenMap.get(ACCESS_TOKEN))
-                .map(String::valueOf)
-                .ifPresent(token -> this.accessToken = token);
+        if (accessToken == null || expiresIn == null) {
+            return;
+        }
 
-        Optional.ofNullable(tokenMap.get(EXPIRES_IN))
-                .map(v -> Integer.parseInt(String.valueOf(v)))
-                .ifPresent(exp -> this.expiresAt = LocalDateTime.now().plusSeconds(exp));
+        this.accessToken = String.valueOf(accessToken);
+        this.expiresAt = LocalDateTime.now().plusSeconds(Integer.parseInt(String.valueOf(expiresIn)));
     }
 
     private boolean isTokenExpiringSoon(LocalDateTime expiry) {
