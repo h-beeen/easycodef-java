@@ -7,7 +7,6 @@ public enum CodefError {
     UNSUPPORTED_ENCODING("지원하지 않는 형식으로 인코딩된 문자열입니다."),
 
     EMPTY_CLIENT_INFO("상품 요청을 위해서는 클라이언트 정보가 필요합니다. 클라이언트 아이디와 시크릿 정보를 설정하세요."),
-    EMPTY_PUBLIC_KEY("상품 요청을 위해서는 퍼블릭키가 필요합니다."),
 
     PARSE_ERROR("클라이언트가 서버 응답을 기대한 형식대로 파싱하지 못했습니다. 요청 형식을 확인해 주세요."),
 
@@ -21,6 +20,11 @@ public enum CodefError {
     FORBIDDEN("잘못된 요청입니다."),
     NOT_FOUND("요청하신 페이지(Resource)를 찾을 수 없습니다."),
     METHOD_NOT_ALLOWED("요청하신 방법(Method)이 잘못되었습니다."),
+
+    EMPTY_SERVICE_TYPE("A membership version is required for the product request. Please set the desired membership version."),
+    EMPTY_CLIENT_ID("Client ID is required for the product request. Please set the Client ID."),
+    EMPTY_CLIENT_SECRET("Client Secret is required for the product request. Please set the Client Secret."),
+    EMPTY_PUBLIC_KEY("A public key is required for the product request. Please set the public key information."),
 
     IO_ERROR("통신 요청에 실패했습니다. IP: 211.55.34.5, PORT: 443 방향의 Outbound 포트가 열려 있는지 확인해 주세요."),
     SERVER_ERROR("서버 처리중 에러가 발생 했습니다. 관리자에게 문의하세요.");

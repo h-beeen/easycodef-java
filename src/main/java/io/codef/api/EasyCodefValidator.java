@@ -1,6 +1,7 @@
 package io.codef.api;
 
 import com.alibaba.fastjson2.JSON;
+import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 
 import java.util.Map;
@@ -41,5 +42,13 @@ public class EasyCodefValidator {
 
     protected static boolean checkTwoWayKeyword(Map<String, Object> parameterMap) {
         return parameterMap == null || (!parameterMap.containsKey(IS_2WAY) && !parameterMap.containsKey(TWO_WAY_INFO));
+    }
+
+    protected static <T> T validateNotNullOrThrow(T object, CodefError codefError) {
+        if (object == null) {
+            throw CodefException.from(codefError);
+        }
+
+        return object;
     }
 }
