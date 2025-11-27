@@ -18,7 +18,7 @@ public class EasyCodefApiClient {
                 .url(OAUTH_DOMAIN + GET_TOKEN)
                 .header("Authorization", oauthToken);
 
-        return EasyCodefConnector.execute(httpRequestBuilder);
+        return EasyCodefApiSender.execute(httpRequestBuilder);
     }
 
     protected static EasyCodefResponse requestProduct(
@@ -33,6 +33,6 @@ public class EasyCodefApiClient {
                 .header("Content-Type", "application/json")
                 .body(jsonBody);
 
-        return EasyCodefConnector.execute(requestBuilder);
+        return EasyCodefApiSender.execute(requestBuilder);
     }
 }

@@ -9,9 +9,9 @@ import io.codef.api.http.HttpRequestBuilder;
 
 import static io.codef.api.error.CodefError.IO_ERROR;
 
-public class EasyCodefConnector {
+public class EasyCodefApiSender {
 
-    private EasyCodefConnector() {}
+    private EasyCodefApiSender() {}
 
     protected static EasyCodefResponse execute(HttpRequestBuilder builder) {
         HttpClient httpClient = HttpClientFactory.getInstance();
