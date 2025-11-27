@@ -1,25 +1,19 @@
 package io.codef.api;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.codef.api.dto.EasyCodefRequest;
-import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.error.CodefError;
-import io.codef.api.error.CodefException;
-import io.codef.api.util.JsonUtil;
-
-import static io.codef.api.constants.CodefPath.CREATE_ACCOUNT;
 
 public class EasyCodef {
 
 	private final EasyCodefProperties properties;
-    private final EasyCodefTokenManager tokenManager;
+    private final EasyCodefExecutor executor;
 
     protected EasyCodef(EasyCodefBuilder builder) {
-        this.properties = new EasyCodefProperties(builder);
-        this.tokenManager = new EasyCodefTokenManager(properties);
+        EasyCodefProperties properties = new EasyCodefProperties(builder);
+        EasyCodefTokenManager tokenManager = new EasyCodefTokenManager(properties);
+        EasyCodefExecutor executor = new EasyCodefExecutor(tokenManager);
+
+        this.properties = properties;
+        this.executor = executor;
     }
 
 	public String getPublicKey() {
@@ -27,40 +21,14 @@ public class EasyCodef {
 	}
 
     public String requestProduct(EasyCodefRequest request) {
-        return requestProduct(request.getProductUrl(), request.getParameterMap());
+        EasyCodefValidator.validateTwoWayKeywordsOrThrow(request.getParameterMap());
+
+        return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap());
     }
 
-	public String requestProduct(String productUrl, Map<String, Object> parameterMap) {
-        EasyCodefValidator.validateTwoWayKeywordsOrThrow(parameterMap);
+    public String requestCertification(EasyCodefRequest request) {
+        EasyCodefValidator.validateTwoWayInfoOrThrow(request.getParameterMap());
 
-        String accessToken = requestToken(properties.getServiceType());
-        String urlPath = properties.getServiceTypeHost() + productUrl;
-		EasyCodefResponse response = EasyCodefApiClient.requestProduct(urlPath, accessToken, parameterMap);
-
-		return JsonUtil.writeValueAsString(response);
-	}
-
-    public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) {
-        if (!EasyCodefValidator.checkTwoWayInfo(parameterMap)) {
-            throw CodefException.from(CodefError.INVALID_2WAY_INFO);
-        }
-
-        String accessToken = requestToken(serviceType);
-        String urlPath = serviceType.getServiceType() + productUrl;
-        EasyCodefResponse response = EasyCodefApiClient.requestProduct(urlPath, accessToken, parameterMap);
-
-        return JsonUtil.writeValueAsString(response);
+        return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap());
     }
-
-	public String createAccount(Map<String, Object> parameterMap) throws JsonProcessingException {
-		return requestProduct(CREATE_ACCOUNT, parameterMap);
-	}
-
-	public String requestToken(EasyCodefServiceType serviceType) {
-        return tokenManager.getAccessToken(serviceType);
-	}
-
-	public String requestNewToken(EasyCodefServiceType serviceType) {
-        return tokenManager.getNewAccessToken(serviceType);
-	}
 }
