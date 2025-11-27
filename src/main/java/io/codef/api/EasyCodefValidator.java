@@ -1,6 +1,6 @@
 package io.codef.api;
 
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 
@@ -12,21 +12,24 @@ public class EasyCodefValidator {
 
     private EasyCodefValidator() {}
 
-    protected static boolean checkTwoWayInfo(Map<String, Object> parameterMap) {
+    protected static void validateTwoWayInfoOrThrow(Map<String, Object> parameterMap) {
         Object is2WayObj = parameterMap.get(IS_2WAY);
-        if (!Boolean.TRUE.equals(is2WayObj)) {
-            return false;
+        if (Boolean.FALSE.equals(is2WayObj)) {
+            throw CodefException.from(CodefError.INVALID_2WAY_INFO);
         }
 
         Object twoWayInfoObj = parameterMap.get(TWO_WAY_INFO);
-        String jsonString = JSON.toJSONString(twoWayInfoObj);
 
-        Map<String, Object> twoWayInfoMap = JSON.parseObject(jsonString);
+        Map<String, Object> twoWayInfoMap = JSONObject.from(twoWayInfoObj);
 
-        return twoWayInfoMap.containsKey(JOB_INDEX)
+        boolean hasAllKeys = twoWayInfoMap.containsKey(JOB_INDEX)
                 && twoWayInfoMap.containsKey(THREAD_INDEX)
                 && twoWayInfoMap.containsKey(JTI)
                 && twoWayInfoMap.containsKey(TWO_WAY_TIMESTAMP);
+
+        if (!hasAllKeys) {
+            throw CodefException.from(CodefError.INVALID_2WAY_INFO);
+        }
     }
 
     public static void validateTwoWayKeywordsOrThrow(Map<String, Object> parameterMap) {
