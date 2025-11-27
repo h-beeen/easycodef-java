@@ -8,7 +8,6 @@ import java.util.Map;
 public class EasyCodefRequestBuilder {
 
     private String productUrl;
-    private EasyCodefServiceType serviceType;
     private Map<String, Object> parameterMap = new HashMap<>();
 
     public static EasyCodefRequestBuilder builder() {
@@ -20,17 +19,12 @@ public class EasyCodefRequestBuilder {
         return this;
     }
 
-    public EasyCodefRequestBuilder serviceType(EasyCodefServiceType serviceType) {
-        this.serviceType = serviceType;
-        return this;
-    }
-
     public EasyCodefRequestBuilder parameterMap(Map<String, Object> parameterMap) {
         this.parameterMap = parameterMap;
         return this;
     }
 
     public EasyCodefRequest build() {
-        return new EasyCodefRequest(productUrl, serviceType, parameterMap);
+        return new EasyCodefRequest(productUrl, parameterMap);
     }
 }

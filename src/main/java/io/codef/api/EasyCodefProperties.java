@@ -18,6 +18,10 @@ public class EasyCodefProperties {
         return serviceType;
     }
 
+    public String getServiceTypeHost() {
+        return serviceType.getServiceType();
+    }
+
     public String getPublicKey() {
         return publicKey;
     }

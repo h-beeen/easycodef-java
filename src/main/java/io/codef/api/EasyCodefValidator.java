@@ -7,21 +7,10 @@ import io.codef.api.error.CodefException;
 import java.util.Map;
 
 import static io.codef.api.constants.CodefConstant.*;
-import static io.codef.api.error.CodefError.*;
 
 public class EasyCodefValidator {
 
     private EasyCodefValidator() {}
-
-    protected static void validateRequest(EasyCodefProperties properties) {
-        if (properties.checkClientInfo()) {
-            throw CodefException.from(EMPTY_CLIENT_INFO);
-        }
-
-        if (properties.checkPublicKey()) {
-            throw CodefException.from(EMPTY_PUBLIC_KEY);
-        }
-    }
 
     protected static boolean checkTwoWayInfo(Map<String, Object> parameterMap) {
         Object is2WayObj = parameterMap.get(IS_2WAY);
@@ -44,7 +33,7 @@ public class EasyCodefValidator {
         return parameterMap == null || (!parameterMap.containsKey(IS_2WAY) && !parameterMap.containsKey(TWO_WAY_INFO));
     }
 
-    protected static <T> T validateNotNullOrThrow(T object, CodefError codefError) {
+    public static <T> T validateNotNullOrThrow(T object, CodefError codefError) {
         if (object == null) {
             throw CodefException.from(codefError);
         }
