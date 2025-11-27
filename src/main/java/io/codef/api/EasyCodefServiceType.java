@@ -15,8 +15,4 @@ public enum EasyCodefServiceType {
 	public String getServiceType() {
 		return serviceType;
 	}
-
-    public boolean isApiService() {
-        return this == API;
-    }
 }

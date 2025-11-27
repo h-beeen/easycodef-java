@@ -33,18 +33,4 @@ public class EasyCodefProperties {
     public String getClientSecret() {
         return clientSecret;
     }
-
-    protected boolean checkClientInfo() {
-        String id = getClientId();
-        String secret = getClientSecret();
-        return isNullOrEmpty(id) || isNullOrEmpty(secret);
-    }
-
-    protected boolean checkPublicKey() {
-        return isNullOrEmpty(publicKey);
-    }
-
-    private boolean isNullOrEmpty(String value) {
-        return value == null || value.trim().isEmpty();
-    }
 }

@@ -30,16 +30,4 @@ public class EasyCodefUtil {
             throw CodefException.of(CodefError.RSA_ENCRYPTION_ERROR, e);
         }
 	}
-
-	public static String encodeToFileString(String filePath) {
-        try {
-            File file = new File(filePath);
-
-            byte[] fileContent = FileUtils.readFileToByteArray(file);
-
-            return Base64.getEncoder().encodeToString(fileContent);
-        } catch (IOException e) {
-            throw new RuntimeException("파일을 읽는 중 오류가 발생했습니다: " + filePath, e);
-        }
-	}
 }
