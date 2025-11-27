@@ -31,4 +31,6 @@ public class CodefConstant {
     public static final String TWO_WAY_TIMESTAMP = "twoWayTimestamp";
 
     public static final String PATH_PREFIX = "/v1";
+
+    public static final String RSA = "RSA";
 }

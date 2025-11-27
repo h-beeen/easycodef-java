@@ -1,7 +1,7 @@
 package io.codef.api;
 
+import com.alibaba.fastjson2.JSON;
 import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.util.JsonUtil;
 
 import java.util.Map;
 
@@ -19,6 +19,6 @@ public class EasyCodefExecutor {
         String urlPath = serviceType.getServiceType() + productUrl;
 
         EasyCodefResponse response = EasyCodefApiClient.requestProduct(urlPath, accessToken, parameterMap);
-        return JsonUtil.writeValueAsString(response);
+        return JSON.toJSONString(response);
     }
 }

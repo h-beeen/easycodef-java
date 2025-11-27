@@ -1,8 +1,8 @@
 package io.codef.api;
 
+import com.alibaba.fastjson2.JSON;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.http.HttpRequestBuilder;
-import io.codef.api.util.JsonUtil;
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class EasyCodefApiClient {
             String accessToken,
             Map<String, Object> bodyMap
     ) {
-        String jsonBody = JsonUtil.writeValueAsString(bodyMap);
+        String jsonBody = JSON.toJSONString(bodyMap);
         HttpRequestBuilder requestBuilder = HttpRequestBuilder.builder()
                 .url(urlPath)
                 .header("Authorization", "Bearer " + accessToken)
