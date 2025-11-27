@@ -29,8 +29,14 @@ public class EasyCodefValidator {
                 && twoWayInfoMap.containsKey(TWO_WAY_TIMESTAMP);
     }
 
-    protected static boolean checkTwoWayKeyword(Map<String, Object> parameterMap) {
-        return parameterMap == null || (!parameterMap.containsKey(IS_2WAY) && !parameterMap.containsKey(TWO_WAY_INFO));
+    public static void validateTwoWayKeywordsOrThrow(Map<String, Object> parameterMap) {
+        if (parameterMap == null) {
+            return;
+        }
+
+        if (parameterMap.containsKey(IS_2WAY) || parameterMap.containsKey(TWO_WAY_INFO)) {
+            throw CodefException.from(CodefError.INVALID_2WAY_KEYWORD);
+        }
     }
 
     public static <T> T validateNotNullOrThrow(T object, CodefError codefError) {

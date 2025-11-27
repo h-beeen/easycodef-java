@@ -31,9 +31,7 @@ public class EasyCodef {
     }
 
 	public String requestProduct(String productUrl, Map<String, Object> parameterMap) {
-		if(!EasyCodefValidator.checkTwoWayKeyword(parameterMap)) {
-            throw CodefException.from(CodefError.INVALID_2WAY_KEYWORD);
-		}
+        EasyCodefValidator.validateTwoWayKeywordsOrThrow(parameterMap);
 
         String accessToken = requestToken(properties.getServiceType());
         String urlPath = properties.getServiceTypeHost() + productUrl;
