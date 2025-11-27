@@ -12,8 +12,8 @@ public class EasyCodefValidator {
 
     private EasyCodefValidator() {}
 
-    protected static void validateRequest(EasyCodefProperties properties, EasyCodefServiceType serviceType) {
-        if (properties.checkClientInfo(serviceType)) {
+    protected static void validateRequest(EasyCodefProperties properties) {
+        if (properties.checkClientInfo()) {
             throw CodefException.from(EMPTY_CLIENT_INFO);
         }
 

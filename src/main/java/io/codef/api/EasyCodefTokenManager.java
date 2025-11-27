@@ -18,7 +18,7 @@ public class EasyCodefTokenManager {
     }
 
     public String getNewAccessToken(EasyCodefServiceType serviceType) {
-        EasyCodefToken newToken = createNewToken(serviceType);
+        EasyCodefToken newToken = createNewToken();
         tokens.put(serviceType, newToken);
         return newToken.getAccessToken();
     }
@@ -26,15 +26,15 @@ public class EasyCodefTokenManager {
     private EasyCodefToken getOrCreateToken(EasyCodefServiceType serviceType) {
         EasyCodefToken token = tokens.get(serviceType);
         if (token == null) {
-            token = createNewToken(serviceType);
+            token = createNewToken();
             tokens.put(serviceType, token);
         }
         return token;
     }
 
-    private EasyCodefToken createNewToken(EasyCodefServiceType serviceType) {
-        String clientId = properties.getClientIdByServiceType(serviceType);
-        String clientSecret = properties.getClientSecretByServiceType(serviceType);
+    private EasyCodefToken createNewToken() {
+        String clientId = properties.getClientId();
+        String clientSecret = properties.getClientSecret();
         return new EasyCodefToken(clientId, clientSecret);
     }
 }

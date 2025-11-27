@@ -4,36 +4,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.codef.api.dto.EasyCodefRequest;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
+import io.codef.api.util.JsonUtil;
 
 import static io.codef.api.constants.CodefPath.CREATE_ACCOUNT;
-import static io.codef.api.util.JsonUtil.mapper;
 
 public class EasyCodef {
 
-	private final EasyCodefProperties properties = new EasyCodefProperties();
-    private final EasyCodefTokenManager tokenManager = new EasyCodefTokenManager(properties);
+	private final EasyCodefProperties properties;
+    private final EasyCodefTokenManager tokenManager;
 
-	public void setClientInfo(String clientId, String clientSecret) {
-		properties.setClientInfo(clientId, clientSecret);
-	}
-
-	public void setClientInfoForDemo(String demoClientId, String demoClientSecret) {
-		properties.setClientInfoForDemo(demoClientId, demoClientSecret);
-	}
-
-	public void setPublicKey(String publicKey) {
-		properties.setPublicKey(publicKey);
-	}
+    protected EasyCodef(EasyCodefBuilder builder) {
+        this.properties = new EasyCodefProperties(builder);
+        this.tokenManager = new EasyCodefTokenManager(properties);
+    }
 
 	public String getPublicKey() {
 		return properties.getPublicKey();
 	}
 
-	public String requestProduct(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {
-        EasyCodefValidator.validateRequest(properties, serviceType);
+    public String requestProduct(EasyCodefRequest request) {
+        return requestProduct(request.getProductUrl(), request.getServiceType(), request.getParameterMap());
+    }
+
+	public String requestProduct(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) {
+        EasyCodefValidator.validateRequest(properties);
 
 		if(!EasyCodefValidator.checkTwoWayKeyword(parameterMap)) {
             throw CodefException.from(CodefError.INVALID_2WAY_KEYWORD);
@@ -43,11 +41,11 @@ public class EasyCodef {
         String urlPath = serviceType.getServiceType() + productUrl;
 		EasyCodefResponse response = EasyCodefApiClient.requestProduct(urlPath, accessToken, parameterMap);
 
-		return mapper().writeValueAsString(response);
+		return JsonUtil.writeValueAsString(response);
 	}
 
-    public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) throws JsonProcessingException {
-        EasyCodefValidator.validateRequest(properties, serviceType);
+    public String requestCertification(String productUrl, EasyCodefServiceType serviceType, HashMap<String, Object> parameterMap) {
+        EasyCodefValidator.validateRequest(properties);
 
         if (!EasyCodefValidator.checkTwoWayInfo(parameterMap)) {
             throw CodefException.from(CodefError.INVALID_2WAY_INFO);
@@ -57,7 +55,7 @@ public class EasyCodef {
         String urlPath = serviceType.getServiceType() + productUrl;
         EasyCodefResponse response = EasyCodefApiClient.requestProduct(urlPath, accessToken, parameterMap);
 
-        return mapper().writeValueAsString(response);
+        return JsonUtil.writeValueAsString(response);
     }
 
 	public String createAccount(EasyCodefServiceType serviceType, Map<String, Object> parameterMap) throws JsonProcessingException {

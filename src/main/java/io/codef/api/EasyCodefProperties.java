@@ -1,52 +1,43 @@
 package io.codef.api;
 
 public class EasyCodefProperties {
-	
-	private String demoClientId 	= "";
-	
-	private String demoClientSecret 	= "";
-	
-	private String clientId 	= "";
-	
-	private String clientSecret 	= "";
-	
-	private String publicKey 	= "";
 
+    private final EasyCodefServiceType serviceType;
+    private final String clientId;
+    private final String clientSecret;
+    private final String publicKey;
 
-	protected void setClientInfo(String clientId, String clientSecret) {
-		this.clientId = clientId;
-		this.clientSecret = clientSecret;
-	}
+    protected EasyCodefProperties(EasyCodefBuilder builder) {
+        this.serviceType = builder.getServiceType();
+        this.clientId = builder.getClientId();
+        this.clientSecret = builder.getClientSecret();
+        this.publicKey = builder.getPublicKey();
+    }
 
-	protected void setClientInfoForDemo(String demoClientId, String demoClientSecret) {
-		this.demoClientId = demoClientId;
-		this.demoClientSecret = demoClientSecret;
-	}
+    public EasyCodefServiceType getServiceType() {
+        return serviceType;
+    }
 
-	protected String getPublicKey() {
-		return publicKey;
-	}
+    public String getPublicKey() {
+        return publicKey;
+    }
 
-	protected void setPublicKey(String publicKey) {
-		this.publicKey = publicKey;
-	}
+    public String getClientId() {
+        return clientId;
+    }
 
-    protected boolean checkClientInfo(EasyCodefServiceType serviceType) {
-        String id = getClientIdByServiceType(serviceType);
-        String secret = getClientSecretByServiceType(serviceType);
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    protected boolean checkClientInfo() {
+        String id = getClientId();
+        String secret = getClientSecret();
         return isNullOrEmpty(id) || isNullOrEmpty(secret);
     }
 
     protected boolean checkPublicKey() {
         return isNullOrEmpty(publicKey);
-    }
-
-    protected String getClientIdByServiceType(EasyCodefServiceType serviceType) {
-        return serviceType.isApiService() ? clientId : demoClientId;
-    }
-
-    protected String getClientSecretByServiceType(EasyCodefServiceType serviceType) {
-        return serviceType.isApiService() ? clientSecret : demoClientSecret;
     }
 
     private boolean isNullOrEmpty(String value) {
