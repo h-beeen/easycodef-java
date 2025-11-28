@@ -1,7 +1,6 @@
 package io.codef.api.error;
 
 public enum CodefError {
-
     INVALID_JSON("json형식이 올바르지 않습니다."),
     INVALID_PARAMETER("요청 파라미터가 올바르지 않습니다."),
     UNSUPPORTED_ENCODING("지원하지 않는 형식으로 인코딩된 문자열입니다."),

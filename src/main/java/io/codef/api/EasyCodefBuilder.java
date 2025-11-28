@@ -39,13 +39,6 @@ public class EasyCodefBuilder {
         return new EasyCodef(this);
     }
 
-    private void validateProperties() {
-        EasyCodefValidator.validateNotNullOrThrow(serviceType, CodefError.EMPTY_SERVICE_TYPE);
-        EasyCodefValidator.validateNotNullOrThrow(clientId, CodefError.EMPTY_CLIENT_ID);
-        EasyCodefValidator.validateNotNullOrThrow(clientSecret, CodefError.EMPTY_CLIENT_SECRET);
-        EasyCodefValidator.validateNotNullOrThrow(publicKey, CodefError.EMPTY_PUBLIC_KEY);
-    }
-
     protected EasyCodefServiceType getServiceType() {
         return serviceType;
     }
@@ -60,5 +53,12 @@ public class EasyCodefBuilder {
 
     protected String getPublicKey() {
         return publicKey;
+    }
+
+    private void validateProperties() {
+        EasyCodefValidator.validateNotNullOrThrow(serviceType, CodefError.EMPTY_SERVICE_TYPE);
+        EasyCodefValidator.validateNotNullOrThrow(clientId, CodefError.EMPTY_CLIENT_ID);
+        EasyCodefValidator.validateNotNullOrThrow(clientSecret, CodefError.EMPTY_CLIENT_SECRET);
+        EasyCodefValidator.validateNotNullOrThrow(publicKey, CodefError.EMPTY_PUBLIC_KEY);
     }
 }

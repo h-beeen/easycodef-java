@@ -3,6 +3,7 @@ package io.codef.api.dto;
 import java.util.Map;
 
 public class EasyCodefRequest {
+
     private final String productUrl;
     private final Map<String, Object> parameterMap;
 

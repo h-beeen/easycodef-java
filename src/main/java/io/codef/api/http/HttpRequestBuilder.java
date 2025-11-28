@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequestBuilder {
+
     private final Map<String, String> headers = new HashMap<>();
     private String url;
     private String body;

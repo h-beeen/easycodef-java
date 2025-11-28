@@ -7,6 +7,7 @@ import org.apache.http.impl.client.HttpClients;
 import static io.codef.api.constants.HttpConstant.*;
 
 public class HttpClientFactory {
+
     private static volatile HttpClient instance;
 
     public static HttpClient getInstance() {
