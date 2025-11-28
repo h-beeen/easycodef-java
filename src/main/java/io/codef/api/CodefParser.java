@@ -3,13 +3,12 @@ package io.codef.api;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 
 import java.util.List;
 
-import static io.codef.api.constants.CodefConstant.DATA;
-import static io.codef.api.constants.CodefConstant.RESULT;
-import static io.codef.api.error.CodefError.PARSE_ERROR;
+import static io.codef.api.constants.CodefConstant.*;
 
 public class CodefParser {
 
@@ -19,13 +18,13 @@ public class CodefParser {
         JSONObject resultObj = jsonResponse.getJSONObject(RESULT);
 
         if (resultObj == null) {
-            throw CodefException.from(PARSE_ERROR);
+            throw CodefException.from(CodefError.PARSE_ERROR);
         }
 
         EasyCodefResponse.Result result = resultObj.to(EasyCodefResponse.Result.class);
 
         if (result == null) {
-            throw CodefException.from(PARSE_ERROR);
+            throw CodefException.from(CodefError.PARSE_ERROR);
         }
 
         return result;
@@ -43,12 +42,12 @@ public class CodefParser {
         JSONObject dataObj = jsonResponse.getJSONObject(DATA);
 
         if (dataObj == null) {
-            throw CodefException.from(PARSE_ERROR);
+            throw CodefException.from(CodefError.PARSE_ERROR);
         }
 
         Object data = dataObj.to(Object.class);
         if (data == null) {
-            throw CodefException.from(PARSE_ERROR);
+            throw CodefException.from(CodefError.PARSE_ERROR);
         }
 
         return data;
@@ -58,12 +57,12 @@ public class CodefParser {
         JSONArray dataArr = jsonResponse.getJSONArray(DATA);
 
         if (dataArr == null) {
-            throw CodefException.from(PARSE_ERROR);
+            throw CodefException.from(CodefError.PARSE_ERROR);
         }
 
         List<?> list = dataArr.to(List.class);
         if (list == null) {
-            throw CodefException.from(PARSE_ERROR);
+            throw CodefException.from(CodefError.PARSE_ERROR);
         }
 
         return list;

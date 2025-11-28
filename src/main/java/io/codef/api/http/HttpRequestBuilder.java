@@ -1,6 +1,5 @@
 package io.codef.api.http;
 
-import org.apache.http.*;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;

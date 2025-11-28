@@ -10,7 +10,7 @@ import javax.crypto.Cipher;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 
-import static io.codef.api.constants.CodefConstant.RSA;
+import static io.codef.api.constants.CodefConstant.*;
 
 public class RSAUtil {
 

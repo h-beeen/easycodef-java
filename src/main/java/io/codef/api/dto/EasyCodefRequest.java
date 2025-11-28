@@ -1,7 +1,5 @@
 package io.codef.api.dto;
 
-import io.codef.api.EasyCodefServiceType;
-
 import java.util.Map;
 
 public class EasyCodefRequest {

@@ -3,13 +3,12 @@ package io.codef.api;
 import com.alibaba.fastjson2.JSON;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.http.HttpRequestBuilder;
-import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import java.util.Map;
 
-import static io.codef.api.constants.CodefHost.OAUTH_DOMAIN;
-import static io.codef.api.constants.CodefPath.GET_TOKEN;
+import static io.codef.api.constants.CodefHost.*;
+import static io.codef.api.constants.CodefPath.*;
 
 public class EasyCodefApiClient {
 
@@ -21,7 +20,7 @@ public class EasyCodefApiClient {
                 .header("Authorization", oauthToken)
                 .build();
 
-        return EasyCodefApiSender.execute(request);
+        return EasyCodefApiSender.sendRequest(request);
     }
 
     protected static EasyCodefResponse requestProduct(
@@ -37,6 +36,6 @@ public class EasyCodefApiClient {
                 .body(jsonBody)
                 .build();
 
-        return EasyCodefApiSender.execute(request);
+        return EasyCodefApiSender.sendRequest(request);
     }
 }
