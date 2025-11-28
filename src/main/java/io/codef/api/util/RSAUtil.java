@@ -1,5 +1,7 @@
 package io.codef.api.util;
 
+import static io.codef.api.constants.CodefConstant.*;
+
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
@@ -9,8 +11,6 @@ import javax.crypto.Cipher;
 
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
-
-import static io.codef.api.constants.CodefConstant.*;
 
 public class RSAUtil {
 

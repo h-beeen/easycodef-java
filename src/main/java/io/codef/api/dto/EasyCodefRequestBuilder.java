@@ -1,10 +1,10 @@
 package io.codef.api.dto;
 
-import io.codef.api.EasyCodefValidator;
-import io.codef.api.error.CodefError;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import io.codef.api.EasyCodefValidator;
+import io.codef.api.error.CodefError;
 
 public class EasyCodefRequestBuilder {
 

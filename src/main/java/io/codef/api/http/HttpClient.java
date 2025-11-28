@@ -1,13 +1,14 @@
 package io.codef.api.http;
 
-import io.codef.api.dto.HttpResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import io.codef.api.dto.HttpResponse;
 
 public class HttpClient {
 

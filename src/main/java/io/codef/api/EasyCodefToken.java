@@ -1,12 +1,14 @@
 package io.codef.api;
 
+import static io.codef.api.constants.CodefConstant.*;
+
 import java.time.LocalDateTime;
 
-import com.alibaba.fastjson2.JSONObject;
-import io.codef.api.dto.EasyCodefResponse;
 import org.apache.commons.codec.binary.Base64;
 
-import static io.codef.api.constants.CodefConstant.*;
+import com.alibaba.fastjson2.JSONObject;
+
+import io.codef.api.dto.EasyCodefResponse;
 
 public class EasyCodefToken {
 

@@ -1,12 +1,13 @@
 package io.codef.api;
 
-import com.alibaba.fastjson2.JSONObject;
-import io.codef.api.error.CodefError;
-import io.codef.api.error.CodefException;
+import static io.codef.api.constants.CodefConstant.*;
 
 import java.util.Map;
 
-import static io.codef.api.constants.CodefConstant.*;
+import com.alibaba.fastjson2.JSONObject;
+
+import io.codef.api.error.CodefError;
+import io.codef.api.error.CodefException;
 
 public class EasyCodefValidator {
 

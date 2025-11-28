@@ -1,14 +1,16 @@
 package io.codef.api.http;
 
+import static io.codef.api.constants.HttpConstant.*;
+
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
-import static io.codef.api.constants.HttpConstant.*;
-
 public class HttpClientFactory {
 
     private static volatile HttpClient instance;
+
+    private HttpClientFactory() {}
 
     public static HttpClient getInstance() {
         if (instance == null) {

@@ -1,11 +1,11 @@
 package io.codef.api.util;
 
-import io.codef.api.error.CodefError;
-import io.codef.api.error.CodefException;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+
+import io.codef.api.error.CodefError;
+import io.codef.api.error.CodefException;
 
 public class URLUtil {
 

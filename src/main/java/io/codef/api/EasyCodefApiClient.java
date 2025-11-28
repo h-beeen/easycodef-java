@@ -1,14 +1,16 @@
 package io.codef.api;
 
-import com.alibaba.fastjson2.JSON;
-import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.http.HttpRequestBuilder;
-import org.apache.http.client.methods.HttpUriRequest;
+import static io.codef.api.constants.CodefHost.*;
+import static io.codef.api.constants.CodefPath.*;
 
 import java.util.Map;
 
-import static io.codef.api.constants.CodefHost.*;
-import static io.codef.api.constants.CodefPath.*;
+import org.apache.http.client.methods.HttpUriRequest;
+
+import com.alibaba.fastjson2.JSON;
+
+import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.http.HttpRequestBuilder;
 
 public class EasyCodefApiClient {
 

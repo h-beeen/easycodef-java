@@ -1,12 +1,13 @@
 package io.codef.api;
 
+import org.apache.http.client.methods.HttpUriRequest;
+
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.dto.HttpResponse;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 import io.codef.api.http.HttpClient;
 import io.codef.api.http.HttpClientFactory;
-import org.apache.http.client.methods.HttpUriRequest;
 
 public class EasyCodefApiSender {
 

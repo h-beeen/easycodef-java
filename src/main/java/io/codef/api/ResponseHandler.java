@@ -1,15 +1,16 @@
 package io.codef.api;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
-import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.dto.HttpResponse;
-import io.codef.api.util.URLUtil;
+import static io.codef.api.constants.CodefConstant.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.codef.api.constants.CodefConstant.*;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+
+import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.dto.HttpResponse;
+import io.codef.api.util.URLUtil;
 
 public class ResponseHandler {
 
