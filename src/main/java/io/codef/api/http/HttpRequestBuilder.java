@@ -1,5 +1,11 @@
 package io.codef.api.http;
 
+import org.apache.http.*;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
+
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,5 +43,17 @@ public class HttpRequestBuilder {
 
     public String getBody() {
         return body;
+    }
+
+    public HttpUriRequest build() {
+        HttpPost httpPost = new HttpPost(url);
+
+        headers.forEach(httpPost::setHeader);
+
+        if (body != null && !body.isEmpty()) {
+            httpPost.setEntity(new StringEntity(body, StandardCharsets.UTF_8));
+        }
+
+        return httpPost;
     }
 }

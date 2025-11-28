@@ -5,7 +5,7 @@ import io.codef.api.dto.HttpResponse;
 import io.codef.api.error.CodefException;
 import io.codef.api.http.HttpClient;
 import io.codef.api.http.HttpClientFactory;
-import io.codef.api.http.HttpRequestBuilder;
+import org.apache.http.client.methods.HttpUriRequest;
 
 import static io.codef.api.error.CodefError.IO_ERROR;
 
@@ -13,13 +13,9 @@ public class EasyCodefApiSender {
 
     private EasyCodefApiSender() {}
 
-    protected static EasyCodefResponse execute(HttpRequestBuilder builder) {
+    protected static EasyCodefResponse execute(HttpUriRequest request) {
         HttpClient httpClient = HttpClientFactory.getInstance();
-        HttpResponse httpResponse = httpClient.postJson(
-                builder.getUrl(),
-                builder.getHeaders(),
-                builder.getBody()
-        );
+        HttpResponse httpResponse = httpClient.postJson(request);
 
         if (httpResponse.getStatusCode() == -1) {
             throw CodefException.from(IO_ERROR);

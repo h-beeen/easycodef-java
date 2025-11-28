@@ -3,6 +3,8 @@ package io.codef.api;
 import com.alibaba.fastjson2.JSON;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.http.HttpRequestBuilder;
+import org.apache.http.HttpRequest;
+import org.apache.http.client.methods.HttpUriRequest;
 
 import java.util.Map;
 
@@ -14,11 +16,12 @@ public class EasyCodefApiClient {
     private EasyCodefApiClient() {}
 
     protected static EasyCodefResponse publishToken(String oauthToken) {
-        HttpRequestBuilder httpRequestBuilder = HttpRequestBuilder.builder()
+        HttpUriRequest request = HttpRequestBuilder.builder()
                 .url(OAUTH_DOMAIN + GET_TOKEN)
-                .header("Authorization", oauthToken);
+                .header("Authorization", oauthToken)
+                .build();
 
-        return EasyCodefApiSender.execute(httpRequestBuilder);
+        return EasyCodefApiSender.execute(request);
     }
 
     protected static EasyCodefResponse requestProduct(
@@ -27,12 +30,13 @@ public class EasyCodefApiClient {
             Map<String, Object> bodyMap
     ) {
         String jsonBody = JSON.toJSONString(bodyMap);
-        HttpRequestBuilder requestBuilder = HttpRequestBuilder.builder()
+        HttpUriRequest request = HttpRequestBuilder.builder()
                 .url(urlPath)
                 .header("Authorization", "Bearer " + accessToken)
                 .header("Content-Type", "application/json")
-                .body(jsonBody);
+                .body(jsonBody)
+                .build();
 
-        return EasyCodefApiSender.execute(requestBuilder);
+        return EasyCodefApiSender.execute(request);
     }
 }
