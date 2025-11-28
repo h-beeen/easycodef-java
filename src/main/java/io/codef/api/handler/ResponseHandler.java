@@ -1,22 +1,19 @@
-package io.codef.api;
+package io.codef.api.handler;
 
-import static io.codef.api.constants.CodefConstant.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import static io.codef.api.constants.CodefConstant.OAuth.*;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 
 import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.dto.HttpResponse;
+import io.codef.api.http.HttpResponse;
 import io.codef.api.util.URLUtil;
 
 public class ResponseHandler {
 
     private ResponseHandler() {}
 
-    protected static EasyCodefResponse processResponse(HttpResponse httpResponse) {
+    public static EasyCodefResponse processResponse(HttpResponse httpResponse) {
         String decoded = URLUtil.decode(httpResponse.getBody());
         JSONObject jsonObject = JSON.parseObject(decoded);
 
@@ -26,11 +23,7 @@ public class ResponseHandler {
     }
 
     private static EasyCodefResponse handleTokenResponse(JSONObject jsonResponse) {
-        Map<String, Object> tokenMap = new HashMap<>();
-        tokenMap.put(ACCESS_TOKEN, jsonResponse.getString(ACCESS_TOKEN));
-        tokenMap.put(EXPIRES_IN, jsonResponse.getString(EXPIRES_IN));
-
-        return new EasyCodefResponse(null, tokenMap);
+        return new EasyCodefResponse(null, jsonResponse);
     }
 
     private static EasyCodefResponse handleProductResponse(JSONObject jsonResponse) {

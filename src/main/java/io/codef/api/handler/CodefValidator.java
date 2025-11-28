@@ -1,6 +1,7 @@
-package io.codef.api;
+package io.codef.api.handler;
 
 import static io.codef.api.constants.CodefConstant.*;
+import static io.codef.api.constants.CodefConstant.TwoWay.*;
 
 import java.util.Map;
 
@@ -9,9 +10,9 @@ import com.alibaba.fastjson2.JSONObject;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 
-public class EasyCodefValidator {
+public class CodefValidator {
 
-    private EasyCodefValidator() {}
+    private CodefValidator() {}
 
     public static <T> T validateNotNullOrThrow(T object, CodefError codefError) {
         if (object == null) {
@@ -34,27 +35,21 @@ public class EasyCodefValidator {
             return;
         }
 
-        if (parameterMap.containsKey(IS_2WAY) || parameterMap.containsKey(TWO_WAY_INFO)) {
+        if (parameterMap.containsKey(IS_2WAY) || parameterMap.containsKey(INFO_KEY)) {
             throw CodefException.from(CodefError.INVALID_2WAY_KEYWORD);
         }
     }
 
-    protected static void validateTwoWayInfoOrThrow(Map<String, Object> parameterMap) {
+    public static void validateTwoWayInfoOrThrow(Map<String, Object> parameterMap) {
         Object is2WayObj = parameterMap.get(IS_2WAY);
         if (Boolean.FALSE.equals(is2WayObj)) {
             throw CodefException.from(CodefError.INVALID_2WAY_INFO);
         }
 
-        Object twoWayInfoObj = parameterMap.get(TWO_WAY_INFO);
-
+        Object twoWayInfoObj = parameterMap.get(INFO_KEY);
         Map<String, Object> twoWayInfoMap = JSONObject.from(twoWayInfoObj);
 
-        boolean hasAllKeys = twoWayInfoMap.containsKey(JOB_INDEX)
-                && twoWayInfoMap.containsKey(THREAD_INDEX)
-                && twoWayInfoMap.containsKey(JTI)
-                && twoWayInfoMap.containsKey(TWO_WAY_TIMESTAMP);
-
-        if (!hasAllKeys) {
+        if (!twoWayInfoMap.keySet().containsAll(REQUIRED_KEYS)) {
             throw CodefException.from(CodefError.INVALID_2WAY_INFO);
         }
     }
