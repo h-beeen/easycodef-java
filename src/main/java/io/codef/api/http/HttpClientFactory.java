@@ -27,7 +27,7 @@ public class HttpClientFactory {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectionRequestTimeout(WAIT_CONNECTION_TIMEOUT)
                 .setConnectTimeout(CONNECT_TIMEOUT)
-                .setSocketTimeout(REAT_TIMEOUT)
+                .setSocketTimeout(READ_TIMEOUT)
                 .build();
 
         CloseableHttpClient pooledClient = HttpClients.custom()
