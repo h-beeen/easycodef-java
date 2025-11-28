@@ -1,4 +1,6 @@
-package io.codef.api;
+package io.codef.api.auth;
+
+import io.codef.api.EasyCodefProperties;
 
 public class EasyCodefTokenManager {
 
@@ -20,6 +22,7 @@ public class EasyCodefTokenManager {
     private EasyCodefToken createNewToken() {
         String clientId = properties.getClientId();
         String clientSecret = properties.getClientSecret();
+
         return new EasyCodefToken(clientId, clientSecret);
     }
 }

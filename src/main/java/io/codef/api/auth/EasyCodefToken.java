@@ -1,9 +1,10 @@
-package io.codef.api;
+package io.codef.api.auth;
 
-import static io.codef.api.constants.CodefConstant.*;
+import static io.codef.api.constants.CodefConstant.OAuth.*;
 
 import java.time.LocalDateTime;
 
+import io.codef.api.core.EasyCodefApiClient;
 import org.apache.commons.codec.binary.Base64;
 
 import com.alibaba.fastjson2.JSONObject;
@@ -18,8 +19,8 @@ public class EasyCodefToken {
 
     protected EasyCodefToken(String clientId, String clientSecret) {
         this.oauthToken = createOAuthToken(clientId, clientSecret);
-
         EasyCodefResponse response = EasyCodefApiClient.publishToken(oauthToken);
+
         initializeToken(response);
     }
 
@@ -38,7 +39,8 @@ public class EasyCodefToken {
     private String createOAuthToken(String clientId, String clientSecret) {
         String auth = clientId + ":" + clientSecret;
         byte[] authEncBytes = Base64.encodeBase64(auth.getBytes());
-        return "Basic " + new String(authEncBytes);
+
+        return new String(authEncBytes);
     }
 
     private void initializeToken(EasyCodefResponse response) {
@@ -46,7 +48,6 @@ public class EasyCodefToken {
 
         Object accessToken = jsonObject.get(ACCESS_TOKEN);
         Object expiresIn = jsonObject.get(EXPIRES_IN);
-
         if (accessToken == null || expiresIn == null) {
             return;
         }
@@ -61,6 +62,7 @@ public class EasyCodefToken {
 
     private void refreshToken() {
         EasyCodefResponse response = EasyCodefApiClient.publishToken(oauthToken);
+
         initializeToken(response);
     }
 }
