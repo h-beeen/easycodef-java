@@ -1,4 +1,4 @@
-package io.codef.api.dto;
+package io.codef.api.http;
 
 public class HttpResponse {
 
