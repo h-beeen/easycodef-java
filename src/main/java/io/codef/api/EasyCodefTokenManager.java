@@ -1,29 +1,20 @@
 package io.codef.api;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 public class EasyCodefTokenManager {
 
     private final EasyCodefProperties properties;
-    private final Map<EasyCodefServiceType, EasyCodefToken> tokens = new EnumMap<>(EasyCodefServiceType.class);
+    private EasyCodefToken token;
 
     public EasyCodefTokenManager(EasyCodefProperties properties) {
         this.properties = properties;
     }
 
-    public String getAccessToken(EasyCodefServiceType serviceType) {
-        EasyCodefToken token = getOrCreateToken(serviceType).validateAndRefreshToken();
-        return token.getAccessToken();
-    }
-
-    private EasyCodefToken getOrCreateToken(EasyCodefServiceType serviceType) {
-        EasyCodefToken token = tokens.get(serviceType);
+    public String getValidAccessToken() {
         if (token == null) {
             token = createNewToken();
-            tokens.put(serviceType, token);
         }
-        return token;
+
+        return token.validateAndRefreshToken().getAccessToken();
     }
 
     private EasyCodefToken createNewToken() {
