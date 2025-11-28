@@ -34,6 +34,7 @@ public class RSAUtil {
 
         try {
             KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+
             return keyFactory.generatePublic(new X509EncodedKeySpec(decodedPublicKey));
         } catch (Exception e) {
             throw CodefException.of(CodefError.RSA_ENCRYPTION_ERROR, e);
@@ -44,6 +45,7 @@ public class RSAUtil {
         try {
             Cipher cipher = Cipher.getInstance(RSA);
             cipher.init(Cipher.ENCRYPT_MODE, key);
+
             return cipher;
         } catch (Exception e) {
             throw CodefException.of(CodefError.RSA_ENCRYPTION_ERROR, e);

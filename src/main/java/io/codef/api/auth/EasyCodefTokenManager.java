@@ -5,6 +5,7 @@ import io.codef.api.EasyCodefProperties;
 public class EasyCodefTokenManager {
 
     private final EasyCodefProperties properties;
+
     private EasyCodefToken token;
 
     public EasyCodefTokenManager(EasyCodefProperties properties) {

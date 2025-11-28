@@ -23,7 +23,7 @@ public class CodefValidator {
     }
 
     public static String validatePathOrThrow(String productUrl, CodefError codefError) {
-        if (!productUrl.startsWith(PATH_PREFIX)) {
+        if (productUrl == null || !productUrl.startsWith(PATH_PREFIX)) {
             throw CodefException.from(codefError);
         }
 
@@ -31,7 +31,7 @@ public class CodefValidator {
     }
 
     public static void validateTwoWayKeywordsOrThrow(Map<String, Object> parameterMap) {
-        if (parameterMap == null) {
+        if (parameterMap == null || parameterMap.isEmpty()) {
             return;
         }
 
@@ -41,6 +41,10 @@ public class CodefValidator {
     }
 
     public static void validateTwoWayInfoOrThrow(Map<String, Object> parameterMap) {
+        if (parameterMap == null || parameterMap.isEmpty()) {
+            throw CodefException.from(CodefError.EMPTY_PARAMETER);
+        }
+
         Object is2WayObj = parameterMap.get(IS_2WAY);
         if (Boolean.FALSE.equals(is2WayObj)) {
             throw CodefException.from(CodefError.INVALID_2WAY_INFO);

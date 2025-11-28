@@ -14,17 +14,19 @@ import io.codef.api.dto.EasyCodefResponse;
 public class EasyCodefToken {
 
     private final String oauthToken;
+
     private String accessToken;
     private LocalDateTime expiresAt;
 
-    protected EasyCodefToken(String clientId, String clientSecret) {
+    EasyCodefToken(String clientId, String clientSecret) {
         this.oauthToken = createOAuthToken(clientId, clientSecret);
+
         EasyCodefResponse response = EasyCodefApiClient.publishToken(oauthToken);
 
         initializeToken(response);
     }
 
-    protected EasyCodefToken validateAndRefreshToken() {
+    EasyCodefToken validateAndRefreshToken() {
         if (expiresAt == null || isTokenExpiringSoon(expiresAt)) {
             refreshToken();
         }
@@ -32,7 +34,7 @@ public class EasyCodefToken {
         return this;
     }
 
-    protected String getAccessToken() {
+    String getAccessToken() {
         return accessToken;
     }
 
@@ -48,12 +50,14 @@ public class EasyCodefToken {
 
         Object accessToken = jsonObject.get(ACCESS_TOKEN);
         Object expiresIn = jsonObject.get(EXPIRES_IN);
+
         if (accessToken == null || expiresIn == null) {
             return;
         }
 
         this.accessToken = String.valueOf(accessToken);
-        this.expiresAt = LocalDateTime.now().plusSeconds(Integer.parseInt(String.valueOf(expiresIn)));
+        this.expiresAt = LocalDateTime.now()
+                .plusSeconds(Integer.parseInt(String.valueOf(expiresIn)));
     }
 
     private boolean isTokenExpiringSoon(LocalDateTime expiry) {

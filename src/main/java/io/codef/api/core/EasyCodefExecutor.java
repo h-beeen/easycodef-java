@@ -18,7 +18,7 @@ public class EasyCodefExecutor {
 
     public String execute(String productUrl, CodefServiceType serviceType, Map<String, Object> parameterMap) {
         String accessToken = tokenManager.getValidAccessToken();
-        String urlPath = serviceType.getServiceType() + productUrl;
+        String urlPath = serviceType.getHost() + productUrl;
         EasyCodefResponse response = EasyCodefApiClient.requestProduct(urlPath, accessToken, parameterMap);
 
         return JSON.toJSONString(response);
