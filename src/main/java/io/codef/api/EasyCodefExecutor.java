@@ -14,7 +14,7 @@ public class EasyCodefExecutor {
     }
 
     protected String execute(String productUrl, EasyCodefServiceType serviceType, Map<String, Object> parameterMap) {
-        String accessToken = tokenManager.getAccessToken(serviceType);
+        String accessToken = tokenManager.getValidAccessToken();
 
         String urlPath = serviceType.getServiceType() + productUrl;
 
