@@ -18,10 +18,6 @@ public class EasyCodefResponse {
         return result;
     }
 
-    public Object getData() {
-        return data;
-    }
-
     public <T> T getData(Class<T> clazz) {
         return JSONObject.from(data).to(clazz);
     }

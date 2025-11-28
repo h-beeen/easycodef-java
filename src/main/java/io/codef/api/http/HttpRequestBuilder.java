@@ -33,18 +33,6 @@ public class HttpRequestBuilder {
         return this;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
     public HttpUriRequest build() {
         HttpPost httpPost = new HttpPost(url);
 

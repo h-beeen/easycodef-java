@@ -3,7 +3,6 @@ package io.codef.api.error;
 public class CodefException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
-    private final CodefError codefError;
 
     private static String decoratedMessage (
             final String errorMessage, final String message) {
@@ -12,17 +11,14 @@ public class CodefException extends RuntimeException {
 
     private CodefException(CodefError codefError) {
         super(codefError.getMessage());
-        this.codefError = codefError;
     }
 
     private CodefException(CodefError codefError, Exception exception) {
         super(decoratedMessage(codefError.getMessage(), exception.getMessage()), exception);
-        this.codefError = codefError;
     }
 
     private CodefException(CodefError codefError, String extraMessage) {
         super(decoratedMessage(codefError.getMessage(), extraMessage));
-        this.codefError = codefError;
     }
 
     public static CodefException from(CodefError codefError) {
@@ -35,9 +31,5 @@ public class CodefException extends RuntimeException {
 
     public static CodefException of(CodefError codefError, String extraMessage) {
         return new CodefException(codefError, extraMessage);
-    }
-
-    public CodefError getCodefError() {
-        return codefError;
     }
 }
