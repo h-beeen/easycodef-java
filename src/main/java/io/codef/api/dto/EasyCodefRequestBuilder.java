@@ -3,7 +3,7 @@ package io.codef.api.dto;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.codef.api.EasyCodefValidator;
+import io.codef.api.handler.CodefValidator;
 import io.codef.api.error.CodefError;
 
 public class EasyCodefRequestBuilder {
@@ -16,12 +16,12 @@ public class EasyCodefRequestBuilder {
     }
 
     public EasyCodefRequestBuilder productUrl(String productUrl) {
-        this.productUrl = EasyCodefValidator.validatePathOrThrow(productUrl, CodefError.INVALID_PATH_REQUESTED);
+        this.productUrl = CodefValidator.validatePathOrThrow(productUrl, CodefError.INVALID_PATH_REQUESTED);
         return this;
     }
 
     public EasyCodefRequestBuilder parameterMap(Map<String, Object> parameterMap) {
-        this.parameterMap = EasyCodefValidator.validateNotNullOrThrow(parameterMap, CodefError.EMPTY_PARAMETER);
+        this.parameterMap = CodefValidator.validateNotNullOrThrow(parameterMap, CodefError.EMPTY_PARAMETER);
         return this;
     }
 
@@ -32,7 +32,7 @@ public class EasyCodefRequestBuilder {
     }
 
     private void validateProperties() {
-        EasyCodefValidator.validateNotNullOrThrow(productUrl, CodefError.EMPTY_PATH);
-        EasyCodefValidator.validateNotNullOrThrow(parameterMap, CodefError.EMPTY_PARAMETER);
+        CodefValidator.validateNotNullOrThrow(productUrl, CodefError.EMPTY_PATH);
+        CodefValidator.validateNotNullOrThrow(parameterMap, CodefError.EMPTY_PARAMETER);
     }
 }

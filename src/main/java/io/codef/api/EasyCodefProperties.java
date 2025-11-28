@@ -1,8 +1,10 @@
 package io.codef.api;
 
+import io.codef.api.constants.CodefServiceType;
+
 public class EasyCodefProperties {
 
-    private final EasyCodefServiceType serviceType;
+    private final CodefServiceType serviceType;
     private final String clientId;
     private final String clientSecret;
     private final String publicKey;
@@ -14,7 +16,7 @@ public class EasyCodefProperties {
         this.publicKey = builder.getPublicKey();
     }
 
-    public EasyCodefServiceType getServiceType() {
+    public CodefServiceType getServiceType() {
         return serviceType;
     }
 
