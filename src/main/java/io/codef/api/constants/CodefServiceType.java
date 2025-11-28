@@ -4,13 +4,13 @@ public enum CodefServiceType {
 	DEMO(CodefHost.DEMO_DOMAIN),
 	API(CodefHost.API_DOMAIN);
 	
-	private final String serviceType;
+	private final String host;
 	
-	CodefServiceType(String serviceType) {
-		this.serviceType = serviceType;
+	CodefServiceType(String host) {
+		this.host = host;
 	}
 
-	public String getServiceType() {
-		return serviceType;
+	public String getHost() {
+		return host;
 	}
 }
