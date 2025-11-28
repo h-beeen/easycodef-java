@@ -10,6 +10,8 @@ import static io.codef.api.error.CodefError.UNSUPPORTED_ENCODING;
 
 public class URLUtil {
 
+    private URLUtil() {}
+
     public static String decode(String content) {
         try {
             return URLDecoder.decode(content, StandardCharsets.UTF_8.name());
