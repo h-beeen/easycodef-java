@@ -16,12 +16,12 @@ public class CodefParser {
     private CodefParser() {}
 
     protected static EasyCodefResponse.Result parseResult(JSONObject jsonResponse) {
-        JSONObject resultObj = jsonResponse.getJSONObject(RESULT);
-        if (resultObj == null) {
+        if (!jsonResponse.containsKey(RESULT)) {
             throw CodefException.from(CodefError.PARSE_ERROR);
         }
 
-        EasyCodefResponse.Result result = resultObj.to(EasyCodefResponse.Result.class);
+        EasyCodefResponse.Result result = jsonResponse.getObject(RESULT, EasyCodefResponse.Result.class);
+
         if (result == null) {
             throw CodefException.from(CodefError.PARSE_ERROR);
         }
@@ -39,29 +39,21 @@ public class CodefParser {
 
     private static Object parseObjectData(JSONObject jsonResponse) {
         JSONObject dataObj = jsonResponse.getJSONObject(DATA);
+
         if (dataObj == null) {
             throw CodefException.from(CodefError.PARSE_ERROR);
         }
 
-        Object data = dataObj.to(Object.class);
-        if (data == null) {
-            throw CodefException.from(CodefError.PARSE_ERROR);
-        }
-
-        return data;
+        return dataObj;
     }
 
     private static List<?> parseArrayData(JSONObject jsonResponse) {
         JSONArray dataArr = jsonResponse.getJSONArray(DATA);
+
         if (dataArr == null) {
             throw CodefException.from(CodefError.PARSE_ERROR);
         }
 
-        List<?> list = dataArr.to(List.class);
-        if (list == null) {
-            throw CodefException.from(CodefError.PARSE_ERROR);
-        }
-
-        return list;
+        return dataArr;
     }
 }
