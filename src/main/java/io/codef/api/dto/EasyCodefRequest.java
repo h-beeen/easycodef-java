@@ -7,7 +7,7 @@ public class EasyCodefRequest {
     private final String productUrl;
     private final Map<String, Object> parameterMap;
 
-    protected EasyCodefRequest(String productUrl, Map<String, Object> parameterMap) {
+    EasyCodefRequest(String productUrl, Map<String, Object> parameterMap) {
         this.productUrl = productUrl;
         this.parameterMap = parameterMap;
     }

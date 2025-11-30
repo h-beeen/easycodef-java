@@ -15,7 +15,7 @@ public class CodefParser {
 
     private CodefParser() {}
 
-    protected static EasyCodefResponse.Result parseResult(JSONObject jsonResponse) {
+    static EasyCodefResponse.Result parseResult(JSONObject jsonResponse) {
         if (!jsonResponse.containsKey(RESULT)) {
             throw CodefException.from(CodefError.PARSE_ERROR);
         }
@@ -29,7 +29,7 @@ public class CodefParser {
         return result;
     }
 
-    protected static Object parseData(JSONObject jsonResponse) {
+    static Object parseData(JSONObject jsonResponse) {
         try {
             return parseObjectData(jsonResponse);
         } catch (Exception e) {

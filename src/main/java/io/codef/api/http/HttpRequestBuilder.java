@@ -11,6 +11,7 @@ import org.apache.http.entity.StringEntity;
 public class HttpRequestBuilder {
 
     private final Map<String, String> headers = new HashMap<>();
+
     private String url;
     private String body;
 
