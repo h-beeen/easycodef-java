@@ -3,6 +3,7 @@ package io.codef.api;
 import io.codef.api.auth.EasyCodefTokenManager;
 import io.codef.api.core.EasyCodefExecutor;
 import io.codef.api.dto.EasyCodefRequest;
+import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.handler.CodefValidator;
 
 public class EasyCodef {
@@ -23,13 +24,13 @@ public class EasyCodef {
 		return properties.getPublicKey();
 	}
 
-    public String requestProduct(EasyCodefRequest request) {
+    public EasyCodefResponse requestProduct(EasyCodefRequest request) {
         CodefValidator.validateTwoWayKeywordsOrThrow(request.getParameterMap());
 
         return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap());
     }
 
-    public String requestCertification(EasyCodefRequest request) {
+    public EasyCodefResponse requestCertification(EasyCodefRequest request) {
         CodefValidator.validateTwoWayInfoOrThrow(request.getParameterMap());
 
         return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap());

@@ -1,6 +1,7 @@
 package io.codef.api.dto;
 
 import com.alibaba.fastjson.annotation.JSONType;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 
 @JSONType(orders = {"result", "data"})
@@ -24,6 +25,11 @@ public class EasyCodefResponse {
 
     public <T> T getData(Class<T> clazz) {
         return JSONObject.from(data).to(clazz);
+    }
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 
     public static class Result {
