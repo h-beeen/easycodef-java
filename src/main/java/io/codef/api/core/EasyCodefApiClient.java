@@ -5,8 +5,8 @@ import static io.codef.api.constants.CodefPath.*;
 
 import java.util.Map;
 
-import org.apache.http.HttpHeaders;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.core5.http.HttpHeaders;
 
 import com.alibaba.fastjson2.JSON;
 
@@ -16,36 +16,37 @@ import io.codef.api.util.AuthorizationUtil;
 
 public class EasyCodefApiClient {
 
-    private EasyCodefApiClient() {}
+	private EasyCodefApiClient() {
+	}
 
-    public static EasyCodefResponse publishToken(String oauthToken) {
-        String basicToken = AuthorizationUtil.createBasicAuth(oauthToken);
+	public static EasyCodefResponse publishToken(String oauthToken) {
+		String basicToken = AuthorizationUtil.createBasicAuth(oauthToken);
 
-        HttpUriRequest request = HttpRequestBuilder.builder()
-                .url(OAUTH_DOMAIN + GET_TOKEN)
-                .header(HttpHeaders.AUTHORIZATION, basicToken)
-                .build();
+		HttpPost request = HttpRequestBuilder.builder()
+			.url(OAUTH_DOMAIN + GET_TOKEN)
+			.header(HttpHeaders.AUTHORIZATION, basicToken)
+			.build();
 
-        return EasyCodefApiSender.sendRequest(request);
-    }
+		return EasyCodefApiSender.sendRequest(request);
+	}
 
-    static EasyCodefResponse requestProduct(
-            String urlPath,
-            String accessToken,
-            Map<String, Object> bodyMap,
-            Integer customTimeout
-    ) {
-        String jsonBody = JSON.toJSONString(bodyMap);
-        String bearerToken = AuthorizationUtil.createBearerAuth(accessToken);
+	static EasyCodefResponse requestProduct(
+		String urlPath,
+		String accessToken,
+		Map<String, Object> bodyMap,
+		Integer customTimeout
+	) {
+		String jsonBody = JSON.toJSONString(bodyMap);
+		String bearerToken = AuthorizationUtil.createBearerAuth(accessToken);
 
-        HttpUriRequest request = HttpRequestBuilder.builder()
-                .url(urlPath)
-                .header(HttpHeaders.AUTHORIZATION, bearerToken)
-                .header(HttpHeaders.CONTENT_TYPE, "application/json")
-                .body(jsonBody)
-                .timeout(customTimeout)
-                .build();
+		HttpPost request = HttpRequestBuilder.builder()
+			.url(urlPath)
+			.header(HttpHeaders.AUTHORIZATION, bearerToken)
+			.header(HttpHeaders.CONTENT_TYPE, "application/json")
+			.body(jsonBody)
+			.timeout(customTimeout)
+			.build();
 
-        return EasyCodefApiSender.sendRequest(request);
-    }
+		return EasyCodefApiSender.sendRequest(request);
+	}
 }
