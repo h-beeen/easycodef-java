@@ -14,10 +14,10 @@ public class EasyCodefExecutor {
         this.tokenManager = tokenManager;
     }
 
-    public EasyCodefResponse execute(String productUrl, CodefServiceType serviceType, Map<String, Object> parameterMap) {
+    public EasyCodefResponse execute(String productUrl, CodefServiceType serviceType, Map<String, Object> parameterMap, Integer customTimeout) {
         String accessToken = tokenManager.getValidAccessToken();
         String urlPath = serviceType.getHost() + productUrl;
 
-        return EasyCodefApiClient.requestProduct(urlPath, accessToken, parameterMap);
+        return EasyCodefApiClient.requestProduct(urlPath, accessToken, parameterMap, customTimeout);
     }
 }

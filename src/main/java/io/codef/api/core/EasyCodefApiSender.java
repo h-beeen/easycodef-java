@@ -1,6 +1,7 @@
 package io.codef.api.core;
 
 import static io.codef.api.constants.HttpConstant.STATUS_CONNECTION_ERROR;
+import static io.codef.api.constants.HttpConstant.STATUS_TIMEOUT_ERROR;
 
 import org.apache.http.client.methods.HttpUriRequest;
 
@@ -18,11 +19,12 @@ public class EasyCodefApiSender {
 
     static EasyCodefResponse sendRequest(HttpUriRequest request) {
         HttpClient httpClient = HttpClientFactory.getInstance();
-
         HttpResponse httpResponse = httpClient.postJson(request);
 
         if (httpResponse.getStatusCode() == STATUS_CONNECTION_ERROR) {
             throw CodefException.from(CodefError.IO_ERROR);
+        } else if (httpResponse.getStatusCode() == STATUS_TIMEOUT_ERROR) {
+            throw CodefException.from(CodefError.TIMEOUT_ERROR);
         }
 
         return ResponseHandler.processResponse(httpResponse);

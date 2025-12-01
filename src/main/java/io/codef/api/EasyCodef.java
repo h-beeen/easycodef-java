@@ -27,12 +27,12 @@ public class EasyCodef {
     public EasyCodefResponse requestProduct(EasyCodefRequest request) {
         CodefValidator.validateTwoWayKeywordsOrThrow(request.getParameterMap());
 
-        return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap());
+        return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap(), request.getCustomTimeout());
     }
 
     public EasyCodefResponse requestCertification(EasyCodefRequest request) {
         CodefValidator.validateTwoWayInfoOrThrow(request.getParameterMap());
 
-        return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap());
+        return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap(), request.getCustomTimeout());
     }
 }

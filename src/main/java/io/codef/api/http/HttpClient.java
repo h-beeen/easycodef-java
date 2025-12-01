@@ -1,8 +1,10 @@
 package io.codef.api.http;
 
 import static io.codef.api.constants.HttpConstant.STATUS_CONNECTION_ERROR;
+import static io.codef.api.constants.HttpConstant.STATUS_TIMEOUT_ERROR;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -28,6 +30,8 @@ public class HttpClient {
                     : EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 
             return new HttpResponse(statusCode, responseBody);
+        } catch (SocketTimeoutException e) {
+            return new HttpResponse(STATUS_TIMEOUT_ERROR, e.getMessage());
         } catch (IOException e) {
             return new HttpResponse(STATUS_CONNECTION_ERROR, e.getMessage());
         }

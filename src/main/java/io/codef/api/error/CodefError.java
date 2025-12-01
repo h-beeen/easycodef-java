@@ -46,6 +46,10 @@ public enum CodefError {
 
     IO_ERROR(
             "An error occurred because the request was either not sent properly or not received. Please check if the outbound port to IP: 211.55.34.5, PORT: 443 is open."
+    ),
+
+    TIMEOUT_ERROR(
+            "The request timed out. The server did not respond within the expected time. Please check the timeout settings or network connectivity."
     );
 
     private final String message;

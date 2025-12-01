@@ -10,6 +10,7 @@ public class EasyCodefRequestBuilder {
 
     private String productUrl;
     private Map<String, Object> parameterMap = new HashMap<>();
+    private Integer customTimeout;
 
     public static EasyCodefRequestBuilder builder() {
         return new EasyCodefRequestBuilder();
@@ -25,10 +26,15 @@ public class EasyCodefRequestBuilder {
         return this;
     }
 
+    public EasyCodefRequestBuilder customTimeout(Integer customTimeout) {
+        this.customTimeout = customTimeout;
+        return this;
+    }
+
     public EasyCodefRequest build() {
         validateProperties();
 
-        return new EasyCodefRequest(productUrl, parameterMap);
+        return new EasyCodefRequest(productUrl, parameterMap, customTimeout);
     }
 
     private void validateProperties() {

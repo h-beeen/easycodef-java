@@ -32,7 +32,8 @@ public class EasyCodefApiClient {
     static EasyCodefResponse requestProduct(
             String urlPath,
             String accessToken,
-            Map<String, Object> bodyMap
+            Map<String, Object> bodyMap,
+            Integer customTimeout
     ) {
         String jsonBody = JSON.toJSONString(bodyMap);
         String bearerToken = AuthorizationUtil.createBearerAuth(accessToken);
@@ -42,6 +43,7 @@ public class EasyCodefApiClient {
                 .header(HttpHeaders.AUTHORIZATION, bearerToken)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .body(jsonBody)
+                .timeout(customTimeout)
                 .build();
 
         return EasyCodefApiSender.sendRequest(request);
