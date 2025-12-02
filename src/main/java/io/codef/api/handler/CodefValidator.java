@@ -16,7 +16,7 @@ public class CodefValidator {
 	}
 
 	public static <T> T validateNotNullOrThrow(T object, CodefError codefError) {
-		if (object == null) {
+		if (object == null || object.toString().trim().isEmpty()) {
 			throw CodefException.from(codefError);
 		}
 
@@ -47,7 +47,7 @@ public class CodefValidator {
 		}
 
 		Object is2WayObj = parameterMap.get(IS_2WAY);
-		if (Boolean.FALSE.equals(is2WayObj)) {
+		if (is2WayObj == null || Boolean.FALSE.equals(is2WayObj)) {
 			throw CodefException.from(CodefError.INVALID_2WAY_INFO);
 		}
 
