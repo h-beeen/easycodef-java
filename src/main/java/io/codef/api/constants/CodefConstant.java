@@ -10,6 +10,7 @@ public class CodefConstant {
 	public static final String DATA = "data";
 	public static final String PATH_PREFIX = "/v1";
 	public static final String RSA = "RSA";
+	public static final String APPLICATION_JSON = "application/json";
 
 	public static class OAuth {
 		public static final String ACCESS_TOKEN = "access_token";

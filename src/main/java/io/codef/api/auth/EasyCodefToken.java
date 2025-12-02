@@ -11,6 +11,7 @@ import com.alibaba.fastjson2.JSONObject;
 import io.codef.api.EasyCodefBuilder;
 import io.codef.api.core.EasyCodefClient;
 import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.util.AuthorizationUtil;
 
 public class EasyCodefToken {
 
@@ -45,8 +46,8 @@ public class EasyCodefToken {
 	}
 
 	private void refreshToken() {
-		EasyCodefResponse response = EasyCodefClient.publishToken(oauthToken);
-
+		String basicToken = AuthorizationUtil.createBasicAuth(oauthToken);
+		EasyCodefResponse response = EasyCodefClient.publishToken(basicToken);
 		JSONObject jsonObject = response.getData(JSONObject.class);
 
 		Object accessToken = jsonObject.get(ACCESS_TOKEN);
