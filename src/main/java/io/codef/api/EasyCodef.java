@@ -1,6 +1,6 @@
 package io.codef.api;
 
-import io.codef.api.auth.EasyCodefTokenManager;
+import io.codef.api.auth.EasyCodefToken;
 import io.codef.api.core.EasyCodefExecutor;
 import io.codef.api.dto.EasyCodefRequest;
 import io.codef.api.dto.EasyCodefResponse;
@@ -8,33 +8,33 @@ import io.codef.api.handler.CodefValidator;
 
 public class EasyCodef {
 
-	private final EasyCodefProperties properties;
 	private final EasyCodefExecutor executor;
+	private final String publicKey;
 
 	protected EasyCodef(EasyCodefBuilder builder) {
-		EasyCodefProperties properties = new EasyCodefProperties(builder);
-		EasyCodefTokenManager tokenManager = new EasyCodefTokenManager(properties);
-		EasyCodefExecutor executor = new EasyCodefExecutor(tokenManager);
+		this.publicKey = builder.getPublicKey();
 
-		this.properties = properties;
-		this.executor = executor;
-	}
+		EasyCodefToken easyCodefToken = new EasyCodefToken(builder);
 
-	public String getPublicKey() {
-		return properties.getPublicKey();
+		this.executor = new EasyCodefExecutor(
+			easyCodefToken,
+			builder.getServiceType()
+		);
 	}
 
 	public EasyCodefResponse requestProduct(EasyCodefRequest request) {
 		CodefValidator.validateTwoWayKeywordsOrThrow(request.getParameterMap());
 
-		return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap(),
-			request.getCustomTimeout());
+		return executor.execute(request);
 	}
 
 	public EasyCodefResponse requestCertification(EasyCodefRequest request) {
 		CodefValidator.validateTwoWayInfoOrThrow(request.getParameterMap());
 
-		return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap(),
-			request.getCustomTimeout());
+		return executor.execute(request);
+	}
+
+	public String getPublicKey() {
+		return publicKey;
 	}
 }

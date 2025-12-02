@@ -2,23 +2,27 @@ package io.codef.api.core;
 
 import java.util.Map;
 
-import io.codef.api.auth.EasyCodefTokenManager;
+import io.codef.api.auth.EasyCodefToken;
 import io.codef.api.constants.CodefServiceType;
+import io.codef.api.dto.EasyCodefRequest;
 import io.codef.api.dto.EasyCodefResponse;
 
 public class EasyCodefExecutor {
 
-	private final EasyCodefTokenManager tokenManager;
+	private final EasyCodefToken easyCodefToken;
+	private final CodefServiceType codefServiceType;
 
-	public EasyCodefExecutor(EasyCodefTokenManager tokenManager) {
-		this.tokenManager = tokenManager;
+	public EasyCodefExecutor(EasyCodefToken easyCodefToken, CodefServiceType codefServiceType) {
+		this.easyCodefToken = easyCodefToken;
+		this.codefServiceType = codefServiceType;
 	}
 
-	public EasyCodefResponse execute(String productUrl, CodefServiceType serviceType, Map<String, Object> parameterMap,
-		Integer customTimeout) {
-		String accessToken = tokenManager.getValidAccessToken();
-		String urlPath = serviceType.getHost() + productUrl;
+	public EasyCodefResponse execute(EasyCodefRequest request) {
+		String urlPath = codefServiceType.getHost() + request.getProductUrl();
+		EasyCodefToken validToken = easyCodefToken.validateAndRefreshToken();
+		Map<String, Object> parameterMap = request.getParameterMap();
+		Integer customTimeout = request.getCustomTimeout();
 
-		return EasyCodefApiClient.requestProduct(urlPath, accessToken, parameterMap, customTimeout);
+		return EasyCodefClient.requestProduct(urlPath, validToken, parameterMap, customTimeout);
 	}
 }

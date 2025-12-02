@@ -41,19 +41,19 @@ public class EasyCodefBuilder {
 		return new EasyCodef(this);
 	}
 
-	protected CodefServiceType getServiceType() {
+	public CodefServiceType getServiceType() {
 		return serviceType;
 	}
 
-	protected String getClientId() {
+	public String getClientId() {
 		return clientId;
 	}
 
-	protected String getClientSecret() {
+	public String getClientSecret() {
 		return clientSecret;
 	}
 
-	protected String getPublicKey() {
+	public String getPublicKey() {
 		return publicKey;
 	}
 

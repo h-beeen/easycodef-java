@@ -8,7 +8,8 @@ import org.apache.commons.codec.binary.Base64;
 
 import com.alibaba.fastjson2.JSONObject;
 
-import io.codef.api.core.EasyCodefApiClient;
+import io.codef.api.EasyCodefBuilder;
+import io.codef.api.core.EasyCodefClient;
 import io.codef.api.dto.EasyCodefResponse;
 
 public class EasyCodefToken {
@@ -18,15 +19,13 @@ public class EasyCodefToken {
 	private String accessToken;
 	private LocalDateTime expiresAt;
 
-	EasyCodefToken(String clientId, String clientSecret) {
-		this.oauthToken = createOAuthToken(clientId, clientSecret);
+	public EasyCodefToken(EasyCodefBuilder builder) {
+		this.oauthToken = createOAuthToken(builder.getClientId(), builder.getClientSecret());
 
-		EasyCodefResponse response = EasyCodefApiClient.publishToken(oauthToken);
-
-		initializeToken(response);
+		refreshToken();
 	}
 
-	EasyCodefToken validateAndRefreshToken() {
+	public EasyCodefToken validateAndRefreshToken() {
 		if (expiresAt == null || isTokenExpiringSoon(expiresAt)) {
 			refreshToken();
 		}
@@ -34,7 +33,7 @@ public class EasyCodefToken {
 		return this;
 	}
 
-	String getAccessToken() {
+	public String getAccessToken() {
 		return accessToken;
 	}
 
@@ -45,7 +44,9 @@ public class EasyCodefToken {
 		return new String(authEncBytes);
 	}
 
-	private void initializeToken(EasyCodefResponse response) {
+	private void refreshToken() {
+		EasyCodefResponse response = EasyCodefClient.publishToken(oauthToken);
+
 		JSONObject jsonObject = response.getData(JSONObject.class);
 
 		Object accessToken = jsonObject.get(ACCESS_TOKEN);
@@ -62,11 +63,5 @@ public class EasyCodefToken {
 
 	private boolean isTokenExpiringSoon(LocalDateTime expiry) {
 		return expiry.isBefore(LocalDateTime.now().plusHours(24));
-	}
-
-	private void refreshToken() {
-		EasyCodefResponse response = EasyCodefApiClient.publishToken(oauthToken);
-
-		initializeToken(response);
 	}
 }
