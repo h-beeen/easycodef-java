@@ -30,7 +30,7 @@ public class EasyCodefToken implements Token {
 	@Override
 	public String getValidAccessToken() {
 		validateAndRefreshToken();
-		return accessToken;
+		return AuthorizationUtil.createBearerAuth(accessToken);
 	}
 
 	private void validateAndRefreshToken() {

@@ -8,7 +8,6 @@ import io.codef.api.auth.Token;
 import io.codef.api.constants.CodefServiceType;
 import io.codef.api.dto.EasyCodefRequest;
 import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.util.AuthorizationUtil;
 
 public class EasyCodefExecutor implements Executor {
 
@@ -26,8 +25,7 @@ public class EasyCodefExecutor implements Executor {
 	public EasyCodefResponse execute(EasyCodefRequest request) {
 		String urlPath = codefServiceType.getHost() + request.getProductUrl();
 
-		String accessToken = token.getValidAccessToken();
-		String bearerToken = AuthorizationUtil.createBearerAuth(accessToken);
+		String bearerToken = token.getValidAccessToken();
 
 		Map<String, Object> parameterMap = request.getParameterMap();
 		String jsonBody = JSON.toJSONString(parameterMap);
