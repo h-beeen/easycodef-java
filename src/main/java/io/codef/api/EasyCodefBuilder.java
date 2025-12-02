@@ -57,8 +57,8 @@ public class EasyCodefBuilder {
 			: this.httpClient;
 
 		Client client = new EasyCodefClient(httpClient);
-		Token token = new EasyCodefToken(this.clientId, this.clientSecret, client);
-		Executor executor = new EasyCodefExecutor(token, this.serviceType, client);
+		Token token = new EasyCodefToken(clientId, clientSecret, client);
+		Executor executor = new EasyCodefExecutor(token, serviceType, client);
 
 		return new EasyCodef(executor, this.publicKey);
 	}
