@@ -12,12 +12,12 @@ import javax.crypto.Cipher;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 
-public class RSAUtil {
+public class RsaUtil {
 
-	private RSAUtil() {
+	private RsaUtil() {
 	}
 
-	public static String encryptRSA(String plainText, String publicKey) {
+	public static String encryptRsa(String plainText, String publicKey) {
 		try {
 			PublicKey key = generatePublicKey(publicKey);
 

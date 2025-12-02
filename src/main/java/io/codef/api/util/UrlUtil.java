@@ -7,9 +7,9 @@ import java.nio.charset.StandardCharsets;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 
-public class URLUtil {
+public class UrlUtil {
 
-	private URLUtil() {
+	private UrlUtil() {
 	}
 
 	public static String decode(String content) {

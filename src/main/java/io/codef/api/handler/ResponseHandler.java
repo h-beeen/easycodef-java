@@ -12,7 +12,7 @@ import com.alibaba.fastjson2.JSONObject;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
-import io.codef.api.util.URLUtil;
+import io.codef.api.util.UrlUtil;
 
 public class ResponseHandler {
 
@@ -20,7 +20,7 @@ public class ResponseHandler {
 	}
 
 	public static EasyCodefResponse processResponse(String httpResponse) {
-		String decoded = URLUtil.decode(httpResponse);
+		String decoded = UrlUtil.decode(httpResponse);
 		JSONObject jsonObject = JSON.parseObject(decoded);
 
 		return jsonObject.containsKey(ACCESS_TOKEN)
