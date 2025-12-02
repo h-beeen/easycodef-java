@@ -11,8 +11,8 @@ public class EasyCodef {
 	private final EasyCodefExecutor executor;
 	private final String publicKey;
 
-	protected EasyCodef(EasyCodefBuilder builder) {
-		EasyCodefToken easyCodefToken = new EasyCodefToken(builder.getClientId(), builder.getClientSecret());
+	EasyCodef(EasyCodefBuilder builder) {
+		EasyCodefToken easyCodefToken = new EasyCodefToken(builder);
 
 		this.publicKey = builder.getPublicKey();
 		this.executor = new EasyCodefExecutor(easyCodefToken, builder.getServiceType());
