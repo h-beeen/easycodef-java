@@ -9,13 +9,14 @@ import io.codef.api.error.CodefException;
 
 public class URLUtil {
 
-    private URLUtil() {}
+	private URLUtil() {
+	}
 
-    public static String decode(String content) {
-        try {
-            return URLDecoder.decode(content, StandardCharsets.UTF_8.name());
-        } catch (UnsupportedEncodingException e) {
-            throw CodefException.of(CodefError.UNSUPPORTED_ENCODING, e.getMessage());
-        }
-    }
+	public static String decode(String content) {
+		try {
+			return URLDecoder.decode(content, StandardCharsets.UTF_8.name());
+		} catch (UnsupportedEncodingException e) {
+			throw CodefException.of(CodefError.UNSUPPORTED_ENCODING, e.getMessage());
+		}
+	}
 }

@@ -11,25 +11,26 @@ import io.codef.api.util.URLUtil;
 
 public class ResponseHandler {
 
-    private ResponseHandler() {}
+	private ResponseHandler() {
+	}
 
-    public static EasyCodefResponse processResponse(HttpResponse httpResponse) {
-        String decoded = URLUtil.decode(httpResponse.getBody());
-        JSONObject jsonObject = JSON.parseObject(decoded);
+	public static EasyCodefResponse processResponse(HttpResponse httpResponse) {
+		String decoded = URLUtil.decode(httpResponse.getBody());
+		JSONObject jsonObject = JSON.parseObject(decoded);
 
-        return jsonObject.containsKey(ACCESS_TOKEN)
-                ? handleTokenResponse(jsonObject)
-                : handleProductResponse(jsonObject);
-    }
+		return jsonObject.containsKey(ACCESS_TOKEN)
+			? handleTokenResponse(jsonObject)
+			: handleProductResponse(jsonObject);
+	}
 
-    private static EasyCodefResponse handleTokenResponse(JSONObject jsonResponse) {
-        return new EasyCodefResponse(null, jsonResponse);
-    }
+	private static EasyCodefResponse handleTokenResponse(JSONObject jsonResponse) {
+		return new EasyCodefResponse(null, jsonResponse);
+	}
 
-    private static EasyCodefResponse handleProductResponse(JSONObject jsonResponse) {
-        EasyCodefResponse.Result result = CodefParser.parseResult(jsonResponse);
-        Object data = CodefParser.parseData(jsonResponse);
+	private static EasyCodefResponse handleProductResponse(JSONObject jsonResponse) {
+		EasyCodefResponse.Result result = CodefParser.parseResult(jsonResponse);
+		Object data = CodefParser.parseData(jsonResponse);
 
-        return new EasyCodefResponse(result, data);
-    }
+		return new EasyCodefResponse(result, data);
+	}
 }

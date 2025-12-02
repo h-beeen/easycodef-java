@@ -14,41 +14,42 @@ import io.codef.api.error.CodefException;
 
 public class RSAUtil {
 
-    private RSAUtil() {}
+	private RSAUtil() {
+	}
 
 	public static String encryptRSA(String plainText, String publicKey) {
 		try {
-            PublicKey key = generatePublicKey(publicKey);
+			PublicKey key = generatePublicKey(publicKey);
 
-            Cipher cipher = initializeCipher(key);
-            byte[] bytePlain = cipher.doFinal(plainText.getBytes());
+			Cipher cipher = initializeCipher(key);
+			byte[] bytePlain = cipher.doFinal(plainText.getBytes());
 
-            return Base64.getEncoder().encodeToString(bytePlain);
-        } catch (Exception e) {
-            throw CodefException.of(CodefError.RSA_ENCRYPTION_ERROR, e);
-        }
+			return Base64.getEncoder().encodeToString(bytePlain);
+		} catch (Exception e) {
+			throw CodefException.of(CodefError.RSA_ENCRYPTION_ERROR, e);
+		}
 	}
 
-    private static PublicKey generatePublicKey(String publicKey) {
-        final byte[] decodedPublicKey = Base64.getDecoder().decode(publicKey);
+	private static PublicKey generatePublicKey(String publicKey) {
+		final byte[] decodedPublicKey = Base64.getDecoder().decode(publicKey);
 
-        try {
-            KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+		try {
+			KeyFactory keyFactory = KeyFactory.getInstance(RSA);
 
-            return keyFactory.generatePublic(new X509EncodedKeySpec(decodedPublicKey));
-        } catch (Exception e) {
-            throw CodefException.of(CodefError.RSA_ENCRYPTION_ERROR, e);
-        }
-    }
+			return keyFactory.generatePublic(new X509EncodedKeySpec(decodedPublicKey));
+		} catch (Exception e) {
+			throw CodefException.of(CodefError.RSA_ENCRYPTION_ERROR, e);
+		}
+	}
 
-    private static Cipher initializeCipher(PublicKey key) {
-        try {
-            Cipher cipher = Cipher.getInstance(RSA);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
+	private static Cipher initializeCipher(PublicKey key) {
+		try {
+			Cipher cipher = Cipher.getInstance(RSA);
+			cipher.init(Cipher.ENCRYPT_MODE, key);
 
-            return cipher;
-        } catch (Exception e) {
-            throw CodefException.of(CodefError.RSA_ENCRYPTION_ERROR, e);
-        }
-    }
+			return cipher;
+		} catch (Exception e) {
+			throw CodefException.of(CodefError.RSA_ENCRYPTION_ERROR, e);
+		}
+	}
 }

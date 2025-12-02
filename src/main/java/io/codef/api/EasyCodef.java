@@ -9,30 +9,32 @@ import io.codef.api.handler.CodefValidator;
 public class EasyCodef {
 
 	private final EasyCodefProperties properties;
-    private final EasyCodefExecutor executor;
+	private final EasyCodefExecutor executor;
 
-    protected EasyCodef(EasyCodefBuilder builder) {
-        EasyCodefProperties properties = new EasyCodefProperties(builder);
-        EasyCodefTokenManager tokenManager = new EasyCodefTokenManager(properties);
-        EasyCodefExecutor executor = new EasyCodefExecutor(tokenManager);
+	protected EasyCodef(EasyCodefBuilder builder) {
+		EasyCodefProperties properties = new EasyCodefProperties(builder);
+		EasyCodefTokenManager tokenManager = new EasyCodefTokenManager(properties);
+		EasyCodefExecutor executor = new EasyCodefExecutor(tokenManager);
 
-        this.properties = properties;
-        this.executor = executor;
-    }
+		this.properties = properties;
+		this.executor = executor;
+	}
 
 	public String getPublicKey() {
 		return properties.getPublicKey();
 	}
 
-    public EasyCodefResponse requestProduct(EasyCodefRequest request) {
-        CodefValidator.validateTwoWayKeywordsOrThrow(request.getParameterMap());
+	public EasyCodefResponse requestProduct(EasyCodefRequest request) {
+		CodefValidator.validateTwoWayKeywordsOrThrow(request.getParameterMap());
 
-        return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap(), request.getCustomTimeout());
-    }
+		return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap(),
+			request.getCustomTimeout());
+	}
 
-    public EasyCodefResponse requestCertification(EasyCodefRequest request) {
-        CodefValidator.validateTwoWayInfoOrThrow(request.getParameterMap());
+	public EasyCodefResponse requestCertification(EasyCodefRequest request) {
+		CodefValidator.validateTwoWayInfoOrThrow(request.getParameterMap());
 
-        return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap(), request.getCustomTimeout());
-    }
+		return executor.execute(request.getProductUrl(), properties.getServiceType(), request.getParameterMap(),
+			request.getCustomTimeout());
+	}
 }
