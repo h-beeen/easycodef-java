@@ -12,14 +12,10 @@ public class EasyCodef {
 	private final String publicKey;
 
 	protected EasyCodef(EasyCodefBuilder builder) {
+		EasyCodefToken easyCodefToken = new EasyCodefToken(builder.getClientId(), builder.getClientSecret());
+
 		this.publicKey = builder.getPublicKey();
-
-		EasyCodefToken easyCodefToken = new EasyCodefToken(builder);
-
-		this.executor = new EasyCodefExecutor(
-			easyCodefToken,
-			builder.getServiceType()
-		);
+		this.executor = new EasyCodefExecutor(easyCodefToken, builder.getServiceType());
 	}
 
 	public EasyCodefResponse requestProduct(EasyCodefRequest request) {
