@@ -36,7 +36,7 @@ public class EasyCodefClient implements Client {
 		HttpPost request = HttpRequestBuilder.builder()
 			.url(urlPath)
 			.header(HttpHeaders.AUTHORIZATION, bearerToken)
-			.header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+			.header(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON.getValue())
 			.body(jsonBody)
 			.timeout(customTimeout)
 			.build();

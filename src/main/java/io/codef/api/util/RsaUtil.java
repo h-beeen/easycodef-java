@@ -34,7 +34,7 @@ public class RsaUtil {
 		final byte[] decodedPublicKey = Base64.getDecoder().decode(publicKey);
 
 		try {
-			KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+			KeyFactory keyFactory = KeyFactory.getInstance(RSA.getValue());
 
 			return keyFactory.generatePublic(new X509EncodedKeySpec(decodedPublicKey));
 		} catch (Exception e) {
@@ -44,7 +44,7 @@ public class RsaUtil {
 
 	private static Cipher initializeCipher(PublicKey key) {
 		try {
-			Cipher cipher = Cipher.getInstance(RSA);
+			Cipher cipher = Cipher.getInstance(RSA.getValue());
 			cipher.init(Cipher.ENCRYPT_MODE, key);
 
 			return cipher;

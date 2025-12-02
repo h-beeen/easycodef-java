@@ -1,6 +1,6 @@
 package io.codef.api.auth;
 
-import static io.codef.api.constants.CodefConstant.OAuth.*;
+import static io.codef.api.constants.OAuthConstant.*;
 
 import java.time.LocalDateTime;
 
@@ -51,8 +51,8 @@ public class EasyCodefToken implements Token {
 		EasyCodefResponse response = client.publishToken(basicToken);
 		JSONObject jsonObject = response.getData(JSONObject.class);
 
-		Object accessToken = jsonObject.get(ACCESS_TOKEN);
-		Object expiresIn = jsonObject.get(EXPIRES_IN);
+		Object accessToken = jsonObject.get(ACCESS_TOKEN.getValue());
+		Object expiresIn = jsonObject.get(EXPIRES_IN.getValue());
 
 		if (accessToken == null || expiresIn == null) {
 			return;

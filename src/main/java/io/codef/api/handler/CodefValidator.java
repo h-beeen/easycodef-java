@@ -1,7 +1,7 @@
 package io.codef.api.handler;
 
 import static io.codef.api.constants.CodefConstant.*;
-import static io.codef.api.constants.CodefConstant.TwoWay.*;
+import static io.codef.api.constants.TwoWayConstant.*;
 
 import java.util.Map;
 
@@ -24,7 +24,7 @@ public class CodefValidator {
 	}
 
 	public static String validatePathOrThrow(String productUrl, CodefError codefError) {
-		if (productUrl == null || !productUrl.startsWith(PATH_PREFIX)) {
+		if (productUrl == null || !productUrl.startsWith(PATH_PREFIX.getValue())) {
 			throw CodefException.from(codefError);
 		}
 
@@ -36,7 +36,7 @@ public class CodefValidator {
 			return;
 		}
 
-		if (parameterMap.containsKey(IS_2WAY) || parameterMap.containsKey(INFO_KEY)) {
+		if (parameterMap.containsKey(IS_2WAY.getValue()) || parameterMap.containsKey(INFO_KEY.getValue())) {
 			throw CodefException.from(CodefError.INVALID_2WAY_KEYWORD);
 		}
 	}
@@ -46,12 +46,12 @@ public class CodefValidator {
 			throw CodefException.from(CodefError.EMPTY_PARAMETER);
 		}
 
-		Object is2WayObj = parameterMap.get(IS_2WAY);
+		Object is2WayObj = parameterMap.get(IS_2WAY.getValue());
 		if (is2WayObj == null || Boolean.FALSE.equals(is2WayObj)) {
 			throw CodefException.from(CodefError.INVALID_2WAY_INFO);
 		}
 
-		Object twoWayInfoObj = parameterMap.get(INFO_KEY);
+		Object twoWayInfoObj = parameterMap.get(INFO_KEY.getValue());
 		Map<String, Object> twoWayInfoMap = JSONObject.from(twoWayInfoObj);
 
 		if (!twoWayInfoMap.keySet().containsAll(REQUIRED_KEYS)) {

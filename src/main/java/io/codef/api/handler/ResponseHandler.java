@@ -1,7 +1,7 @@
 package io.codef.api.handler;
 
 import static io.codef.api.constants.CodefConstant.*;
-import static io.codef.api.constants.CodefConstant.OAuth.*;
+import static io.codef.api.constants.OAuthConstant.*;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class ResponseHandler {
 		String decoded = UrlUtil.decode(httpResponse);
 		JSONObject jsonObject = JSON.parseObject(decoded);
 
-		return jsonObject.containsKey(ACCESS_TOKEN)
+		return jsonObject.containsKey(ACCESS_TOKEN.getValue())
 			? handleTokenResponse(jsonObject)
 			: handleProductResponse(jsonObject);
 	}
@@ -40,11 +40,11 @@ public class ResponseHandler {
 	}
 
 	private static EasyCodefResponse.Result parseResult(JSONObject jsonResponse) {
-		if (!jsonResponse.containsKey(RESULT)) {
+		if (!jsonResponse.containsKey(RESULT.getValue())) {
 			throw CodefException.from(CodefError.PARSE_ERROR);
 		}
 
-		EasyCodefResponse.Result result = jsonResponse.getObject(RESULT, EasyCodefResponse.Result.class);
+		EasyCodefResponse.Result result = jsonResponse.getObject(RESULT.getValue(), EasyCodefResponse.Result.class);
 
 		if (result == null) {
 			throw CodefException.from(CodefError.PARSE_ERROR);
@@ -62,7 +62,7 @@ public class ResponseHandler {
 	}
 
 	private static Object parseObjectData(JSONObject jsonResponse) {
-		JSONObject dataObj = jsonResponse.getJSONObject(DATA);
+		JSONObject dataObj = jsonResponse.getJSONObject(DATA.getValue());
 
 		if (dataObj == null) {
 			throw CodefException.from(CodefError.PARSE_ERROR);
@@ -72,7 +72,7 @@ public class ResponseHandler {
 	}
 
 	private static List<?> parseArrayData(JSONObject jsonResponse) {
-		JSONArray dataArr = jsonResponse.getJSONArray(DATA);
+		JSONArray dataArr = jsonResponse.getJSONArray(DATA.getValue());
 
 		if (dataArr == null) {
 			throw CodefException.from(CodefError.PARSE_ERROR);
