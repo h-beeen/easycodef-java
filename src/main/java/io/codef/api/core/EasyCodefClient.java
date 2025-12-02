@@ -12,12 +12,16 @@ import io.codef.api.handler.ResponseHandler;
 import io.codef.api.http.HttpClient;
 import io.codef.api.http.HttpRequestBuilder;
 
-public class EasyCodefClient {
+public class EasyCodefClient implements Client {
 
-	private EasyCodefClient() {
+	private final HttpClient httpClient;
+
+	public EasyCodefClient(HttpClient httpClient) {
+		this.httpClient = httpClient;
 	}
 
-	public static EasyCodefResponse publishToken(String basicToken) {
+	@Override
+	public EasyCodefResponse publishToken(String basicToken) {
 		HttpPost request = HttpRequestBuilder.builder()
 			.url(OAUTH_DOMAIN + GET_TOKEN)
 			.header(HttpHeaders.AUTHORIZATION, basicToken)
@@ -26,12 +30,9 @@ public class EasyCodefClient {
 		return sendRequest(request);
 	}
 
-	static EasyCodefResponse requestProduct(
-		String urlPath,
-		String bearerToken,
-		String jsonBody,
-		Integer customTimeout
-	) {
+	@Override
+	public EasyCodefResponse requestProduct(String urlPath, String bearerToken, String jsonBody,
+		Integer customTimeout) {
 		HttpPost request = HttpRequestBuilder.builder()
 			.url(urlPath)
 			.header(HttpHeaders.AUTHORIZATION, bearerToken)
@@ -43,8 +44,8 @@ public class EasyCodefClient {
 		return sendRequest(request);
 	}
 
-	private static EasyCodefResponse sendRequest(HttpPost request) {
-		String httpResponse = HttpClient.postJson(request);
+	private EasyCodefResponse sendRequest(HttpPost request) {
+		String httpResponse = httpClient.execute(request);
 
 		return ResponseHandler.processResponse(httpResponse);
 	}

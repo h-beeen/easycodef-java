@@ -1,8 +1,16 @@
 package io.codef.api;
 
+import io.codef.api.auth.EasyCodefToken;
+import io.codef.api.auth.Token;
 import io.codef.api.constants.CodefServiceType;
+import io.codef.api.core.Client;
+import io.codef.api.core.EasyCodefClient;
+import io.codef.api.core.EasyCodefExecutor;
+import io.codef.api.core.Executor;
 import io.codef.api.error.CodefError;
 import io.codef.api.handler.CodefValidator;
+import io.codef.api.http.CodefHttpClient;
+import io.codef.api.http.HttpClient;
 
 public class EasyCodefBuilder {
 
@@ -10,6 +18,7 @@ public class EasyCodefBuilder {
 	private String clientId;
 	private String clientSecret;
 	private String publicKey;
+	private HttpClient httpClient;
 
 	public static EasyCodefBuilder builder() {
 		return new EasyCodefBuilder();
@@ -35,26 +44,23 @@ public class EasyCodefBuilder {
 		return this;
 	}
 
+	public EasyCodefBuilder httpClient(HttpClient httpClient) {
+		this.httpClient = httpClient;
+		return this;
+	}
+
 	public EasyCodef build() {
 		validateProperties();
 
-		return new EasyCodef(this);
-	}
+		HttpClient httpClient = (this.httpClient == null)
+			? new CodefHttpClient()
+			: this.httpClient;
 
-	public CodefServiceType getServiceType() {
-		return serviceType;
-	}
+		Client client = new EasyCodefClient(httpClient);
+		Token token = new EasyCodefToken(this.clientId, this.clientSecret, client);
+		Executor executor = new EasyCodefExecutor(token, this.serviceType, client);
 
-	public String getClientId() {
-		return clientId;
-	}
-
-	public String getClientSecret() {
-		return clientSecret;
-	}
-
-	public String getPublicKey() {
-		return publicKey;
+		return new EasyCodef(executor, this.publicKey);
 	}
 
 	private void validateProperties() {

@@ -1,21 +1,18 @@
 package io.codef.api;
 
-import io.codef.api.auth.EasyCodefToken;
-import io.codef.api.core.EasyCodefExecutor;
+import io.codef.api.core.Executor;
 import io.codef.api.dto.EasyCodefRequest;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.handler.CodefValidator;
 
 public class EasyCodef {
 
-	private final EasyCodefExecutor executor;
+	private final Executor executor;
 	private final String publicKey;
 
-	EasyCodef(EasyCodefBuilder builder) {
-		EasyCodefToken easyCodefToken = new EasyCodefToken(builder);
-
-		this.publicKey = builder.getPublicKey();
-		this.executor = new EasyCodefExecutor(easyCodefToken, builder.getServiceType());
+	EasyCodef(Executor executor, String publicKey) {
+		this.executor = executor;
+		this.publicKey = publicKey;
 	}
 
 	public EasyCodefResponse requestProduct(EasyCodefRequest request) {
