@@ -14,12 +14,12 @@ public enum CodefError {
 	),
 
 	INVALID_2WAY_INFO(
-		"Invalid information for 2-way request processing. Items received in the response must be included exactly in the 2-way request."
+		"Invalid information for 2-way request processing. "
+			+ "Items received in the response must be included exactly in the 2-way request."
 	),
 	INVALID_2WAY_KEYWORD(
 		"Requests for additional authentication (2-way) must use the requestCertification method."
 	),
-
 	INVALID_PATH_REQUESTED(
 		"The path should be requested in the following format: `/v1/kr/***/***/...`"
 	),
@@ -36,7 +36,6 @@ public enum CodefError {
 	EMPTY_PUBLIC_KEY(
 		"A public key is required for the product request. Please set the public key information."
 	),
-
 	EMPTY_PATH(
 		"A path is required for the product request. Please set the path information."
 	),
@@ -45,11 +44,13 @@ public enum CodefError {
 	),
 
 	IO_ERROR(
-		"An error occurred because the request was either not sent properly or not received. Please check if the outbound port to IP: 211.55.34.5, PORT: 443 is open."
+		"An error occurred because the request was either not sent properly or not received. "
+			+ "Please check if the outbound port to IP: 211.55.34.5, PORT: 443 is open."
 	),
 
 	TIMEOUT_ERROR(
-		"The request timed out. The server did not respond within the expected time. Please check the timeout settings or network connectivity."
+		"The request timed out. The server did not respond within the expected time. "
+			+ "Please check the timeout settings or network connectivity."
 	);
 
 	private final String message;
