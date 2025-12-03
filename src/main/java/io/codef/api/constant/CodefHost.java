@@ -1,4 +1,4 @@
-package io.codef.api.constants;
+package io.codef.api.constant;
 
 public final class CodefHost {
 
