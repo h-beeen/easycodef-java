@@ -23,9 +23,9 @@ public class CodefValidator {
 		return object;
 	}
 
-	public static String validatePathOrThrow(String productUrl, CodefError codefError) {
+	public static String validatePathOrThrow(String productUrl) {
 		if (productUrl == null || !productUrl.startsWith(PATH_PREFIX.getValue())) {
-			throw CodefException.from(codefError);
+			throw CodefException.from(CodefError.INVALID_PATH_REQUESTED);
 		}
 
 		return productUrl;

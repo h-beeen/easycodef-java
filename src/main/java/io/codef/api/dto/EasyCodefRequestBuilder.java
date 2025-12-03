@@ -17,7 +17,7 @@ public class EasyCodefRequestBuilder {
 	}
 
 	public EasyCodefRequestBuilder productUrl(String productUrl) {
-		this.productUrl = CodefValidator.validatePathOrThrow(productUrl, CodefError.INVALID_PATH_REQUESTED);
+		this.productUrl = CodefValidator.validatePathOrThrow(productUrl);
 		return this;
 	}
 
