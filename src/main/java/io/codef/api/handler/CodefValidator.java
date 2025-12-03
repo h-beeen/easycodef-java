@@ -1,7 +1,7 @@
 package io.codef.api.handler;
 
-import static io.codef.api.constants.CodefConstant.*;
-import static io.codef.api.constants.TwoWayConstant.*;
+import static io.codef.api.constant.CodefConstant.*;
+import static io.codef.api.constant.TwoWayConstant.*;
 
 import java.util.Map;
 

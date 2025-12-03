@@ -1,6 +1,6 @@
 package io.codef.api.util;
 
-import static io.codef.api.constants.CodefConstant.*;
+import static io.codef.api.constant.CodefConstant.*;
 
 import java.security.KeyFactory;
 import java.security.PublicKey;
