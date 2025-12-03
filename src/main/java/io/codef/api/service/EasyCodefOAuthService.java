@@ -7,12 +7,12 @@ import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.core5.http.HttpHeaders;
 
 import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.http.HttpClient;
+import io.codef.api.http.ApacheHttpClient;
 import io.codef.api.http.HttpRequestBuilder;
 
 public class EasyCodefOAuthService extends EasyCodefService {
 
-	public EasyCodefOAuthService(HttpClient httpClient) {
+	public EasyCodefOAuthService(ApacheHttpClient httpClient) {
 		super(httpClient);
 	}
 

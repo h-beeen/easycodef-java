@@ -5,10 +5,8 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import io.codef.api.constant.CodefServiceType;
 import io.codef.api.error.CodefError;
 import io.codef.api.handler.CodefValidator;
-import io.codef.api.http.CodefHttpClient;
-import io.codef.api.http.HttpClient;
+import io.codef.api.http.ApacheHttpClient;
 import io.codef.api.service.EasyCodefApiService;
-import io.codef.api.service.EasyCodefDispatcher;
 import io.codef.api.service.EasyCodefOAuthService;
 
 public class EasyCodefBuilder {
@@ -17,7 +15,7 @@ public class EasyCodefBuilder {
 	private String clientId;
 	private String clientSecret;
 	private String publicKey;
-	private HttpClient httpClient;
+	private ApacheHttpClient httpClient;
 
 	public static EasyCodefBuilder builder() {
 		return new EasyCodefBuilder();
@@ -44,15 +42,15 @@ public class EasyCodefBuilder {
 	}
 
 	public EasyCodefBuilder httpClient(CloseableHttpClient httpClient) {
-		this.httpClient = CodefHttpClient.ofCustom(httpClient);
+		this.httpClient = ApacheHttpClient.ofCustom(httpClient);
 		return this;
 	}
 
 	public EasyCodef build() {
 		validateProperties();
 
-		HttpClient httpClient = (this.httpClient == null)
-			? CodefHttpClient.of()
+		ApacheHttpClient httpClient = (this.httpClient == null)
+			? ApacheHttpClient.of()
 			: this.httpClient;
 
 		EasyCodefOAuthService oAuthService = new EasyCodefOAuthService(httpClient);
