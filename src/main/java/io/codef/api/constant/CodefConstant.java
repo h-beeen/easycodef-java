@@ -1,11 +1,13 @@
-package io.codef.api.constants;
+package io.codef.api.constant;
 
 public enum CodefConstant {
 	RESULT("result"),
 	DATA("data"),
 	PATH_PREFIX("/v1"),
 	RSA("RSA"),
-	APPLICATION_JSON("application/json");
+	APPLICATION_JSON("application/json"),
+	IS_2WAY("is2Way"),
+	INFO_KEY("twoWayInfo");
 
 	private final String value;
 
