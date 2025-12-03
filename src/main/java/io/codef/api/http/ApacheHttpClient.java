@@ -24,11 +24,11 @@ public class ApacheHttpClient {
 		this.client = client;
 	}
 
-	public static ApacheHttpClient of() {
+	public static ApacheHttpClient create() {
 		return new ApacheHttpClient();
 	}
 
-	public static ApacheHttpClient ofCustom(CloseableHttpClient client) {
+	public static ApacheHttpClient from(CloseableHttpClient client) {
 		return new ApacheHttpClient(client);
 	}
 

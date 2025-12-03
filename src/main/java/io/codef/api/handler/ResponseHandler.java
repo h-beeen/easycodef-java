@@ -29,7 +29,7 @@ public class ResponseHandler {
 	}
 
 	private static EasyCodefResponse handleTokenResponse(JSONObject jsonResponse) {
-		return EasyCodefResponse.ofToken(jsonResponse);
+		return EasyCodefResponse.from(jsonResponse);
 	}
 
 	private static EasyCodefResponse handleProductResponse(JSONObject jsonResponse) {

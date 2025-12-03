@@ -42,7 +42,7 @@ public class EasyCodefBuilder {
 	}
 
 	public EasyCodefBuilder httpClient(CloseableHttpClient httpClient) {
-		this.httpClient = ApacheHttpClient.ofCustom(httpClient);
+		this.httpClient = ApacheHttpClient.from(httpClient);
 		return this;
 	}
 
@@ -50,7 +50,7 @@ public class EasyCodefBuilder {
 		validateProperties();
 
 		ApacheHttpClient httpClient = (this.httpClient == null)
-			? ApacheHttpClient.of()
+			? ApacheHttpClient.create()
 			: this.httpClient;
 
 		EasyCodefOAuthService oAuthService = new EasyCodefOAuthService(httpClient);

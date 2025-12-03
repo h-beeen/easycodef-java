@@ -20,12 +20,12 @@ public class EasyCodefResponse {
 		this.data = data;
 	}
 
-	public static EasyCodefResponse of(Result result, Object data) {
-		return new EasyCodefResponse(result, data);
+	public static EasyCodefResponse from(Object data) {
+		return new EasyCodefResponse(data);
 	}
 
-	public static EasyCodefResponse ofToken(Object data) {
-		return new EasyCodefResponse(data);
+	public static EasyCodefResponse of(Result result, Object data) {
+		return new EasyCodefResponse(result, data);
 	}
 
 	public Result getResult() {
