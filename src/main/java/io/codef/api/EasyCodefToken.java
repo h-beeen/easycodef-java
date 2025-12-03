@@ -47,7 +47,7 @@ public class EasyCodefToken {
 
 	private void refreshToken() {
 		String basicToken = AuthorizationUtil.createBasicAuth(oauthToken);
-		EasyCodefResponse response = oAuthService.publishToken(basicToken);
+		EasyCodefResponse response = oAuthService.requestToken(basicToken);
 		JSONObject jsonObject = response.getData(JSONObject.class);
 
 		Object accessToken = jsonObject.get(ACCESS_TOKEN.getValue());

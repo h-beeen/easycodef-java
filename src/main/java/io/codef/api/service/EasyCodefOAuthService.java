@@ -16,7 +16,7 @@ public class EasyCodefOAuthService extends EasyCodefService {
 		super(httpClient);
 	}
 
-	public EasyCodefResponse publishToken(String basicToken) {
+	public EasyCodefResponse requestToken(String basicToken) {
 		HttpPost request = HttpRequestBuilder.builder()
 			.url(OAUTH_DOMAIN + GET_TOKEN)
 			.header(HttpHeaders.AUTHORIZATION, basicToken)
