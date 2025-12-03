@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id "com.vanniktech.maven.publish" version "0.34.0"
 }
 
 group = 'io.codef.api'
