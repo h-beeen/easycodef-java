@@ -1,4 +1,4 @@
-package io.codef.api.constants;
+package io.codef.api.constant;
 
 public enum OAuthConstant {
 	ACCESS_TOKEN("access_token"),
