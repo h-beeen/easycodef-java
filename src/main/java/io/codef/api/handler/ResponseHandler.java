@@ -1,7 +1,7 @@
 package io.codef.api.handler;
 
-import static io.codef.api.constants.CodefConstant.*;
-import static io.codef.api.constants.OAuthConstant.*;
+import static io.codef.api.constant.CodefConstant.*;
+import static io.codef.api.constant.OAuthConstant.*;
 
 import java.util.List;
 
@@ -29,14 +29,14 @@ public class ResponseHandler {
 	}
 
 	private static EasyCodefResponse handleTokenResponse(JSONObject jsonResponse) {
-		return new EasyCodefResponse(null, jsonResponse);
+		return EasyCodefResponse.ofToken(jsonResponse);
 	}
 
 	private static EasyCodefResponse handleProductResponse(JSONObject jsonResponse) {
 		EasyCodefResponse.Result result = parseResult(jsonResponse);
 		Object data = parseData(jsonResponse);
 
-		return new EasyCodefResponse(result, data);
+		return EasyCodefResponse.of(result, data);
 	}
 
 	private static EasyCodefResponse.Result parseResult(JSONObject jsonResponse) {

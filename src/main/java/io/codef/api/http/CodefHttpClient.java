@@ -16,12 +16,20 @@ public class CodefHttpClient implements HttpClient {
 
 	private final CloseableHttpClient client;
 
-	public CodefHttpClient() {
+	private CodefHttpClient() {
 		this.client = HttpClients.createSystem();
 	}
 
-	public CodefHttpClient(CloseableHttpClient client) {
+	private CodefHttpClient(CloseableHttpClient client) {
 		this.client = client;
+	}
+
+	public static CodefHttpClient of() {
+		return new CodefHttpClient();
+	}
+
+	public static CodefHttpClient ofCustom(CloseableHttpClient client) {
+		return new CodefHttpClient(client);
 	}
 
 	@Override

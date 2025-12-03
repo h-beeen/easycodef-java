@@ -10,9 +10,22 @@ public class EasyCodefResponse {
 	private final Result result;
 	private final Object data;
 
-	public EasyCodefResponse(Result result, Object data) {
+	private EasyCodefResponse(Result result, Object data) {
 		this.result = result;
 		this.data = data;
+	}
+
+	private EasyCodefResponse(Object data) {
+		this.result = null;
+		this.data = data;
+	}
+
+	public static EasyCodefResponse of(Result result, Object data) {
+		return new EasyCodefResponse(result, data);
+	}
+
+	public static EasyCodefResponse ofToken(Object data) {
+		return new EasyCodefResponse(data);
 	}
 
 	public Result getResult() {
