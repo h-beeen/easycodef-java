@@ -1,6 +1,6 @@
-package io.codef.api.auth;
+package io.codef.api;
 
-import static io.codef.api.constants.OAuthConstant.*;
+import static io.codef.api.constant.OAuthConstant.*;
 
 import java.time.LocalDateTime;
 
@@ -8,26 +8,25 @@ import org.apache.commons.codec.binary.Base64;
 
 import com.alibaba.fastjson2.JSONObject;
 
-import io.codef.api.core.Client;
 import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.service.EasyCodefOAuthService;
 import io.codef.api.util.AuthorizationUtil;
 
-public class EasyCodefToken implements Token {
+public class EasyCodefToken {
 
-	private final Client client;
+	private final EasyCodefOAuthService oAuthService;
 	private final String oauthToken;
 
 	private String accessToken;
 	private LocalDateTime expiresAt;
 
-	public EasyCodefToken(String clientId, String clientSecret, Client client) {
+	EasyCodefToken(String clientId, String clientSecret, EasyCodefOAuthService oAuthService) {
 		this.oauthToken = createOAuthToken(clientId, clientSecret);
-		this.client = client;
+		this.oAuthService = oAuthService;
 
 		refreshToken();
 	}
 
-	@Override
 	public String getValidAccessToken() {
 		validateAndRefreshToken();
 		return AuthorizationUtil.createBearerAuth(accessToken);
@@ -48,7 +47,7 @@ public class EasyCodefToken implements Token {
 
 	private void refreshToken() {
 		String basicToken = AuthorizationUtil.createBasicAuth(oauthToken);
-		EasyCodefResponse response = client.publishToken(basicToken);
+		EasyCodefResponse response = oAuthService.publishToken(basicToken);
 		JSONObject jsonObject = response.getData(JSONObject.class);
 
 		Object accessToken = jsonObject.get(ACCESS_TOKEN.getValue());
