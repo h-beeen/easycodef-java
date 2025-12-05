@@ -2,9 +2,7 @@ package io.codef.api.dto;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.annotation.JSONType;
 
-@JSONType(orders = {"result", "data"})
 public class EasyCodefResponse {
 
 	private final Result result;

@@ -1,13 +1,7 @@
 package io.codef.api.http;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.apache.hc.core5.util.Timeout;
 
 public class HttpRequestBuilder {
 
@@ -41,23 +35,7 @@ public class HttpRequestBuilder {
 		return this;
 	}
 
-	public HttpPost build() {
-		HttpPost httpPost = new HttpPost(url);
-
-		headers.forEach(httpPost::setHeader);
-
-		if (body != null && !body.isEmpty()) {
-			httpPost.setEntity(new StringEntity(body, StandardCharsets.UTF_8));
-		}
-
-		if (timeout != null && timeout > 0) {
-			RequestConfig config = RequestConfig.custom()
-				.setConnectionRequestTimeout(Timeout.ofSeconds(timeout))
-				.setResponseTimeout(Timeout.ofSeconds(timeout))
-				.build();
-			httpPost.setConfig(config);
-		}
-
-		return httpPost;
+	public CodefHttpRequest build() {
+		return new CodefHttpRequest(url, headers, body, timeout);
 	}
 }

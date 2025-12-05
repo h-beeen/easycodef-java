@@ -14,7 +14,6 @@ dependencies {
     implementation("com.alibaba.fastjson2:fastjson2:2.0.60")
     implementation("commons-codec:commons-codec:1.19.0")
     implementation("commons-io:commons-io:2.20.0")
-    implementation("org.apache.httpcomponents.client5:httpclient5:5.2.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.4")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.13.4")

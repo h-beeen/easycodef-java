@@ -1,12 +1,10 @@
 package io.codef.api;
 
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-
 import io.codef.api.constant.CodefServiceType;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 import io.codef.api.handler.CodefValidator;
-import io.codef.api.http.ApacheHttpClient;
+import io.codef.api.http.CodefHttpClient;
 import io.codef.api.service.EasyCodefApiService;
 import io.codef.api.service.EasyCodefOAuthService;
 
@@ -22,7 +20,7 @@ public class EasyCodefBuilder {
 	private String clientId;
 	private String clientSecret;
 	private String publicKey;
-	private ApacheHttpClient httpClient;
+	private CodefHttpClient httpClient;
 
 	/**
 	 * EasyCodefBuilder 생성자
@@ -86,21 +84,6 @@ public class EasyCodefBuilder {
 	}
 
 	/**
-	 * HTTP 클라이언트 설정
-	 *
-	 * <p>
-	 *     설정하지 않을 경우, {@link #build()} 호출 시 기본 설정의 {@link ApacheHttpClient} 생성
-	 * </p>
-	 *
-	 * @param httpClient CloseableHttpClient
-	 * @return EasyCodefBuilder
-	 */
-	public EasyCodefBuilder httpClient(CloseableHttpClient httpClient) {
-		this.httpClient = ApacheHttpClient.from(httpClient);
-		return this;
-	}
-
-	/**
 	 * 설정 값 기반 {@link EasyCodef} 생성
 	 *
 	 * @return EasyCodef
@@ -108,10 +91,7 @@ public class EasyCodefBuilder {
 	public EasyCodef build() {
 		validateProperties();
 
-		ApacheHttpClient httpClient = (this.httpClient == null)
-			? ApacheHttpClient.create()
-			: this.httpClient;
-
+		CodefHttpClient httpClient = new CodefHttpClient();
 		EasyCodefOAuthService oAuthService = new EasyCodefOAuthService(httpClient);
 		EasyCodefApiService apiService = new EasyCodefApiService(httpClient);
 
