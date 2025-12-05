@@ -12,11 +12,26 @@ import javax.crypto.Cipher;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 
+/**
+ * RSA 암호화를 위한 유틸리티 클래스
+ *
+ * @author : kdso10@codef.io
+ * @since  : Dec 5, 2025
+ */
+
 public class RsaUtil {
 
 	private RsaUtil() {
 	}
 
+	/**
+	 * RSA 암호화 수행
+	 *
+	 * @param plainText 암호화할 평문
+	 * @param publicKey RSA 암호화를 위한 퍼블릭 키
+	 * @return 암호화된 문자열(Base64 인코딩)
+	 * @throws CodefException {@link CodefError} RSA_ENCRYPTION_ERROR
+	 */
 	public static String encryptRsa(String plainText, String publicKey) {
 		try {
 			PublicKey key = generatePublicKey(publicKey);
@@ -30,6 +45,13 @@ public class RsaUtil {
 		}
 	}
 
+	/**
+	 * 문자열 형태의 퍼블릭 키를 {@link PublicKey} 객체로 변환
+	 *
+	 * @param publicKey RSA 암호화를 위한 퍼블릭 키
+	 * @return PublicKey 객체
+	 * @throws CodefException {@link CodefError} RSA_ENCRYPTION_ERROR
+	 */
 	private static PublicKey generatePublicKey(String publicKey) {
 		final byte[] decodedPublicKey = Base64.getDecoder().decode(publicKey);
 
@@ -42,6 +64,13 @@ public class RsaUtil {
 		}
 	}
 
+	/**
+	 * 암호화에 사용될 RSA {@link Cipher} 객체 초기화
+	 *
+	 * @param key PublicKey 객체
+	 * @return Cipher 객체
+	 * @throws CodefException {@link CodefError} RSA_ENCRYPTION_ERROR
+	 */
 	private static Cipher initializeCipher(PublicKey key) {
 		try {
 			Cipher cipher = Cipher.getInstance(RSA.getValue());

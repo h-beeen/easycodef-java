@@ -1,5 +1,11 @@
 package io.codef.api.util;
 
+/**
+ * Desc :
+ *
+ * @author : kdso10@codef.io
+ * @since  : Dec 5, 2025
+ */
 public class AuthorizationUtil {
 
 	private static final String BASIC_FORMAT = "Basic %s";
