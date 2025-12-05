@@ -78,7 +78,7 @@ CODEF API 서비스를 이용하기 위해서는 자격 증명을 위한 클라�
 한 번 발급 받은 토큰은 일주일간 재사용이 가능합니다.
 
 > [!NOTE]  
-> EasyCodef 객체는 모든 CODEF API 상품 요청을 위해 필요하며, Singleton 객체로 재사용하도록 설계되었습니다.  
+> EasyCodef 객체는 모든 CODEF API 상품 요청을 위해 필요합니다.
 > 토큰의 발급과 재사용을 자동으로 처리하며, 유효기간이 만료되는 경우 재발급 또한 자동으로 처리합니다.  
 > EasyCodef 객체는 EasyCodefBuilder 생성자를 통해 생성할 수 있습니다.
 
@@ -151,8 +151,8 @@ EasyCodefRequest request = EasyCodefRequestBuilder.builder()
 - 암호화가 필요한 상품 [[커넥티드 아이디 > 계정 등록]](https://developer.codef.io/common-guide/connected-id/register) 파라미터 구성 예시
 
 ```java
-List<HashMap<String, Object>> accountList = new ArrayList<HashMap<String, Object>>();
-HashMap<String, Object> accountMap = new HashMap<String, Object>();
+List<Map<String, Object>> accountList = new ArrayList<HashMap<String, Object>>();
+Map<String, Object> accountMap = new HashMap<String, Object>();
 accountMap.put("countryCode",  "KR");
 accountMap.put("businessType", "CD");
 accountMap.put("clientType",   "P");
