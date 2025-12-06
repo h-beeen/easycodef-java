@@ -35,8 +35,9 @@ public class ResponseHandler {
 	private static EasyCodefResponse handleProductResponse(JSONObject jsonResponse) {
 		EasyCodefResponse.Result result = parseResult(jsonResponse);
 		Object data = parseData(jsonResponse);
+		Object extraInfo = parseExtraInfo(jsonResponse);
 
-		return EasyCodefResponse.of(result, data);
+		return EasyCodefResponse.of(result, data, extraInfo);
 	}
 
 	private static EasyCodefResponse.Result parseResult(JSONObject jsonResponse) {
@@ -79,5 +80,14 @@ public class ResponseHandler {
 		}
 
 		return dataArr;
+	}
+
+	private static Object parseExtraInfo(JSONObject jsonResponse) {
+		JSONObject extraInfo = new JSONObject(jsonResponse);
+
+		extraInfo.remove(RESULT.getValue());
+		extraInfo.remove(DATA.getValue());
+
+		return extraInfo;
 	}
 }
