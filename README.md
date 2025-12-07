@@ -1,6 +1,6 @@
 <br>
 <br>
-<p style="text-align: center;">
+<p align="center">
   <a title="코드에프" href="https://codef.io/">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/d83f0450-d84e-4594-8fc0-ed08a1d05390">
@@ -9,16 +9,16 @@
   </a>
 </p>
 
-<p style="text-align: center;">
+<p align="center">
   <span><code>easycodef-java</code><br><b>Open-Source Library</b><br>For the <b>CODEF API</b></span>
 </p>
 
-<p style="text-align: center;">
+<p align="center">
 <img alt="헥토데이터" src="https://github.com/user-attachments/assets/ac6b7a7d-33f1-4b1e-9fbb-8231d56e7f33" height="20"><br>
 <span>MIT © | <a href="https://github.com/codef-io/easycodef-java/blob/master/LICENSE" target="_blank">LICENSE</a></span>
 </p>
 
-<p style="text-align: center;">
+<p align="center">
   <a href="https://search.maven.org/search?q=g:%22io.codef.api%22%20AND%20a:%22easycodef-java%22">
     <img src="https://img.shields.io/maven-central/v/io.codef.api/easycodef-java.svg?label=Maven%20Central" />
   </a>
@@ -78,7 +78,7 @@ CODEF API 서비스를 이용하기 위해서는 자격 증명을 위한 클라�
 한 번 발급 받은 토큰은 일주일간 재사용이 가능합니다.
 
 > [!NOTE]  
-> EasyCodef 객체는 모든 CODEF API 상품 요청을 위해 필요합니다.
+> EasyCodef 객체는 모든 CODEF API 상품 요청을 위해 필요합니다.  
 > 토큰의 발급과 재사용을 자동으로 처리하며, 유효기간이 만료되는 경우 재발급 또한 자동으로 처리합니다.  
 > EasyCodef 객체는 EasyCodefBuilder 생성자를 통해 생성할 수 있습니다.
 
@@ -111,7 +111,7 @@ EasyCodef에서 CODEF API 상품을 요청하기 위해서는 EasyCodefRequest �
 > [!NOTE]  
 > EasyCodefRequest 객체는 EasyCodefRequestBuilder 생성자를 통해 생성할 수 있습니다.
 > - EndPoint는 host를 제외한 `/v1/***` 형식으로 구성합니다.
-> - 파라미터 정보는 < 'key', 'value [ Object ]' > 형식으로 구성합니다.
+> - 파라미터 정보는 <"key", value> 형식으로 구성합니다.
 >
 > 본 예제는 [건강보험공단 > 건강검진결과](https://developer.codef.io/products/public/each/pp/nhis-health-check),  
 > [커넥티드 아이디 > 계정 등록](https://developer.codef.io/common-guide/connected-id/register) 기반으로 작성되었습니다.
@@ -151,8 +151,10 @@ EasyCodefRequest request = EasyCodefRequestBuilder.builder()
 - 암호화가 필요한 상품 [[커넥티드 아이디 > 계정 등록]](https://developer.codef.io/common-guide/connected-id/register) 파라미터 구성 예시
 
 ```java
-List<Map<String, Object>> accountList = new ArrayList<HashMap<String, Object>>();
-Map<String, Object> accountMap = new HashMap<String, Object>();
+import io.codef.api.util.RsaUtil;
+
+List<Map<String, Object>> accountList = new ArrayList<>();
+Map<String, Object> accountMap = new HashMap<>();
 accountMap.put("countryCode",  "KR");
 accountMap.put("businessType", "CD");
 accountMap.put("clientType",   "P");
@@ -208,11 +210,11 @@ EasyCodefResponse response = easyCodef.requestProduct(request);
 
 > [!TIP]  
 > EasyCodef는 API 응답을 `EasyCodefResponse`객체에 자동 바인딩합니다.  
-> `response.getResult()`, `response.getData()`형태로 편리하게 접근할 수 있습니다.
+> `response.getResult()`, `response.getData()`, `response.getExtraInfo()`형태로 편리하게 접근할 수 있습니다.
 
 - 요청 성공 응답 예시
 
-```java
+```json
 {
   "result": {
     "code": "CF-00000",
@@ -302,7 +304,7 @@ requestParam.put("is2Way",true);
 requestParam.put("simpleAuth","1");
 
 // 4. requestCertification() 메소드 호출 → 추가 인증 요청 처리 수행
-EasyCodefResponse easyCodefResponse = codef.requestCertification(request);
+EasyCodefResponse easyCodefResponse = easyCodef.requestCertification(request);
 ```
 
 > [!WARNING]  
@@ -332,7 +334,7 @@ EasyCodefResponse easyCodefResponse = codef.requestCertification(request);
 }
 ```
 
-### 4. 간편인증 다건요청
+### 5. 간편인증 다건요청
 
 CODEF API는 1개 요청 1개 응답을 원칙으로 합니다.
 
@@ -344,10 +346,10 @@ CODEF API는 1개 요청 1개 응답을 원칙으로 합니다.
 
 > [!IMPORTANT]  
 > **다건요청은 비동기 방식**으로 호출해야 합니다.  
-> 다건요청을 사용하는 모든 요청(`EasycodefRequest`)에는 파라미터 정보(Map 형태)에 **동일한 `"id"`값(요청 그룹 식별자)** 이 설정되어야 합니다.
+> 다건요청을 사용하는 모든 요청(`EasycodefRequest`)에는 파라미터 정보(Map 형태)에 **동일한 `id`값(요청 그룹 식별자)** 이 설정되어야 합니다.
 >
-> 동일한 `"id"`값은 한 번의 인증 세션을 공유하는 요청 묶음을 의미합니다.
-> `"id"`값이 다르면 요청은 서로 독립적으로 처리되며, 간편인증을 다시 수행해야 합니다.
+> 동일한 `id`값은 한 번의 인증 세션을 공유하는 요청 묶음을 의미합니다.
+> `id`값이 다르면 요청은 서로 독립적으로 처리되며, 간편인증을 다시 수행해야 합니다.
 
 - 다건요청 상품 객체 생성
 
@@ -368,37 +370,47 @@ List<EasyCodefRequest> requests = Arrays.asList(request1, request2, request3, re
 - 다건요청 호출 예제
 
 ```java
-for (EasyCodefRequest request : easyCodefRequests) {
+for (EasyCodefRequest request : requests) {
 	Thread.sleep(1000);     // 0.5초 ~ 1초 간격으로 송신
 	
 	new Thread(() -> {
-	    EasyCodefResponse response = codef.requestProduct(request);
+	    EasyCodefResponse productResponse = easyCodef.requestProduct(request);
 	    
-	    String code = response.getResult().getCode();
+	    String code = productResponse.getResult().getCode();
 	    
 	    if (code.equals("CF-03002")) {
 	        System.out.println(" ============= 간편 인증을 완료해주세요. =============  ");
-			
-			// 예제에서는 콘솔 입력으로 인증 완료 시점을 가정
-			Scanner sc = new Scanner(System.in);
-			sc.next();
-			System.out.println(" ============= 2차 요청이 진행됩니다. ============= ");
-			
-			// 1. 1차 응답(response)에서 추가인증 진행에 필요한 Two-Way 인증 데이터 추출
+
+	        // 예제에서는 콘솔 입력으로 인증 완료 시점을 가정
+	        Scanner sc = new Scanner(System.in);
+	        sc.next();
+	        System.out.println(" ============= 2차 요청이 진행됩니다. ============= ");
+
+	        // 1. 1차 응답(response)에서 추가인증 진행에 필요한 Two-Way 인증 데이터 추출
+	        JSONObject dataJson = productResponse.getData(JSONObject.class);
+
+	        // 2. Two-Way 인증 처리 필수 정보 구성
+	        Map<String, Object> twoWayInfoMap = new HashMap<>();
+	        twoWayInfoMap.put("jobIndex", dataJson.getLong("jobIndex"));
+	        twoWayInfoMap.put("threadIndex", dataJson.getLong("threadIndex"));
+	        twoWayInfoMap.put("jti", dataJson.getString("jti"));
+	        twoWayInfoMap.put("twoWayTimestamp", dataJson.getLong("twoWayTimestamp"));
+
+	        // 3. 최초 상품 요청 파라미터 정보(Map 형태)에 Two-Way 키워드 추가
+	        Map<String, Object> requestParam = request.getParameterMap();
+	        requestParam.put("twoWayInfo", twoWayInfoMap);
+	        requestParam.put("is2Way", Optional.of(true));
+	        requestParam.put("simpleAuth", "1");
             
-			// 2. Two-Way 인증 처리 필수 정보 구성
-                
-			// 3. 최초 상품 요청 파라미터 정보(Map 형태)에 Two-Way 키워드 추가
-            
-			// 4. requestCertification() 메소드 호출 → 추가 인증 요청 처리 수행
-			EasyCodefResponse resultCertification = codef.requestCertification(request);
+	        // 4. requestCertification() 메소드 호출 → 추가 인증 요청 처리 수행
+	        EasyCodefResponse certificationResponse = codef.requestCertification(request);
 			
-			System.out.println("result = " + resultCertification);
-		} else if (code.equals("CF-00000")) {
-		    System.out.println("result = " + response);
-		} else {
-		    System.out.println("비정상 result " + response);
-		}
+	        System.out.println("result = " + certificationResponse);
+	    } else if (code.equals("CF-00000")) {
+	        System.out.println("result = " + productResponse);
+	    } else {
+	        System.out.println("비정상 result " + productResponse);
+	    }
 	}).start();
 }
 ```
@@ -436,31 +448,11 @@ for (EasyCodefRequest request : easyCodefRequests) {
 }
 ```
 
-### 5. 커스텀 설정 (Optional)
+### 6. 커스텀 설정 (Optional)
 
 > [!NOTE]  
-> EasyCodef는 앞선 기본 설정으로도 바로 사용할 수 있지만, 전략에 따라 다음과 같은 설정을 적용할 수 있습니다.
-> - Apache HttpClient 커넥션 풀(Custom Connection Pool) 지정
-> - 요청별 http Timeout 지정
-
-- Apache HttpClient 커넥션 풀 설정 예제
-
-```java
-PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
-poolingHttpClientConnectionManager.setMaxTotal(200); // 최대 커넥션 수
-
-CloseableHttpClient httpClient = HttpClients.custom()
-	.setConnectionManager(poolingHttpClientConnectionManager)
-	.build();
-
-EasyCodef easycodef = EasyCodefBuilder.builder()
-    ...
-	.httpClient(httpClient) // CloseableHttpClient 타입만 지원
-	.build();
-```
-
-> [!TIP]  
-> `setMaxTotal()` 및 `setDefaultMaxPerRoute()` 값은 API 호출량 및 서버 환경에 맞게 조정하는 것이 좋습니다.
+> EasyCodef는 앞선 설정으로도 사용할 수 있지만, 전략에 따라 다음과 같은 설정을 적용할 수 있습니다.
+> - 특정 요청에 대한 HTTP Timeout 지정
 
 - 요청별 Timeout 설정 예제
 
@@ -472,7 +464,7 @@ EasyCodefRequest request = EasyCodefRequestBuilder.builder()
 ```
 
 > [!WARNING]  
-> `customTimeout은` 해당 요청에만 적용되며, 전역 Timeout 설정을 변경하지 않습니다.
+> `customTimeout`은 해당 요청에만 적용되며, 전역 Timeout 설정을 변경하지 않습니다.
 
 # Ask us
 
