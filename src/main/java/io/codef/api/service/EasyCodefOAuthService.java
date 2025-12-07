@@ -21,7 +21,7 @@ public class EasyCodefOAuthService extends EasyCodefService {
 	}
 
 	/**
-	 *
+	 * 토큰 발급 요청 실행
 	 *
 	 * @param basicToken Client ID와 Secret으로 생성된 Basic 인증 문자열
 	 * @return 발급된 토큰 정보를 포함한 응답 객체
