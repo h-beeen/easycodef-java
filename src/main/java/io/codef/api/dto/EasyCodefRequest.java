@@ -2,12 +2,25 @@ package io.codef.api.dto;
 
 import java.util.Map;
 
+/**
+ * CODEF API 요청 정보를 담는 DTO 클래스
+ *
+ * @author kdso10
+ * @since Dec 5, 2025
+ */
 public class EasyCodefRequest {
 
 	private final String productUrl;
 	private final Map<String, Object> parameterMap;
 	private final Integer customTimeout;
 
+	/**
+	 * EasyCodefRequest 생성자
+	 *
+	 * @param productUrl    CODEF 상품 API 경로
+	 * @param parameterMap  요청 파라미터 정보(Map 형태)
+	 * @param customTimeout 요청 단위 커스텀 타임아웃 (Optional)
+	 */
 	EasyCodefRequest(String productUrl, Map<String, Object> parameterMap, Integer customTimeout) {
 		this.productUrl = productUrl;
 		this.parameterMap = parameterMap;
