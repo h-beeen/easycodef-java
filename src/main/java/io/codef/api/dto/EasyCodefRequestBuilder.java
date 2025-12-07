@@ -1,6 +1,5 @@
 package io.codef.api.dto;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import io.codef.api.error.CodefError;
@@ -16,7 +15,7 @@ import io.codef.api.handler.CodefValidator;
 public class EasyCodefRequestBuilder {
 
 	private String productUrl;
-	private Map<String, Object> parameterMap = new HashMap<>();
+	private Map<String, Object> parameterMap;
 	private Integer customTimeout;
 
 	/**
