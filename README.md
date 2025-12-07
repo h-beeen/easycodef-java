@@ -459,8 +459,8 @@ for (EasyCodefRequest request : requests) {
 ```java
 EasyCodefRequest request = EasyCodefRequestBuilder.builder()
     ...
-	.customTimeout(500) // 단위: 초(s)
-	.build();
+    .customTimeout(500) // 단위: 초(s)
+    .build();
 ```
 
 > [!WARNING]  
