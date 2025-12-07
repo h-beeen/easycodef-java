@@ -1,5 +1,11 @@
 package io.codef.api.constant;
 
+/**
+ * CODEF 공통 문자열 enum 클래스
+ *
+ * @author kdso10
+ * @since Dec 5, 2025
+ */
 public enum CodefConstant {
 	RESULT("result"),
 	DATA("data"),
