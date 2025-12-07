@@ -15,10 +15,9 @@ import io.codef.api.error.CodefException;
 /**
  * RSA 암호화를 위한 유틸리티 클래스
  *
- * @author : kdso10@codef.io
+ * @author : kdso10
  * @since  : Dec 5, 2025
  */
-
 public class RsaUtil {
 
 	private RsaUtil() {
@@ -30,7 +29,7 @@ public class RsaUtil {
 	 * @param plainText 암호화할 평문
 	 * @param publicKey RSA 암호화를 위한 퍼블릭 키
 	 * @return 암호화된 문자열(Base64 인코딩)
-	 * @throws CodefException {@link CodefError} RSA_ENCRYPTION_ERROR
+	 * @throws CodefException 키 생성 또는 암호화 처리 중 오류가 발생한 경우 {@link CodefError#RSA_ENCRYPTION_ERROR}
 	 */
 	public static String encryptRsa(String plainText, String publicKey) {
 		try {
@@ -50,7 +49,7 @@ public class RsaUtil {
 	 *
 	 * @param publicKey RSA 암호화를 위한 퍼블릭 키
 	 * @return PublicKey 객체
-	 * @throws CodefException {@link CodefError} RSA_ENCRYPTION_ERROR
+	 * @throws CodefException 퍼블릭 키 형식이 잘못되었거나 키 생성 과정에서 오류가 발생한 경우 {@link CodefError#RSA_ENCRYPTION_ERROR}
 	 */
 	private static PublicKey generatePublicKey(String publicKey) {
 		final byte[] decodedPublicKey = Base64.getDecoder().decode(publicKey);
@@ -69,7 +68,7 @@ public class RsaUtil {
 	 *
 	 * @param key PublicKey 객체
 	 * @return Cipher 객체
-	 * @throws CodefException {@link CodefError} RSA_ENCRYPTION_ERROR
+	 * @throws CodefException Cipher 초기화 과정에서 오류가 발생한 경우 {@link CodefError#RSA_ENCRYPTION_ERROR}
 	 */
 	private static Cipher initializeCipher(PublicKey key) {
 		try {
