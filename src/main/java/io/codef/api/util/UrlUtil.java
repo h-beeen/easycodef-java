@@ -10,10 +10,9 @@ import io.codef.api.error.CodefException;
 /**
  * URL 디코딩 처리 유틸리티 클래스
  *
- * @author : kdso10@codef.io
+ * @author : kdso10
  * @since  : Dec 5, 2025
  */
-
 public class UrlUtil {
 
 	private UrlUtil() {
@@ -24,7 +23,7 @@ public class UrlUtil {
 	 *
 	 * @param content 디코딩할 문자열
 	 * @return 디코딩된 문자열
-	 * @throws CodefException {@link CodefError} UNSUPPORTED_ENCODING
+	 * @throws CodefException UTF-8 인코딩을 지원하지 않는 경우 {@link CodefError#UNSUPPORTED_ENCODING}
 	 */
 	public static String decode(String content) {
 		try {
