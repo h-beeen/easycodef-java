@@ -3,8 +3,6 @@ package io.codef.api.error;
 /**
  * CODEF 라이브러리 오류 코드 enum 클래스
  *
- * @author kdso10
- * @since Dec 5, 2025
  */
 public enum CodefError {
 	/** 문자열 디코딩 실패 */

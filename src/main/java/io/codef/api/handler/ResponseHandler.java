@@ -17,8 +17,6 @@ import io.codef.api.util.UrlUtil;
 /**
  * HTTP 응답을 {@link EasyCodefResponse}로 변환하는 유틸리티 클래스
  *
- * @author : kdso10
- * @since  : Dec 5, 2025
  */
 public class ResponseHandler {
 

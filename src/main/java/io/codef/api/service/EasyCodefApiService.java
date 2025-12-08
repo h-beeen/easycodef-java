@@ -10,8 +10,6 @@ import io.codef.api.http.HttpRequestBuilder;
 /**
  * CODEF API 상품 요청 서비스 클래스
  *
- * @author : kdso10
- * @since  : Dec 5, 2025
  */
 public class EasyCodefApiService extends EasyCodefService {
 

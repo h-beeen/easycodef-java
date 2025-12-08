@@ -5,8 +5,6 @@ import java.util.Map;
 /**
  * CODEF API 요청 정보를 담는 DTO 클래스
  *
- * @author kdso10
- * @since Dec 5, 2025
  */
 public class EasyCodefRequest {
 

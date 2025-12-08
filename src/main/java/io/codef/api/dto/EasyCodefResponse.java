@@ -5,8 +5,6 @@ import com.alibaba.fastjson2.JSONObject;
 /**
  * CODEF API 응답을 표현하는 DTO 클래스
  *
- * @author kdso10
- * @since Dec 5, 2025
  */
 public class EasyCodefResponse {
 

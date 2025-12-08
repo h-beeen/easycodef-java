@@ -11,8 +11,6 @@ import io.codef.api.service.EasyCodefOAuthService;
 /**
  * {@link EasyCodef} 객체 생성을 위한 빌더 클래스
  *
- * @author : kdso10
- * @since  : Dec 5, 2025
  */
 public class EasyCodefBuilder {
 

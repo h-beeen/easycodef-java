@@ -10,8 +10,6 @@ import io.codef.api.service.EasyCodefApiService;
 /**
  * CODEF API 호출에 필요한 값을 변환하고 전달하는 디스패처 클래스
  *
- * @author : kdso10
- * @since  : Dec 5, 2025
  */
 public class EasyCodefDispatcher {
 

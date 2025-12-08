@@ -15,8 +15,6 @@ import io.codef.api.util.AuthorizationUtil;
 /**
  * CODEF OAuth Access Token 관리를 위한 클래스
  *
- * @author : kdso10
- * @since  : Dec 5, 2025
  */
 public class EasyCodefToken {
 

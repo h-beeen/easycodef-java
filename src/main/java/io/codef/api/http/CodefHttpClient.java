@@ -17,8 +17,6 @@ import io.codef.api.error.CodefException;
 /**
  * CODEF API 통신을 위한 HTTP 클라이언트
  *
- * @author : kdso10
- * @since  : Dec 5, 2025
  */
 public class CodefHttpClient {
 

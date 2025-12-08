@@ -7,8 +7,6 @@ import io.codef.api.handler.CodefValidator;
 /**
  * CODEF API를 간편하게 호출하기 위한 유틸 라이브러리 클래스
  *
- * @author kdso10
- * @since Dec 5, 2025
  */
 public class EasyCodef {
 

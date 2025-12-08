@@ -3,8 +3,6 @@ package io.codef.api.constant;
 /**
  * CODEF OAuth 인증 응답 처리 필드 키 enum 클래스
  *
- * @author kdso10
- * @since Dec 5, 2025
  */
 public enum OAuthConstant {
 	ACCESS_TOKEN("access_token"),

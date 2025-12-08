@@ -8,8 +8,6 @@ import io.codef.api.http.CodefHttpRequest;
 /**
  * CODEF API 요청 전송 공통 서비스 추상 클래스
  *
- * @author : kdso10
- * @since  : Dec 5, 2025
  */
 public abstract class EasyCodefService {
 
