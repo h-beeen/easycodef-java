@@ -50,17 +50,17 @@
     </dependency>
 </dependencies>
 ```
-
-- `2.0.0` 버전은 기존 `EasyCodef` 객체를 활용한 호출 방법도 하위호환으로 지원합니다.
-- 기존 `1.0.0`~`1.0.6` 버전 코드에 대한 설명은 [Legacy EasyCodef Java](https://www.naver.com)을 참고해주세요
-
 - Gradle
 
 ```gradle
 dependencies {
   implementation 'io.codef.api:easycodef-java:2.0.0'
- }
+}
 ```
+
+> [!NOTE]
+> - `2.0.0` 버전은 기존 `EasyCodef` 객체를 활용한 호출 방법도 하위호환으로 지원합니다.
+> - 기존 `1.0.0`~`1.0.6` 버전 코드에 대한 설명은 [Legacy EasyCodef Java](https://www.naver.com)을 참고해주세요
 
 ### 1. EasyCodef 객체 생성
 
