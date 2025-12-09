@@ -10,6 +10,10 @@ public enum CodefError {
 		"The string is encoded in an unsupported format."
 	),
 
+	JSON_PARSE_ERROR(
+		"An error occurred during JSON deserialization."
+	),
+
 	/** 응답 JSON 형식이 예상 구조와 일치하지 않을 때 */
 	PARSE_ERROR(
 		"The client failed to parse the server response in the expected format. Please verify the request format."
