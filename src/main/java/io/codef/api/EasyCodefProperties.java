@@ -13,31 +13,31 @@ public class EasyCodefProperties {
 
     //	데모 엑세스 토큰 발급을 위한 클라이언트 아이디
     @Deprecated
-    private String demoClientId 	= "";
+    private String demoClientId;
 
     //	데모 엑세스 토큰 발급을 위한 클라이언트 시크릿
     @Deprecated
-    private String demoClientSecret 	= "";
+    private String demoClientSecret;
 
     //	OAUTH2.0 데모 토큰
     @Deprecated
-    private String demoAccessToken = "";
+    private String demoAccessToken;
 
     @Deprecated
     //	정식 엑세스 토큰 발급을 위한 클라이언트 아이디
-    private String clientId 	= "";
+    private String clientId;
 
     //	정식 엑세스 토큰 발급을 위한 클라이언트 시크릿
     @Deprecated
-    private String clientSecret 	= "";
+    private String clientSecret;
 
     //	OAUTH2.0 토큰
     @Deprecated
-    private String accessToken = "";
+    private String accessToken;
 
     //	RSA암호화를 위한 퍼블릭키
     @Deprecated
-    private String publicKey 	= "";
+    private String publicKey;
 
 
     /**

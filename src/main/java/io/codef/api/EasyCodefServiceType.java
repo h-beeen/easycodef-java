@@ -7,7 +7,7 @@ import io.codef.api.constant.CodefHost;
  *
  */
 public enum EasyCodefServiceType {
-	SANDBOX(CodefHost.SANDBOX_DOMAIN),
+
 	DEMO(CodefHost.DEMO_DOMAIN),
 	API(CodefHost.API_DOMAIN);
 
