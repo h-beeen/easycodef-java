@@ -26,7 +26,7 @@ import io.codef.api.http.CodefHttpClient;
 import io.codef.api.http.CodefHttpRequest;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[Service Layer] EasyCodefOAuthServiceTest Test")
+@DisplayName("[Service Layer] EasyCodefOAuthService Test")
 public class EasyCodefOAuthServiceTest {
 
 	@Mock
@@ -44,7 +44,7 @@ public class EasyCodefOAuthServiceTest {
 	class NewConstructor {
 
 		@Test
-		@DisplayName("[Success] EasyCodefOAuthServiceTest 생성자 테스트")
+		@DisplayName("[Success] EasyCodefOAuthService 생성자 테스트")
 		void testConstructor() {
 			assertNotNull(easyCodefOAuthService);
 		}
@@ -70,6 +70,18 @@ public class EasyCodefOAuthServiceTest {
 
 			assertEquals("mockAccessToken", response.getData(Map.class).get("access_token"));
 			assertEquals(3600, response.getData(Map.class).get("expires_in"));
+		}
+
+		@Test
+		@DisplayName("[Verification] 요청 객체 생성 및 전달 확인")
+		void testRequestToken_VerifyRequest() throws Exception {
+			String basicToken = "Basic aHR0cHN...";
+			String rawJson = "{\"access_token\":\"mockAccessToken\",\"expires_in\":3600}";
+			String encodedResponse = URLEncoder.encode(rawJson, StandardCharsets.UTF_8.name());
+
+			when(httpClient.execute(any(CodefHttpRequest.class))).thenReturn(encodedResponse);
+
+			EasyCodefResponse response = easyCodefOAuthService.requestToken(basicToken);
 
 			ArgumentCaptor<CodefHttpRequest> requestCaptor = ArgumentCaptor.forClass(CodefHttpRequest.class);
 			verify(httpClient, times(1)).execute(requestCaptor.capture());
@@ -77,7 +89,6 @@ public class EasyCodefOAuthServiceTest {
 			CodefHttpRequest capturedRequest = requestCaptor.getValue();
 
 			assertNotNull(capturedRequest.getHeaders());
-
 			assertEquals(OAUTH_DOMAIN + GET_TOKEN, capturedRequest.getUrl());
 			assertEquals(basicToken, capturedRequest.getHeaders().get("Authorization"));
 			assertEquals("mockAccessToken", response.getData(Map.class).get("access_token"));
