@@ -14,7 +14,6 @@ import java.util.Map;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 import io.codef.api.handler.CodefValidator;
-import jdk.internal.util.xml.impl.Input;
 
 /**
  * CODEF API 통신을 위한 HTTP 클라이언트

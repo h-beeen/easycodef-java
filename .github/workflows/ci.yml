@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Gradle 실행용 JDK (항상 17 이상)
+      # Gradle 빌드는 JDK 17로 고정
       - name: Setup JDK 17 for Gradle
         uses: actions/setup-java@v4
         with:
@@ -27,6 +27,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      # 실제 테스트는 Gradle Toolchains가 알아서 matrix 버전 JDK 다운로드하여 실행
+      # Gradle Toolchains가 각 matrix JDK를 다운로드하여 테스트 실행
       - name: Run tests using Java ${{ matrix.java }}
-        run: ./gradlew test -PtestJdk=${{ matrix.java }}
+        run: ./gradlew clean test -PtestJdk=${{ matrix.java }} --no-daemon
