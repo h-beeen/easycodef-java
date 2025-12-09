@@ -45,7 +45,7 @@ public class CodefValidator {
 	 * @throws CodefException 상품 URL이 {@code null}이거나 "/v1/***"으로 시작하지 않는 경우 {@link CodefError#INVALID_PATH_REQUESTED}
 	 */
 	public static String validatePathOrThrow(String productUrl) {
-		if (productUrl == null || !productUrl.startsWith(PATH_PREFIX.getValue())) {
+		if (productUrl == null || productUrl.toLowerCase().startsWith(HTTPS.getValue())) {
 			throw CodefException.from(CodefError.INVALID_PATH_REQUESTED);
 		}
 
