@@ -6,6 +6,8 @@ import java.util.Map;
 import io.codef.api.dto.EasyCodefRequest;
 import io.codef.api.dto.EasyCodefRequestBuilder;
 import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.error.CodefError;
+import io.codef.api.error.CodefException;
 
 @Deprecated
 public class EasyCodef extends EasyCodefProperties {
@@ -67,25 +69,25 @@ public class EasyCodef extends EasyCodefProperties {
 		return easyCodefClient.requestNewToken();
 	}
 
-	private EasyCodefClient easyCodefClient(EasyCodefServiceType serviceType) {
-		if (serviceType.equals(EasyCodefServiceType.API)) {
-			easyCodefClient = EasyCodefBuilder
-				.builder()
-				.serviceType(serviceType)
-				.clientId(getClientId())
-				.clientSecret(getClientSecret())
-				.publicKey(getPublicKey())
-				.build();
-		} else {
-			easyCodefClient = EasyCodefBuilder
-				.builder()
-				.serviceType(serviceType)
-				.clientId(getDemoClientId())
-				.clientSecret(getDemoClientSecret())
-				.publicKey(getPublicKey())
-				.build();
-		}
-
-		return easyCodefClient;
-	}
+    private EasyCodefClient easyCodefClient(EasyCodefServiceType serviceType) {
+        if (serviceType.equals(EasyCodefServiceType.API)) {
+            return EasyCodefBuilder
+                .builder()
+                .serviceType(serviceType)
+                .clientId(getClientId())
+                .clientSecret(getClientSecret())
+                .publicKey(getPublicKey())
+                .build();
+        } else if (serviceType.equals(EasyCodefServiceType.DEMO)) {
+            return EasyCodefBuilder
+                .builder()
+                .serviceType(serviceType)
+                .clientId(getDemoClientId())
+                .clientSecret(getDemoClientSecret())
+                .publicKey(getPublicKey())
+                .build();
+        } else {
+            throw CodefException.from(CodefError.EMPTY_SERVICE_TYPE);
+        }
+    }
 }
