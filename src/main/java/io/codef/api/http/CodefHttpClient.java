@@ -37,8 +37,7 @@ public class CodefHttpClient {
 	public String execute(CodefHttpRequest request) {
 		HttpURLConnection connection = null;
 		try {
-			URL url = new URL(request.getUrl());
-			connection = (HttpURLConnection)url.openConnection();
+			connection = createConnection(request.getUrl());
 			connection.setRequestMethod("POST");
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
@@ -118,5 +117,14 @@ public class CodefHttpClient {
 			}
 		}
 		return responseBuilder.toString();
+	}
+
+	protected HttpURLConnection createConnection(String urlString) {
+		try {
+			URL url = new URL(urlString);
+			return (HttpURLConnection) url.openConnection();
+		} catch (IOException e) {
+			throw CodefException.from(CodefError.IO_ERROR);
+		}
 	}
 }
