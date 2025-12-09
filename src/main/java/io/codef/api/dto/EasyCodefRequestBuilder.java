@@ -14,7 +14,6 @@ public class EasyCodefRequestBuilder {
 
 	private String productUrl;
 	private Map<String, Object> parameterMap;
-	private Integer customTimeout;
 
 	/**
 	 * EasyCodefRequestBuilder 인스턴스 생성
@@ -54,17 +53,6 @@ public class EasyCodefRequestBuilder {
 	}
 
 	/**
-	 * 요청 단위 커스텀 타임아웃 설정 (Optional)
-	 *
-	 * @param customTimeout 요청 타임아웃(초 단위)
-	 * @return 현재 EasyCodefRequestBuilder 인스턴스
-	 */
-	public EasyCodefRequestBuilder customTimeout(Integer customTimeout) {
-		this.customTimeout = customTimeout;
-		return this;
-	}
-
-	/**
 	 * 설정 값 기반 {@link EasyCodefRequest} 생성
 	 *
 	 * @return 새로운 {@link EasyCodefRequest} 객체
@@ -72,7 +60,7 @@ public class EasyCodefRequestBuilder {
 	public EasyCodefRequest build() {
 		validateProperties();
 
-		return new EasyCodefRequest(productUrl, parameterMap, customTimeout);
+		return new EasyCodefRequest(productUrl, parameterMap);
 	}
 
 	/**

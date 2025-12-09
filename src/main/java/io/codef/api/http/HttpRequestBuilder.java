@@ -13,7 +13,6 @@ public class HttpRequestBuilder {
 
 	private String url;
 	private String body;
-	private Integer timeout;
 
 	/**
 	 * HttpRequestBuilder 인스턴스 생성
@@ -59,22 +58,11 @@ public class HttpRequestBuilder {
 	}
 
 	/**
-	 * 요청 타임아웃 설정
-	 *
-	 * @param timeout 타임아웃 시간 (초)
-	 * @return 현재 HttpRequestBuilder 인스턴스
-	 */
-	public HttpRequestBuilder timeout(Integer timeout) {
-		this.timeout = timeout;
-		return this;
-	}
-
-	/**
 	 * 설정 값 기반 {@link CodefHttpRequest} 생성
 	 *
 	 * @return 새로운 {@link CodefHttpRequest} 객체
 	 */
 	public CodefHttpRequest build() {
-		return new CodefHttpRequest(url, headers, body, timeout);
+		return new CodefHttpRequest(url, headers, body);
 	}
 }
