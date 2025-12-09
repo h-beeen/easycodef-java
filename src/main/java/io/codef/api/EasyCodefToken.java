@@ -52,6 +52,16 @@ public class EasyCodefToken {
 		return AuthorizationUtil.createBearerAuth(accessToken);
 	}
 
+	String getAccessToken() {
+		validateAndRefreshToken();
+		return accessToken;
+	}
+
+	String getNewAccessToken() {
+		refreshToken();
+		return accessToken;
+	}
+
 	/**
 	 * Access Token 만료 여부 검증, 필요시 재발급
 	 */

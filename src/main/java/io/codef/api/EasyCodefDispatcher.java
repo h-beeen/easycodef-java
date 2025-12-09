@@ -48,4 +48,12 @@ public class EasyCodefDispatcher {
 
 		return apiService.requestProduct(urlPath, bearerToken, jsonBody);
 	}
+
+	String getToken() {
+		return token.getAccessToken();
+	}
+
+	String getNewToken() {
+		return token.getNewAccessToken();
+	}
 }
