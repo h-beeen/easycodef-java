@@ -2,6 +2,8 @@ package io.codef.api;
 
 import io.codef.api.dto.EasyCodefRequest;
 import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.error.CodefError;
+import io.codef.api.error.CodefException;
 import io.codef.api.handler.CodefValidator;
 
 /**
@@ -35,6 +37,10 @@ public class EasyCodefClient {
 	 * @return CODEF 응답 객체
 	 */
 	public EasyCodefResponse requestProduct(EasyCodefRequest request) {
+		if (request == null) {
+			throw CodefException.from(CodefError.EMPTY_EASYCODEF_REQUEST);
+		}
+
 		CodefValidator.validateTwoWayKeywordsOrThrow(request.getParameterMap());
 
 		return dispatcher.dispatchRequest(request);
@@ -51,6 +57,10 @@ public class EasyCodefClient {
 	 * @return CODEF 응답 객체
 	 */
 	public EasyCodefResponse requestCertification(EasyCodefRequest request) {
+		if (request == null) {
+			throw CodefException.from(CodefError.EMPTY_EASYCODEF_REQUEST);
+		}
+
 		CodefValidator.validateTwoWayInfoOrThrow(request.getParameterMap());
 
 		return dispatcher.dispatchRequest(request);
