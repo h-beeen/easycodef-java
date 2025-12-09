@@ -58,6 +58,9 @@ public enum CodefError {
 	EMPTY_PARAMETER(
 		"Parameter is required for the product request. Please set the parameter information."
 	),
+	EMPTY_EASYCODEF_REQUEST(
+		"EasyCodefRequest is required for the product request. Please set the EasyCodefRequest parameter information."
+	),
 
 	/** 입출력(통신) 오류 */
 	IO_ERROR(
