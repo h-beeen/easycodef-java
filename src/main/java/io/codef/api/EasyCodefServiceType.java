@@ -1,16 +1,19 @@
-package io.codef.api.constant;
+package io.codef.api;
+
+import io.codef.api.constant.CodefHost;
 
 /**
  * CODEF 서비스 타입 enum 클래스
  *
  */
-public enum CodefServiceType {
+public enum EasyCodefServiceType {
+	SANDBOX(CodefHost.SANDBOX_DOMAIN),
 	DEMO(CodefHost.DEMO_DOMAIN),
 	API(CodefHost.API_DOMAIN);
 
 	private final String host;
 
-	CodefServiceType(String host) {
+	EasyCodefServiceType(String host) {
 		this.host = host;
 	}
 
