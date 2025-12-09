@@ -37,11 +37,11 @@ public class EasyCodefClient {
 	 * @return CODEF 응답 객체
 	 */
 	public EasyCodefResponse requestProduct(EasyCodefRequest request) {
-		EasyCodefRequest validRequest = CodefValidator.validateNotNullOrThrow(request, EMPTY_EASYCODEF_REQUEST);
+		CodefValidator.validateNotNullOrThrow(request, EMPTY_EASYCODEF_REQUEST);
 
-		CodefValidator.validateTwoWayKeywordsOrThrow(validRequest.getParameterMap());
+		CodefValidator.validateTwoWayKeywordsOrThrow(request.getParameterMap());
 
-		return dispatcher.dispatchRequest(validRequest);
+		return dispatcher.dispatchRequest(request);
 	}
 
 	/**
@@ -55,11 +55,11 @@ public class EasyCodefClient {
 	 * @return CODEF 응답 객체
 	 */
 	public EasyCodefResponse requestCertification(EasyCodefRequest request) {
-		EasyCodefRequest validRequest = CodefValidator.validateNotNullOrThrow(request, EMPTY_EASYCODEF_REQUEST);
+		CodefValidator.validateNotNullOrThrow(request, EMPTY_EASYCODEF_REQUEST);
 
-		CodefValidator.validateTwoWayInfoOrThrow(validRequest.getParameterMap());
+		CodefValidator.validateTwoWayInfoOrThrow(request.getParameterMap());
 
-		return dispatcher.dispatchRequest(validRequest);
+		return dispatcher.dispatchRequest(request);
 	}
 
 	protected String requestToken() {
