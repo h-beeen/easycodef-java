@@ -1,6 +1,7 @@
 package io.codef.api.service;
 
 import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.handler.CodefValidator;
 import io.codef.api.handler.ResponseHandler;
 import io.codef.api.http.CodefHttpClient;
 import io.codef.api.http.CodefHttpRequest;
@@ -29,7 +30,7 @@ public abstract class EasyCodefService {
 	 * @return API 응답 결과를 처리한 EasyCodefResponse 객체
 	 */
 	EasyCodefResponse sendRequest(CodefHttpRequest request) {
-		String httpResponse = httpClient.execute(request);
+		String httpResponse = CodefValidator.validateJSONResponse(httpClient.execute(request));
 
 		return ResponseHandler.processResponse(httpResponse);
 	}
