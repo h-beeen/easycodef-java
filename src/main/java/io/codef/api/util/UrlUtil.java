@@ -26,7 +26,7 @@ public class UrlUtil {
 	public static String decode(String content) {
 		try {
 			return URLDecoder.decode(content, StandardCharsets.UTF_8.name());
-		} catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException | IllegalArgumentException e) {
 			throw CodefException.of(CodefError.UNSUPPORTED_ENCODING, e.getMessage());
 		}
 	}
