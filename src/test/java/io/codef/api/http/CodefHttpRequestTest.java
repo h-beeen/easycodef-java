@@ -8,6 +8,7 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("[HTTP Layer] CodefHttpRequest Test")
 public class CodefHttpRequestTest {
 
 	@Test
