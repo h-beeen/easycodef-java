@@ -1,10 +1,9 @@
 package io.codef.api;
 
-import com.alibaba.fastjson2.JSON;
-
 import io.codef.api.dto.EasyCodefRequest;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.service.EasyCodefApiService;
+import io.codef.api.util.JsonUtil;
 
 /**
  * CODEF API 호출에 필요한 값을 변환하고 전달하는 디스패처 클래스
@@ -44,7 +43,7 @@ public class EasyCodefDispatcher {
 	EasyCodefResponse dispatchRequest(EasyCodefRequest request) {
 		String urlPath = easyCodefServiceType.getHost() + request.getProductUrl();
 		String bearerToken = token.getValidAccessToken();
-		String jsonBody = JSON.toJSONString(request.getParameterMap());
+		String jsonBody = JsonUtil.toJson(request.getParameterMap());
 
 		return apiService.requestProduct(urlPath, bearerToken, jsonBody);
 	}

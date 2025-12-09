@@ -3,14 +3,16 @@ package io.codef.api;
 import static io.codef.api.constant.OAuthConstant.*;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 
-import com.alibaba.fastjson2.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.service.EasyCodefOAuthService;
 import io.codef.api.util.AuthorizationUtil;
+import io.codef.api.util.JsonUtil;
 
 /**
  * CODEF OAuth Access Token 관리를 위한 클래스
@@ -91,18 +93,20 @@ public class EasyCodefToken {
 	private void refreshToken() {
 		String basicToken = AuthorizationUtil.createBasicAuth(oauthToken);
 		EasyCodefResponse response = oAuthService.requestToken(basicToken);
-		JSONObject jsonObject = response.getData(JSONObject.class);
+		Map<?, ?> responseMap = response.getData(Map.class);
 
-		Object accessToken = jsonObject.get(ACCESS_TOKEN.getValue());
-		Object expiresIn = jsonObject.get(EXPIRES_IN.getValue());
+		JsonNode jsonNode = JsonUtil.convertValue(responseMap, JsonNode.class);
 
-		if (accessToken == null || expiresIn == null) {
+		JsonNode accessTokenNode = jsonNode.get(ACCESS_TOKEN.getValue());
+		JsonNode expiresInNode = jsonNode.get(EXPIRES_IN.getValue());
+
+		if (accessTokenNode == null || expiresInNode == null) {
 			return;
 		}
 
-		this.accessToken = String.valueOf(accessToken);
+		this.accessToken = accessTokenNode.asText();
 		this.expiresAt = LocalDateTime.now()
-			.plusSeconds(Integer.parseInt(String.valueOf(expiresIn)));
+			.plusSeconds(expiresInNode.asLong());
 	}
 
 	/**

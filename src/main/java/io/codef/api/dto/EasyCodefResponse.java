@@ -1,6 +1,9 @@
 package io.codef.api.dto;
 
-import com.alibaba.fastjson2.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
+
+import io.codef.api.util.JsonUtil;
 
 /**
  * CODEF API 응답을 표현하는 DTO 클래스
@@ -66,7 +69,7 @@ public class EasyCodefResponse {
 	 * @return      변환된 타입의 데이터 객체
 	 */
 	public <T> T getData(Class<T> clazz) {
-		return JSONObject.from(data).to(clazz);
+		return JsonUtil.convertValue(data, clazz);
 	}
 
 	/**
@@ -76,19 +79,19 @@ public class EasyCodefResponse {
 	 */
 	@Override
 	public String toString() {
-		JSONObject root = new JSONObject();
+		Map<String, Object> root = new HashMap<>();
 
 		root.put("result", result);
 		root.put("data", data);
 
 		if (extraInfo != null) {
-			JSONObject extraJson = JSONObject.from(extraInfo);
-			if (extraJson != null) {
-				root.putAll(extraJson);
+			Map<String, Object> extraMap = JsonUtil.toMap(extraInfo);
+			if (extraMap != null) {
+				root.putAll(extraMap);
 			}
 		}
 
-		return root.toJSONString();
+		return JsonUtil.toJson(root);
 	}
 
 	/**
@@ -100,10 +103,12 @@ public class EasyCodefResponse {
 	 * </p>
 	 */
 	public static class Result {
-		private final String code;
-		private final String extraMessage;
-		private final String message;
-		private final String transactionId;
+		private String code;
+		private String extraMessage;
+		private String message;
+		private String transactionId;
+
+		public Result() {}
 
 		/**
 		 * 메타 정보 생성
@@ -120,6 +125,22 @@ public class EasyCodefResponse {
 			this.code = code;
 			this.extraMessage = extraMessage;
 			this.message = message;
+			this.transactionId = transactionId;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public void setExtraMessage(String extraMessage) {
+			this.extraMessage = extraMessage;
+		}
+
+		public void setMessage(String message) {
+			this.message = message;
+		}
+
+		public void setTransactionId(String transactionId) {
 			this.transactionId = transactionId;
 		}
 

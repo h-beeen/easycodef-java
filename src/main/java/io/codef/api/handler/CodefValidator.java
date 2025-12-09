@@ -5,11 +5,9 @@ import static io.codef.api.constant.TwoWayConstant.*;
 
 import java.util.Map;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
-
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
+import io.codef.api.util.JsonUtil;
 
 /**
  * CODEF 요청 값 검증을 위한 유틸리티 클래스
@@ -90,7 +88,7 @@ public class CodefValidator {
 		}
 
 		Object twoWayInfoObj = parameterMap.get(INFO_KEY.getValue());
-		Map<String, Object> twoWayInfoMap = JSONObject.from(twoWayInfoObj);
+		Map<String, Object> twoWayInfoMap = JsonUtil.toMap(twoWayInfoObj);
 
 		if (!twoWayInfoMap.keySet().containsAll(REQUIRED_KEYS)) {
 			throw CodefException.from(CodefError.INVALID_2WAY_INFO);
