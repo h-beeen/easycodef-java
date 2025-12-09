@@ -36,16 +36,7 @@
 > - [개발가이드](https://developer.codef.io/)
 > - [블로그](https://blog.hectodata.co.kr/)
 
-easycodef-java는 CODEF API 연동 개발을 돕는 Java 라이브러리입니다.
-
-사용을 위해서는 [홈페이지](https://codef.io/) 가입 후 데모/정식 서비스 신청을 통해 자격 증명을 위한 클라이언트 정보 등을 발급받아야 하며
-
-사용 가능한 모든 API(은행, 카드, 보험, 증권, 공공, 기타)와 요청/응답 항목은 모두 [개발가이드](https://developer.codef.io/)를 통해 확인할 수 있습니다.
-
 ## Getting Started
-
-라이브러리는 [Maven 중앙 저장소](https://search.maven.org/artifact/io.codef.api/easycodef-java)에서 확인 가능한 io.codef.api 패키지에 속해 있으며
-의존관계 설정을 통해 사용 가능합니다.
 
 - Maven (pom.xml)
 
@@ -55,26 +46,25 @@ easycodef-java는 CODEF API 연동 개발을 돕는 Java 라이브러리입니�
     <dependency>
         <groupId>io.codef.api</groupId>
         <artifactId>easycodef-java</artifactId>
-        <version>1.0.6</version>
+        <version>2.0.0</version>
     </dependency>
 </dependencies>
 ```
+
+- `2.0.0` 버전은 기존 `EasyCodef` 객체를 활용한 호출 방법도 하위호환으로 지원합니다.
+- 기존 `1.0.0`~`1.0.6` 버전 코드에 대한 설명은 [Legacy EasyCodef Java](https://www.naver.com)을 참고해주세요
 
 - Gradle
 
 ```gradle
 dependencies {
-  implementation 'io.codef.api:easycodef-java:1.0.6'
+  implementation 'io.codef.api:easycodef-java:2.0.0'
  }
 ```
-
-[Maven 중앙 저장소](https://search.maven.org/artifact/io.codef.api/easycodef-java)에서 모든 버전의 easycodef-java jar 파일을 다운로드할 수
-있습니다.
 
 ### 1. EasyCodef 객체 생성
 
 CODEF API 서비스를 이용하기 위해서는 자격 증명을 위한 클라이언트 정보를 통해 토큰을 발급받아야 합니다.
-
 한 번 발급 받은 토큰은 일주일간 재사용이 가능합니다.
 
 > [!NOTE]  
@@ -121,17 +111,17 @@ EasyCodef에서 CODEF API 상품을 요청하기 위해서는 EasyCodefRequest �
 - 일반 상품 [[건강보험공단 > 건강검진결과]](https://developer.codef.io/products/public/each/pp/nhis-health-check) 파라미터 구성 예시
 
 ```java
-Map<String, Object> requestParam = new HashMap<>();
-requestParam.put("organization",    "0002");
-requestParam.put("loginType",       "5");
-requestParam.put("loginTypeLevel",  "1");
-requestParam.put("identity",        "19990101");
-requestParam.put("userName",        "홍길동");
-requestParam.put("telecom",         "1");
-requestParam.put("phoneNo",         "01012345678");
-requestParam.put("searchStartYear", "2023");
-requestParam.put("searchEndYear",   "2023");
-requestParam.put("inquiryType",     "4");
+Map<String, Object> requestParams = new HashMap<>();
+requestParams.put("organization",    "0002");
+requestParams.put("loginType",       "5");
+requestParams.put("loginTypeLevel",  "1");
+requestParams.put("identity",        "19990101");
+requestParams.put("userName",        "홍길동");
+requestParams.put("telecom",         "1");
+requestParams.put("phoneNo",         "01012345678");
+requestParams.put("searchStartYear", "2023");
+requestParams.put("searchEndYear",   "2023");
+requestParams.put("inquiryType",     "4");
 ```
 
 - EasyCodefRequest 객체 생성
@@ -139,7 +129,7 @@ requestParam.put("inquiryType",     "4");
 ```java
 EasyCodefRequest request = EasyCodefRequestBuilder.builder()
 	.productUrl("/v1/kr/public/pp/nhis-health-checkup/result")
-	.parameterMap(requestParam)
+	.parameterMap(requestParams)
 	.build();
 ```
 
@@ -154,7 +144,7 @@ EasyCodefRequest request = EasyCodefRequestBuilder.builder()
 import io.codef.api.util.RsaUtil;
 
 List<Map<String, Object>> accountList = new ArrayList<>();
-Map<String, Object> accountMap = new HashMap<>();
+Map<String, Object> accountMaps = new HashMap<>();
 accountMap.put("countryCode",  "KR");
 accountMap.put("businessType", "CD");
 accountMap.put("clientType",   "P");
@@ -355,7 +345,7 @@ CODEF API는 1개 요청 1개 응답을 원칙으로 합니다.
 
 ```java
 Map<String, Object> requestParam = new HashMap<>();
-...
+
 requestParam.put("id", UUID.randomUUID().toString());   // request1, request2, ...에 동일한 id 값 설정
 
 EasycodefRequest request1;
@@ -447,28 +437,3 @@ for (EasyCodefRequest request : requests) {
   }
 }
 ```
-
-### 6. 커스텀 설정 (Optional)
-
-> [!NOTE]  
-> EasyCodef는 앞선 설정으로도 사용할 수 있지만, 전략에 따라 다음과 같은 설정을 적용할 수 있습니다.
-> - 특정 요청에 대한 HTTP Timeout 지정
-
-- 요청별 Timeout 설정 예제
-
-```java
-EasyCodefRequest request = EasyCodefRequestBuilder.builder()
-    ...
-    .customTimeout(500) // 단위: 초(s)
-    .build();
-```
-
-> [!WARNING]  
-> `customTimeout`은 해당 요청에만 적용되며, 전역 Timeout 설정을 변경하지 않습니다.
-
-# Ask us
-
-easycodef-java 라이브러리 사용에 대한 문의사항과 개발 과정에서의 오류 등에 대한 문의를 [홈페이지 문의게시판](https://codef.io/#/cs/inquiry)에 올려주시면 운영팀이 답변을
-드립니다.
-
-문의게시판의 작성 양식에 맞춰 문의 글을 남겨주세요. 가능한 빠르게 응답을 드리겠습니다. 감사합니다.
