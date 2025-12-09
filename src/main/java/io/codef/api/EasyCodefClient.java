@@ -5,6 +5,7 @@ import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 import io.codef.api.handler.CodefValidator;
+import io.codef.api.service.EasyCodefService;
 
 /**
  * CODEF API를 간편하게 호출하기 위한 유틸 라이브러리 클래스
@@ -64,6 +65,14 @@ public class EasyCodefClient {
 		CodefValidator.validateTwoWayInfoOrThrow(request.getParameterMap());
 
 		return dispatcher.dispatchRequest(request);
+	}
+
+	protected String requestToken() {
+		return dispatcher.getToken();
+	}
+
+	protected String requestNewToken() {
+		return dispatcher.getNewToken();
 	}
 
 	/**

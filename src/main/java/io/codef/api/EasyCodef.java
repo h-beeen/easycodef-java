@@ -1,6 +1,11 @@
 package io.codef.api;
 
+import java.util.HashMap;
 import java.util.Map;
+
+import io.codef.api.dto.EasyCodefRequest;
+import io.codef.api.dto.EasyCodefRequestBuilder;
+import io.codef.api.dto.EasyCodefResponse;
 
 @Deprecated
 public class EasyCodef extends EasyCodefProperties {
@@ -16,6 +21,71 @@ public class EasyCodef extends EasyCodefProperties {
             EasyCodefServiceType serviceType,
             Map<String, Object> parameterMap
     ) {
+		this.easyCodefClient = easyCodefClient(serviceType);
 
+		EasyCodefRequest request = EasyCodefRequestBuilder
+			.builder()
+			.productUrl(productUrl)
+			.parameterMap(parameterMap)
+			.build();
+
+		EasyCodefResponse response = easyCodefClient.requestProduct(request);
+
+		return response.toString();
     }
+
+	@Deprecated
+	public String requestCertification(
+		String productUrl,
+		EasyCodefServiceType serviceType,
+		HashMap<String, Object> parameterMap)
+	{
+		this.easyCodefClient = easyCodefClient(serviceType);
+
+		EasyCodefRequest request = EasyCodefRequestBuilder
+			.builder()
+			.productUrl(productUrl)
+			.parameterMap(parameterMap)
+			.build();
+
+		EasyCodefResponse response = easyCodefClient.requestCertification(request);
+
+		return response.toString();
+	}
+
+	@Deprecated
+	public String requestToken(EasyCodefServiceType serviceType) {
+		this.easyCodefClient = easyCodefClient(serviceType);
+
+		return easyCodefClient.requestToken();
+	}
+
+	@Deprecated
+	public String requestNewToken(EasyCodefServiceType serviceType) {
+		this.easyCodefClient = easyCodefClient(serviceType);
+
+		return easyCodefClient.requestNewToken();
+	}
+
+	private EasyCodefClient easyCodefClient(EasyCodefServiceType serviceType) {
+		if (serviceType.equals(EasyCodefServiceType.API)) {
+			easyCodefClient = EasyCodefBuilder
+				.builder()
+				.serviceType(serviceType)
+				.clientId(getClientId())
+				.clientSecret(getClientSecret())
+				.publicKey(getPublicKey())
+				.build();
+		} else {
+			easyCodefClient = EasyCodefBuilder
+				.builder()
+				.serviceType(serviceType)
+				.clientId(getDemoClientId())
+				.clientSecret(getDemoClientSecret())
+				.publicKey(getPublicKey())
+				.build();
+		}
+
+		return easyCodefClient;
+	}
 }
