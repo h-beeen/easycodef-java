@@ -31,7 +31,7 @@ public enum CodefError {
 	),
 	/** 상품 URL 형식 오류 */
 	INVALID_PATH_REQUESTED(
-		"The path should be requested in the following format: `/v1/kr/***/***/...`"
+		"Invalid path requested. Please exclude the domain address and provide only the relative path (e.g., /v1/kr/...)."
 	),
 	INVALID_SERVICE_TYPE(
 		"The requested service type is not supported."
