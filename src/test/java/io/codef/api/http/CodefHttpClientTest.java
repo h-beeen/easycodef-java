@@ -29,6 +29,7 @@ public class CodefHttpClientTest {
 
 	@Mock
 	private HttpURLConnection mockConnection;
+
 	private CodefHttpClient client;
 	private CodefHttpRequest validRequest;
 
