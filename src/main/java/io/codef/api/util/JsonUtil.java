@@ -20,6 +20,7 @@ public class JsonUtil {
 		if (object == null) {
 			return null;
 		}
+
 		try {
 			return mapper.writeValueAsString(object);
 		} catch (JsonProcessingException e) {
@@ -31,6 +32,7 @@ public class JsonUtil {
 		if (json == null) {
 			return null;
 		}
+
 		try {
 			return mapper.readValue(json, clazz);
 		} catch (JsonProcessingException e) {
@@ -42,6 +44,7 @@ public class JsonUtil {
 		if (fromValue == null) {
 			return null;
 		}
+
 		return mapper.convertValue(fromValue, toValueType);
 	}
 
@@ -49,6 +52,7 @@ public class JsonUtil {
 		if (fromValue == null) {
 			return null;
 		}
+
 		return mapper.convertValue(fromValue, typeReference);
 	}
 
