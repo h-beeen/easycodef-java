@@ -14,31 +14,16 @@
 </p>
 
 <p align="center">
-<img alt="헥토데이터" src="https://github.com/user-attachments/assets/ac6b7a7d-33f1-4b1e-9fbb-8231d56e7f33" height="20"><br>
-<span>MIT © | <a href="https://github.com/codef-io/easycodef-java/blob/master/LICENSE" target="_blank">LICENSE</a></span>
-</p>
-
-<p align="center">
-  <a href="https://search.maven.org/search?q=g:%22io.codef.api%22%20AND%20a:%22easycodef-java%22">
-    <img src="https://img.shields.io/maven-central/v/io.codef.api/easycodef-java.svg?label=Maven%20Central" />
-  </a>
-  <a href="https://javadoc.io/doc/io.codef.api/easycodef-java">
-    <img src="https://javadoc.io/badge2/io.codef.api/easycodef-java/javadoc.svg" />
-  </a>
-  <a href="https://github.com/codef-io/easycodef-java/blob/master/LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-  </a>
-</p>
-
+  <a href="https://github.com/codef-io/easycodef-java"><img align="center"  src="https://img.shields.io/github/last-commit/codef-io/easycodef-java/master?style=for-the-badge&label=LAST%20BUILD&logo=Github&color=181717" alt="Last Commit"/></a>
+  <a href="https://central.sonatype.com/artifact/io.codef.api/easycodef-java/1.0.6"><img align="center"  src="https://img.shields.io/maven-central/v/io.codef.api/easycodef-java.svg?style=for-the-badge&label=Maven%20Central&logo=apache-maven&color=C71A36" alt="Maven Central"/></a>
 
 > [!IMPORTANT]
 > - [홈페이지](https://codef.io/)
 > - [개발가이드](https://developer.codef.io/)
-> - [블로그](https://blog.hectodata.co.kr/)
 
 ## Getting Started
 
-- Maven (pom.xml)
+- Maven
 
 ```xml
 
@@ -50,34 +35,46 @@
     </dependency>
 </dependencies>
 ```
-- Gradle
-
+- Gradle (Groovy DSL)
 ```gradle
-dependencies {
   implementation 'io.codef.api:easycodef-java:2.0.0'
-}
+```
+
+- Gradle (Kotlin DSL)
+```gradle
+  implementation ("io.codef.api:easycodef-java:2.0.0")
 ```
 
 > [!NOTE]
 > - `2.0.0` 버전은 기존 `EasyCodef` 객체를 활용한 호출 방법도 하위호환으로 지원합니다.
 > - 기존 `1.0.0`~`1.0.6` 버전 코드에 대한 설명은 [Legacy EasyCodef Java](https://www.naver.com)을 참고해주세요
 
-### 1. EasyCodef 객체 생성
-
-CODEF API 서비스를 이용하기 위해서는 자격 증명을 위한 클라이언트 정보를 통해 토큰을 발급받아야 합니다.
-한 번 발급 받은 토큰은 일주일간 재사용이 가능합니다.
+> [!IMPORTANT]
+> 지원 JDK : Java 1.8+
+> JDK 1.8 미만 사용자는 TLS 미호환으로 사용이 어렵습니다.
+> 본 README.md의 예제는 JDK 1.8, Spring Framework, Spring Boot 2.x.x 환경에서 연동 예제를 기술해요.
 
 > [!NOTE]  
 > EasyCodef 객체는 모든 CODEF API 상품 요청을 위해 필요합니다.  
 > 토큰의 발급과 재사용을 자동으로 처리하며, 유효기간이 만료되는 경우 재발급 또한 자동으로 처리합니다.  
 > EasyCodef 객체는 EasyCodefBuilder 생성자를 통해 생성할 수 있습니다.
 
-사용자는 자격증명을 위한 **클라이언트 정보** 설정만 진행하면 됩니다.
 
-클라이언트 정보는 [MY > 키 관리](https://codef.io/account/keys)에서 확인할 수 있습니다.
+### 1. EasyCodefClient 객체 생성
+
+> [!IMPORTANT]
+> 시크릿 키 값은 [Codef 홈페이지](https://codef.io/) 회원가입 후, [MY PAGE > 키 관리](https://codef.io/account/keys)에서 확인할 수 있어요.<br>
+> 해당 키 값은 Codef API를 사용하기 위한 인증 정보를 포함해요. 외부에 노출되지 않도록 관리해주세요.<br><br>
+> <img src="https://github.com/user-attachments/assets/42ef24ec-92d3-435c-b9ac-36befe81abc4" width=500px>
+
+> [!NOTE]
+> EasyCodefClient 객체
+> - path: 실제 Codef API에 요청할 경로. `/v1/kr/***/` 형태의 String 값<br>
+> - organization : 모든 Codef API의 필수 값. 각 상품 개발가이드에 적힌 고정 값 입력
+> - 이 외 요청부를 개발가이드 `입력부(Input)` 에 맞게 입력해주세요.
 
 ```java
-EasyCodef easycodef = EasyCodefBuilder.builder()
+EasyCodefClient easycodef = EasyCodefBuilder.builder()
 	.serviceType(CodefServiceType.DEMO) // 클라이언트 정보가 데모버전일 경우 선택 [중복 선택 불가]
 	.serviceType(CodefServiceType.API)  // 클라이언트 정보가 정식버전일 경우 선택 [중복 선택 불가] 
 
@@ -92,10 +89,10 @@ EasyCodef easycodef = EasyCodefBuilder.builder()
 > - `clientId`, `clientSecret`, `publicKey`값이 `null`일 경우
 > - CODEF OAuth API와 통신에 실패하는 경우 (https://oauth.codef.io)
 
+
 ### 2. 상품 요청 객체 생성
 
-EasyCodef에서 CODEF API 상품을 요청하기 위해서는 EasyCodefRequest 객체가 필요합니다.
-
+EasyCodef에서 CODEF API 상품을 요청하기 위해서는 EasyCodefRequest 객체가 필요해요.
 해당 객체에는 호출하고자 하는 상품의 EndPoint(URL)와 요청에 필요한 파라미터 정보(Map 형태)가 포함됩니다.
 
 > [!NOTE]  
@@ -186,9 +183,8 @@ EasyCodefRequest requestCid = EasyCodefRequestBuilder
 - CODEF API 상품 호출 메소드
 
 ```java
-EasyCodef easyCodef;        // 1. EasyCodef 객체 생성
-EasyCodefRequest request;   // 2. 상품 요청 객체 생성
-
+EasyCodefClient easyCodef;        // 1. 생성된 EasyCodefClient 객체
+EasyCodefRequest request;         // 2. 상품 요청 객체 생성
 EasyCodefResponse response = easyCodef.requestProduct(request);
 ```
 
@@ -196,7 +192,7 @@ EasyCodefResponse response = easyCodef.requestProduct(request);
 > requestProduct 메소드는 아래의 예외 사항들을 같이 검증하고, 검증에 실패하면 예외를 반환합니다.
 > - CODEF OAuth API와 통신에 실패하는 경우 (https://oauth.codef.io)
 > - CODEF API와 통신에 실패하는 경우 (https://api.codef.io | https://development.codef.io)
-> - 파라미터 정보에 "is2Way", "twoWayInfo"가 포함된 경우
+> - 파라미터 정보에 "is2Way", "twoWayInfo"가 포함된 경우 -> `requestCertification` 메소드를 활용하세요.
 
 > [!TIP]  
 > EasyCodef는 API 응답을 `EasyCodefResponse`객체에 자동 바인딩합니다.  
