@@ -2,12 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main ]
   pull_request:
 
 jobs:
   test:
-    name: Test on Java ${{ matrix.java }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -16,18 +15,18 @@ jobs:
         java: [ 8, 11, 17, 21, 25 ]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-        # Gradle 캐시(빌드 시간 단축)
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
-      - name: Setup JDK ${{ matrix.java }}
+      # Gradle 실행용 JDK (항상 17 이상)
+      - name: Setup JDK 17 for Gradle
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: ${{ matrix.java }}
+          java-version: 17
 
-      - name: Run Tests
-        run: ./gradlew test
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      # 실제 테스트는 Gradle Toolchains가 알아서 matrix 버전 JDK 다운로드하여 실행
+      - name: Run tests using Java ${{ matrix.java }}
+        run: ./gradlew test -PtestJdk=${{ matrix.java }}
