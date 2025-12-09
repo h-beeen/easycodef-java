@@ -65,6 +65,18 @@ public enum CodefError {
 		"EasyCodefRequest is required for the product request. Please set the EasyCodefRequest parameter information."
 	),
 
+	UNAUTHORIZED(
+		"You do not have permission to make this request. Please check your access token or permissions."
+	),
+
+	INTERNAL_SERVER_ERROR(
+		"The server returned an unsuccessful response. Please check the error details from the server."
+	),
+
+	EMPTY_CODEF_RESPONSE(
+		"the server returned an empty response body."
+	),
+
 	/** 입출력(통신) 오류 */
 	IO_ERROR(
 		"An error occurred because the request was either not sent properly or not received. "

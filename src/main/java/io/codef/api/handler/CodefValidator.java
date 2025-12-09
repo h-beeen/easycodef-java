@@ -52,14 +52,6 @@ public class CodefValidator {
 		return productUrl;
 	}
 
-	public static String validateJSONResponse(String jsonInString) {
-		if (jsonInString == null || jsonInString.trim().isEmpty() || JSON.isValid(jsonInString)) {
-			throw CodefException.from(CodefError.OAUTH_ERROR);
-		}
-
-		return jsonInString;
-	}
-
 	/**
 	 * 상품 요청에서 Two-Way 관련 키워드 사용 여부 검증
 	 *

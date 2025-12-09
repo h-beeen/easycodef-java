@@ -13,6 +13,8 @@ import java.util.Map;
 
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
+import io.codef.api.handler.CodefValidator;
+import jdk.internal.util.xml.impl.Input;
 
 /**
  * CODEF API 통신을 위한 HTTP 클라이언트
@@ -79,28 +81,43 @@ public class CodefHttpClient {
 	 */
 	private String getResponse(HttpURLConnection connection) {
 		try {
-			int status = connection.getResponseCode();
-			InputStream is;
-			if (status >= 200 && status < 300) {
-				is = connection.getInputStream();
-			} else {
-				is = connection.getErrorStream();
+			int responseCode = connection.getResponseCode();
+			String responseBody = getString(connection, responseCode);
+
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				CodefError codefError = (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED)
+					? CodefError.UNAUTHORIZED
+					: CodefError.INTERNAL_SERVER_ERROR;
+
+				throw CodefException.of(codefError, responseBody);
 			}
 
-			if (is == null) {
-				return "";
-			}
+			CodefValidator.validateNotNullOrThrow(responseBody, CodefError.EMPTY_CODEF_RESPONSE);
 
-			try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-				StringBuilder response = new StringBuilder();
-				String responseLine;
-				while ((responseLine = br.readLine()) != null) {
-					response.append(responseLine);
-				}
-				return response.toString();
-			}
+			return responseBody;
 		} catch (IOException e) {
 			throw CodefException.from(CodefError.IO_ERROR);
 		}
+	}
+
+	private static String getString(HttpURLConnection connection, int responseCode) throws IOException {
+		InputStream inputStream;
+
+		if (responseCode == HttpURLConnection.HTTP_OK) {
+			inputStream = connection.getInputStream();
+		} else {
+			inputStream = connection.getErrorStream();
+		}
+
+		StringBuilder responseBuilder = new StringBuilder();
+		if (inputStream != null) {
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					responseBuilder.append(line);
+				}
+			}
+		}
+		return responseBuilder.toString();
 	}
 }
