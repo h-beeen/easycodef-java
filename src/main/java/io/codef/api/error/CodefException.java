@@ -8,6 +8,8 @@ public class CodefException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
+	private final CodefError codefError;
+
 	/**
 	 * 기본 에러 메시지와 추가 메시지를 합성
 	 *
@@ -27,6 +29,7 @@ public class CodefException extends RuntimeException {
 	 */
 	private CodefException(CodefError codefError) {
 		super(codefError.getMessage());
+		this.codefError = codefError;
 	}
 
 	/**
@@ -37,6 +40,7 @@ public class CodefException extends RuntimeException {
 	 */
 	private CodefException(CodefError codefError, Exception exception) {
 		super(decoratedMessage(codefError.getMessage(), exception.getMessage()), exception);
+		this.codefError = codefError;
 	}
 
 	/**
@@ -47,6 +51,7 @@ public class CodefException extends RuntimeException {
 	 */
 	private CodefException(CodefError codefError, String extraMessage) {
 		super(decoratedMessage(codefError.getMessage(), extraMessage));
+		this.codefError = codefError;
 	}
 
 	/**
@@ -79,5 +84,9 @@ public class CodefException extends RuntimeException {
 	 */
 	public static CodefException of(CodefError codefError, String extraMessage) {
 		return new CodefException(codefError, extraMessage);
+	}
+
+	public CodefError getCodefError() {
+		return codefError;
 	}
 }
