@@ -69,25 +69,25 @@ public class EasyCodef extends EasyCodefProperties {
 		return easyCodefClient.requestNewToken();
 	}
 
-    private EasyCodefClient easyCodefClient(EasyCodefServiceType serviceType) {
-        if (serviceType.equals(EasyCodefServiceType.API)) {
-            return EasyCodefBuilder
-                .builder()
-                .serviceType(serviceType)
-                .clientId(getClientId())
-                .clientSecret(getClientSecret())
-                .publicKey(getPublicKey())
-                .build();
-        } else if (serviceType.equals(EasyCodefServiceType.DEMO)) {
-            return EasyCodefBuilder
-                .builder()
-                .serviceType(serviceType)
-                .clientId(getDemoClientId())
-                .clientSecret(getDemoClientSecret())
-                .publicKey(getPublicKey())
-                .build();
-        } else {
-            throw CodefException.from(CodefError.EMPTY_SERVICE_TYPE);
-        }
-    }
+	private EasyCodefClient easyCodefClient(EasyCodefServiceType serviceType) {
+		if (serviceType.equals(EasyCodefServiceType.API)) {
+			return EasyCodefBuilder
+				.builder()
+				.serviceType(serviceType)
+				.clientId(getClientId())
+				.clientSecret(getClientSecret())
+				.publicKey(getPublicKey())
+				.build();
+		} else if (serviceType.equals(EasyCodefServiceType.DEMO)) {
+			return EasyCodefBuilder
+				.builder()
+				.serviceType(serviceType)
+				.clientId(getDemoClientId())
+				.clientSecret(getDemoClientSecret())
+				.publicKey(getPublicKey())
+				.build();
+		} else {
+			throw CodefException.from(CodefError.EMPTY_SERVICE_TYPE);
+		}
+	}
 }

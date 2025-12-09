@@ -33,6 +33,9 @@ public enum CodefError {
 	INVALID_PATH_REQUESTED(
 		"The path should be requested in the following format: `/v1/kr/***/***/...`"
 	),
+	INVALID_SERVICE_TYPE(
+		"The requested service type is not supported."
+	),
 
 	/** 서비스 환경이 지정되지 않음 */
 	EMPTY_SERVICE_TYPE(
@@ -66,6 +69,10 @@ public enum CodefError {
 	IO_ERROR(
 		"An error occurred because the request was either not sent properly or not received. "
 			+ "Please check if the outbound port to IP: 211.55.34.5, PORT: 443 is open."
+	),
+
+	OAUTH_ERROR(
+		"OAuth authentication failed. Please check your client_id, client_secret, or validity of the access token."
 	),
 
 	/** 서버 응답 지연으로 인한 타임아웃 */

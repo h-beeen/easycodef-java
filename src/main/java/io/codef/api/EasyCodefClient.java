@@ -1,11 +1,10 @@
 package io.codef.api;
 
+import static io.codef.api.error.CodefError.*;
+
 import io.codef.api.dto.EasyCodefRequest;
 import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.error.CodefError;
-import io.codef.api.error.CodefException;
 import io.codef.api.handler.CodefValidator;
-import io.codef.api.service.EasyCodefService;
 
 /**
  * CODEF API를 간편하게 호출하기 위한 유틸 라이브러리 클래스
@@ -38,13 +37,11 @@ public class EasyCodefClient {
 	 * @return CODEF 응답 객체
 	 */
 	public EasyCodefResponse requestProduct(EasyCodefRequest request) {
-		if (request == null) {
-			throw CodefException.from(CodefError.EMPTY_EASYCODEF_REQUEST);
-		}
+		EasyCodefRequest validRequest = CodefValidator.validateNotNullOrThrow(request, EMPTY_EASYCODEF_REQUEST);
 
-		CodefValidator.validateTwoWayKeywordsOrThrow(request.getParameterMap());
+		CodefValidator.validateTwoWayKeywordsOrThrow(validRequest.getParameterMap());
 
-		return dispatcher.dispatchRequest(request);
+		return dispatcher.dispatchRequest(validRequest);
 	}
 
 	/**
@@ -58,13 +55,11 @@ public class EasyCodefClient {
 	 * @return CODEF 응답 객체
 	 */
 	public EasyCodefResponse requestCertification(EasyCodefRequest request) {
-		if (request == null) {
-			throw CodefException.from(CodefError.EMPTY_EASYCODEF_REQUEST);
-		}
+		EasyCodefRequest validRequest = CodefValidator.validateNotNullOrThrow(request, EMPTY_EASYCODEF_REQUEST);
 
-		CodefValidator.validateTwoWayInfoOrThrow(request.getParameterMap());
+		CodefValidator.validateTwoWayInfoOrThrow(validRequest.getParameterMap());
 
-		return dispatcher.dispatchRequest(request);
+		return dispatcher.dispatchRequest(validRequest);
 	}
 
 	protected String requestToken() {

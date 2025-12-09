@@ -5,6 +5,7 @@ import static io.codef.api.constant.TwoWayConstant.*;
 
 import java.util.Map;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 
 import io.codef.api.error.CodefError;
@@ -49,6 +50,14 @@ public class CodefValidator {
 		}
 
 		return productUrl;
+	}
+
+	public static String validateJSONResponse(String jsonInString) {
+		if (jsonInString == null || jsonInString.trim().isEmpty() || JSON.isValid(jsonInString)) {
+			throw CodefException.from(CodefError.OAUTH_ERROR);
+		}
+
+		return jsonInString;
 	}
 
 	/**
