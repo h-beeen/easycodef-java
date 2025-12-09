@@ -47,13 +47,6 @@ public class CodefHttpClient {
 				connection.setRequestProperty(entry.getKey(), entry.getValue());
 			}
 
-			Integer timeout = request.getTimeout();
-			if (timeout != null && timeout > 0) {
-				int timeoutMillis = timeout * 1000;
-				connection.setConnectTimeout(timeoutMillis);
-				connection.setReadTimeout(timeoutMillis);
-			}
-
 			String body = request.getBody();
 			if (body != null && !body.isEmpty()) {
 				try (OutputStream os = connection.getOutputStream()) {
