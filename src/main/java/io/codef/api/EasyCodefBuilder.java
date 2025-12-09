@@ -1,6 +1,5 @@
 package io.codef.api;
 
-import io.codef.api.constant.CodefServiceType;
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
 import io.codef.api.handler.CodefValidator;
@@ -9,12 +8,12 @@ import io.codef.api.service.EasyCodefApiService;
 import io.codef.api.service.EasyCodefOAuthService;
 
 /**
- * {@link EasyCodef} 객체 생성을 위한 빌더 클래스
+ * {@link EasyCodefClient} 객체 생성을 위한 빌더 클래스
  *
  */
 public class EasyCodefBuilder {
 
-	private CodefServiceType serviceType;
+	private EasyCodefServiceType serviceType;
 	private String clientId;
 	private String clientSecret;
 	private String publicKey;
@@ -32,14 +31,14 @@ public class EasyCodefBuilder {
 	 * CODEF 서비스 타입 설정
 	 *
 	 * <p>
-	 *     데모/정식 서비스 환경에 따라 {@link CodefServiceType} 지정
+	 *     데모/정식 서비스 환경에 따라 {@link EasyCodefServiceType} 지정
 	 * </p>
 	 *
 	 * @param serviceType CODEF 서비스 타입
 	 * @return 현재 EasyCodefBuilder 인스턴스
 	 * @throws CodefException 서비스 타입이 {@code null}인 경우 {@link CodefError#EMPTY_SERVICE_TYPE}
 	 */
-	public EasyCodefBuilder serviceType(CodefServiceType serviceType) {
+	public EasyCodefBuilder serviceType(EasyCodefServiceType serviceType) {
 		this.serviceType = CodefValidator.validateNotNullOrThrow(serviceType, CodefError.EMPTY_SERVICE_TYPE);
 		return this;
 	}
@@ -81,17 +80,17 @@ public class EasyCodefBuilder {
 	}
 
 	/**
-	 * 설정 값 기반 {@link EasyCodef} 생성
+	 * 설정 값 기반 {@link EasyCodefClient} 생성
 	 *
 	 * <p>
 	 *     필수 값이 유효한지 검증한 후, <br>
 	 *     {@link EasyCodefToken}, {@link EasyCodefDispatcher} 등을 구성하여 <br>
-	 *     {@link EasyCodef}를 반환
+	 *     {@link EasyCodefClient}를 반환
 	 * </p>
 	 *
-	 * @return 새로운 {@link EasyCodef} 객체
+	 * @return 새로운 {@link EasyCodefClient} 객체
 	 */
-	public EasyCodef build() {
+	public EasyCodefClient build() {
 		validateProperties();
 
 		CodefHttpClient httpClient = new CodefHttpClient();
@@ -101,7 +100,7 @@ public class EasyCodefBuilder {
 		EasyCodefToken token = new EasyCodefToken(clientId, clientSecret, oAuthService);
 		EasyCodefDispatcher dispatcher = new EasyCodefDispatcher(token, serviceType, apiService);
 
-		return new EasyCodef(dispatcher, publicKey);
+		return new EasyCodefClient(dispatcher, publicKey);
 	}
 
 	/**

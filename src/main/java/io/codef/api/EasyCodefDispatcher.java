@@ -2,7 +2,6 @@ package io.codef.api;
 
 import com.alibaba.fastjson2.JSON;
 
-import io.codef.api.constant.CodefServiceType;
 import io.codef.api.dto.EasyCodefRequest;
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.service.EasyCodefApiService;
@@ -14,20 +13,20 @@ import io.codef.api.service.EasyCodefApiService;
 public class EasyCodefDispatcher {
 
 	private final EasyCodefToken token;
-	private final CodefServiceType codefServiceType;
+	private final EasyCodefServiceType easyCodefServiceType;
 	private final EasyCodefApiService apiService;
 
 	/**
 	 * EasyCodefDispatcher 생성자
 	 *
 	 * @param token             Access Token 발급 및 갱신 담당 객체
-	 * @param codefServiceType  데모/정식 서비스 환경
+	 * @param easyCodefServiceType  데모/정식 서비스 환경
 	 * @param apiService        API 요청 담당 서비스
 	 */
-	EasyCodefDispatcher(EasyCodefToken token, CodefServiceType codefServiceType,
+	EasyCodefDispatcher(EasyCodefToken token, EasyCodefServiceType easyCodefServiceType,
 		EasyCodefApiService apiService) {
 		this.token = token;
-		this.codefServiceType = codefServiceType;
+		this.easyCodefServiceType = easyCodefServiceType;
 		this.apiService = apiService;
 	}
 
@@ -43,7 +42,7 @@ public class EasyCodefDispatcher {
 	 * @return CODEF 서버 응답 결과
 	 */
 	EasyCodefResponse dispatchRequest(EasyCodefRequest request) {
-		String urlPath = codefServiceType.getHost() + request.getProductUrl();
+		String urlPath = easyCodefServiceType.getHost() + request.getProductUrl();
 		String bearerToken = token.getValidAccessToken();
 		String jsonBody = JSON.toJSONString(request.getParameterMap());
 
