@@ -1,6 +1,5 @@
 package io.codef.api;
 
-import com.alibaba.fastjson2.JSONObject;
 import io.codef.api.error.CodefException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
