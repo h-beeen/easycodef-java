@@ -10,7 +10,6 @@ public class CodefHttpRequest {
 	private final String url;
 	private final Map<String, String> headers;
 	private final String body;
-	private final Integer timeout;
 
 	/**
 	 * CodefHttpRequest 생성자
@@ -18,13 +17,11 @@ public class CodefHttpRequest {
 	 * @param url     요청 대상 URL
 	 * @param headers HTTP 요청 헤더 (Map)
 	 * @param body    HTTP 요청 바디 (Payload)
-	 * @param timeout 요청 타임아웃 (초)
 	 */
-	public CodefHttpRequest(String url, Map<String, String> headers, String body, Integer timeout) {
+	public CodefHttpRequest(String url, Map<String, String> headers, String body) {
 		this.url = url;
 		this.headers = headers;
 		this.body = body;
-		this.timeout = timeout;
 	}
 
 	public String getUrl() {
@@ -37,9 +34,5 @@ public class CodefHttpRequest {
 
 	public String getBody() {
 		return body;
-	}
-
-	public Integer getTimeout() {
-		return timeout;
 	}
 }

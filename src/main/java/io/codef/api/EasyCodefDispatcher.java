@@ -46,8 +46,7 @@ public class EasyCodefDispatcher {
 		String urlPath = codefServiceType.getHost() + request.getProductUrl();
 		String bearerToken = token.getValidAccessToken();
 		String jsonBody = JSON.toJSONString(request.getParameterMap());
-		Integer customTimeout = request.getCustomTimeout();
 
-		return apiService.requestProduct(urlPath, bearerToken, jsonBody, customTimeout);
+		return apiService.requestProduct(urlPath, bearerToken, jsonBody);
 	}
 }
