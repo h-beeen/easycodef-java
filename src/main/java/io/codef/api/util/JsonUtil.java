@@ -1,10 +1,14 @@
 package io.codef.api.util;
 
+import static io.codef.api.error.CodefError.*;
+
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.codef.api.error.CodefException;
 
 public class JsonUtil {
 
@@ -19,7 +23,7 @@ public class JsonUtil {
 		try {
 			return mapper.writeValueAsString(object);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException("JSON 직렬화 중 오류 발생", e);
+			throw CodefException.of(JSON_PARSE_ERROR, e);
 		}
 	}
 
@@ -30,7 +34,7 @@ public class JsonUtil {
 		try {
 			return mapper.readValue(json, clazz);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException("JSON 역직렬화 중 오류 발생", e);
+			throw CodefException.of(JSON_PARSE_ERROR, e);
 		}
 	}
 

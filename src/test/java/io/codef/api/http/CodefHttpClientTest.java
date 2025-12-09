@@ -48,7 +48,7 @@ public class CodefHttpClientTest {
 	}
 
 	@Nested
-	@DisplayName("Response Success Cases")
+	@DisplayName("[isSuccessResponse] 응답이 정상이면 성공")
 	class SuccessCases {
 
 		@Test
@@ -128,7 +128,7 @@ public class CodefHttpClientTest {
 	}
 
 	@Nested
-	@DisplayName("Exception Cases (IO / Timeout / Empty Body)")
+	@DisplayName("[Throw Exception] Exception Cases (IO / Timeout / Empty Body)")
 	class ExceptionCases {
 
 		@Test
@@ -164,7 +164,7 @@ public class CodefHttpClientTest {
 	}
 
 	@Nested
-	@DisplayName("HTTP Status Error Cases")
+	@DisplayName("[HTTP Error] HTTP Status Error Cases")
 	class HTTPStatusErrorCases {
 
 		@Test

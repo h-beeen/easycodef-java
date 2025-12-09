@@ -2,6 +2,7 @@ package io.codef.api.handler;
 
 import static io.codef.api.constant.CodefConstant.*;
 import static io.codef.api.constant.OAuthConstant.*;
+import static io.codef.api.error.CodefError.*;
 
 import java.util.List;
 import java.util.Map;
@@ -77,7 +78,7 @@ public class ResponseHandler {
 	 */
 	private static EasyCodefResponse.Result parseResult(JsonNode jsonNode) {
 		if (!jsonNode.has(RESULT.getValue())) {
-			throw CodefException.from(CodefError.PARSE_ERROR);
+			throw CodefException.from(PARSE_ERROR);
 		}
 
 		EasyCodefResponse.Result result = JsonUtil.convertValue(
@@ -86,17 +87,21 @@ public class ResponseHandler {
 		);
 
 		if (result == null) {
-			throw CodefException.from(CodefError.PARSE_ERROR);
+			throw CodefException.from(PARSE_ERROR);
 		}
 
 		return result;
 	}
 
 	private static Object parseData(JsonNode jsonNode) {
+		if (!jsonNode.has(DATA.getValue())) {
+			throw CodefException.from(PARSE_ERROR);
+		}
+
 		JsonNode dataNode = jsonNode.get(DATA.getValue());
 
-		if (dataNode == null || dataNode.isNull()) {
-			throw CodefException.from(CodefError.PARSE_ERROR);
+		if (dataNode == null) {
+			throw CodefException.from(PARSE_ERROR);
 		}
 
 		if (dataNode.isObject()) {
@@ -105,7 +110,7 @@ public class ResponseHandler {
 			return JsonUtil.convertValue(dataNode, List.class);
 		}
 
-		throw CodefException.from(CodefError.PARSE_ERROR);
+		throw CodefException.from(PARSE_ERROR);
 	}
 
 	private static Object parseExtraInfo(JsonNode jsonNode) {
