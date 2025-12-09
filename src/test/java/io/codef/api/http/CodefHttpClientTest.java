@@ -168,7 +168,7 @@ public class CodefHttpClientTest {
 	class HTTPStatusErrorCases {
 
 		@Test
-		@DisplayName("[Exception] 400 Bad Request 응답 시 INTERNAL_SERVER_ERROR 예외 발생")
+		@DisplayName("[Exception] 400 Bad Request 응답 시 INTERNAL_SERVER_ERROR 예외처리")
 		void execute_BadRequest() throws IOException {
 			String errorBody = "Bad Request";
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -202,7 +202,7 @@ public class CodefHttpClientTest {
 		}
 
 		@Test
-		@DisplayName("[Exception] 403 Forbidden 응답 시 INTERNAL_SERVER_ERROR 예외 발생")
+		@DisplayName("[Exception] 403 Forbidden 응답 시 INTERNAL_SERVER_ERROR 예외처리")
 		void execute_Forbidden() throws IOException {
 			String errorBody = "Forbidden";
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -219,7 +219,7 @@ public class CodefHttpClientTest {
 		}
 
 		@Test
-		@DisplayName("[Exception] 404 Not Found 응답 시 INTERNAL_SERVER_ERROR 예외 발생")
+		@DisplayName("[Exception] 404 Not Found 응답 시 INTERNAL_SERVER_ERROR 예외처리")
 		void execute_NotFound() throws IOException {
 			String errorBody = "Not Found";
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
