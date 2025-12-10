@@ -58,7 +58,7 @@ public class CodefValidator {
 	 */
 	public static void validateTwoWayKeywordsOrThrow(Map<String, Object> parameterMap) {
 		if (parameterMap == null || parameterMap.isEmpty()) {
-			return;
+			throw CodefException.from(CodefError.EMPTY_PARAMETER);
 		}
 
 		if (parameterMap.containsKey(IS_2WAY.getValue()) || parameterMap.containsKey(INFO_KEY.getValue())) {
@@ -88,6 +88,10 @@ public class CodefValidator {
 		}
 
 		Object twoWayInfoObj = parameterMap.get(INFO_KEY.getValue());
+		if (twoWayInfoObj == null || twoWayInfoObj.toString().trim().isEmpty()) {
+			throw CodefException.from(CodefError.INVALID_2WAY_INFO);
+		}
+
 		Map<String, Object> twoWayInfoMap = JsonUtil.toMap(twoWayInfoObj);
 
 		if (!twoWayInfoMap.keySet().containsAll(REQUIRED_KEYS)) {
