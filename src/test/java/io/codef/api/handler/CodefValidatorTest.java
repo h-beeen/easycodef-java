@@ -18,7 +18,7 @@ import io.codef.api.error.CodefException;
 public class CodefValidatorTest {
 
 	@Nested
-	@DisplayName("[validateNotNullOrThrow]")
+	@DisplayName("[validateNotNullOrThrow] 해당 메서드가 정상 동작하면 성공")
 	class ValidateNotNullOrThrow {
 
 		@Test
@@ -53,7 +53,7 @@ public class CodefValidatorTest {
 	}
 
 	@Nested
-	@DisplayName("[validatePathOrThrow]")
+	@DisplayName("[validatePathOrThrow] 해당 메서드가 정상 동작하면 성공")
 	class ValidatePathOrThrow {
 
 		@Test
@@ -90,7 +90,7 @@ public class CodefValidatorTest {
 	}
 
 	@Nested
-	@DisplayName("[validateTwoWayKeywordsOrThrow]")
+	@DisplayName("[validateTwoWayKeywordsOrThrow] 해당 메서드가 정상 동작하면 성공")
 	class ValidateTwoWayKeywordsOrThrow {
 
 		@Test
@@ -133,7 +133,7 @@ public class CodefValidatorTest {
 	}
 
 	@Nested
-	@DisplayName("[validateTwoWayInfoOrThrow]")
+	@DisplayName("[validateTwoWayInfoOrThrow] 해당 메서드가 정상 동작하면 성공")
 	class ValidateTwoWayInfoOrThrow {
 
 		@Test
