@@ -111,6 +111,41 @@ public class EasyCodefDispatcherTest {
 		}
 	}
 
+	@Test
+	@DisplayName("[Success] getToken 호출 시 Access Token 반환")
+	void getToken_return() throws Exception {
+		String expectedToken = "test-access-token";
+
+		Method getAccessTokenMethod = EasyCodefToken.class.getDeclaredMethod("getAccessToken");
+		getAccessTokenMethod.setAccessible(true);
+
+		when(getAccessTokenMethod.invoke(mockToken)).thenReturn(expectedToken);
+
+		Method getTokenMethod = EasyCodefDispatcher.class.getDeclaredMethod("getToken");
+		getTokenMethod.setAccessible(true);
+		String actualToken = (String) getTokenMethod.invoke(dispatcher);
+
+		assertEquals(expectedToken, actualToken);
+		getAccessTokenMethod.invoke(verify(mockToken, times(1)));
+	}
+
+	@Test
+	@DisplayName("[Success] getNewToken 호출 시 새로운 Access Token 반환")
+	void getNewToken_return() throws Exception {
+		String expectedNewToken = "new-test-access-token";
+
+		Method getNewAccessTokenMethod = EasyCodefToken.class.getDeclaredMethod("getNewAccessToken");
+		getNewAccessTokenMethod.setAccessible(true);
+		when(getNewAccessTokenMethod.invoke(mockToken)).thenReturn(expectedNewToken);
+
+		Method getNewTokenMethod = EasyCodefDispatcher.class.getDeclaredMethod("getNewToken");
+		getNewTokenMethod.setAccessible(true);
+		String actualNewToken = (String) getNewTokenMethod.invoke(dispatcher);
+
+		assertEquals(expectedNewToken, actualNewToken);
+		getNewAccessTokenMethod.invoke(verify(mockToken, times(1)));
+	}
+
 	private EasyCodefDispatcher createEasyCodefDispatcher() throws Exception {
 		Constructor<EasyCodefDispatcher> constructor = EasyCodefDispatcher.class.getDeclaredConstructor(
 			EasyCodefToken.class,
