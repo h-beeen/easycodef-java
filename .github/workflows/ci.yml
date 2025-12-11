@@ -29,4 +29,8 @@ jobs:
 
       # Gradle Toolchains가 각 matrix JDK를 다운로드하여 테스트 실행
       - name: Run tests using Java ${{ matrix.java }}
+        env:
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
         run: ./gradlew clean test -PtestJdk=${{ matrix.java }} --no-daemon
