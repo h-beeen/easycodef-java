@@ -180,7 +180,7 @@ public class CodefHttpClientTest {
 
 			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
 			assertEquals(CodefError.INTERNAL_SERVER_ERROR, exception.getCodefError());
-			String expectedMessage = String.format("%s\n%s", CodefError.INTERNAL_SERVER_ERROR.getMessage(), errorBody);
+			String expectedMessage = CodefError.INTERNAL_SERVER_ERROR.getMessage() + System.lineSeparator() + errorBody;
 			assertEquals(expectedMessage, exception.getMessage());
 		}
 
@@ -197,7 +197,7 @@ public class CodefHttpClientTest {
 
 			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
 			assertEquals(CodefError.UNAUTHORIZED, exception.getCodefError());
-			String expectedMessage = String.format("%s\n%s", CodefError.UNAUTHORIZED.getMessage(), errorBody);
+			String expectedMessage = CodefError.UNAUTHORIZED.getMessage() + System.lineSeparator() + errorBody;
 			assertEquals(expectedMessage, exception.getMessage());
 		}
 
@@ -214,7 +214,7 @@ public class CodefHttpClientTest {
 
 			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
 			assertEquals(CodefError.INTERNAL_SERVER_ERROR, exception.getCodefError());
-			String expectedMessage = String.format("%s\n%s", CodefError.INTERNAL_SERVER_ERROR.getMessage(), errorBody);
+			String expectedMessage = CodefError.INTERNAL_SERVER_ERROR.getMessage() + System.lineSeparator() + errorBody;
 			assertEquals(expectedMessage, exception.getMessage());
 		}
 
@@ -231,7 +231,7 @@ public class CodefHttpClientTest {
 
 			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
 			assertEquals(CodefError.INTERNAL_SERVER_ERROR, exception.getCodefError());
-			String expectedMessage = String.format("%s\n%s", CodefError.INTERNAL_SERVER_ERROR.getMessage(), errorBody);
+			String expectedMessage = CodefError.INTERNAL_SERVER_ERROR.getMessage() + System.lineSeparator() + errorBody;
 			assertEquals(expectedMessage, exception.getMessage());
 		}
 
@@ -248,7 +248,7 @@ public class CodefHttpClientTest {
 
 			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
 			assertEquals(CodefError.INTERNAL_SERVER_ERROR, exception.getCodefError());
-			String expectedMessage = String.format("%s\n%s", CodefError.INTERNAL_SERVER_ERROR.getMessage(), errorBody);
+			String expectedMessage = CodefError.INTERNAL_SERVER_ERROR.getMessage() + System.lineSeparator() + errorBody;
 			assertEquals(expectedMessage, exception.getMessage());
 		}
 	}
