@@ -19,7 +19,7 @@ public class CodefException extends RuntimeException {
 	 */
 	private static String decoratedMessage(
 		final String errorMessage, final String message) {
-		return String.format("%s\n%s", errorMessage, message);
+		return errorMessage + System.lineSeparator() + message;
 	}
 
 	/**

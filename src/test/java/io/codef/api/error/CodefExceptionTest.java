@@ -67,12 +67,12 @@ public class CodefExceptionTest {
 
 			Exception cause = new IllegalArgumentException("Invalid argument format");
 			CodefException exceptionWithCause = CodefException.of(codefError, cause);
-			String expectedMessageWithCause = String.format("%s\n%s", codefError.getMessage(), cause.getMessage());
+			String expectedMessageWithCause = codefError.getMessage() + System.lineSeparator() + cause.getMessage();
 			assertEquals(expectedMessageWithCause, exceptionWithCause.getMessage());
 
 			String extraInfo = "Specific file not found";
 			CodefException exceptionWithExtraMessage = CodefException.of(codefError, extraInfo);
-			String expectedMessageWithExtraInfo = String.format("%s\n%s", codefError.getMessage(), extraInfo);
+			String expectedMessageWithExtraInfo = codefError.getMessage() + System.lineSeparator() + extraInfo;
 			assertEquals(expectedMessageWithExtraInfo, exceptionWithExtraMessage.getMessage());
 		}
 	}
