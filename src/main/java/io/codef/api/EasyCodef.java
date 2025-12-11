@@ -12,6 +12,8 @@ import io.codef.api.error.CodefException;
 @Deprecated
 public class EasyCodef extends EasyCodefProperties {
 
+	private final Map<EasyCodefServiceType, EasyCodefClient> clientMap = new HashMap<>();
+
     private EasyCodefClient easyCodefClient;
 
     public EasyCodef() {
@@ -70,6 +72,18 @@ public class EasyCodef extends EasyCodefProperties {
 	}
 
 	private EasyCodefClient easyCodefClient(EasyCodefServiceType serviceType) {
+		if (clientMap.containsKey(serviceType)) {
+			return clientMap.get(serviceType);
+		}
+
+		EasyCodefClient client = createClient(serviceType);
+
+		clientMap.put(serviceType, client);
+
+		return client;
+	}
+
+	private EasyCodefClient createClient(EasyCodefServiceType serviceType) {
 		if (serviceType.equals(EasyCodefServiceType.API)) {
 			return EasyCodefBuilder
 				.builder()
