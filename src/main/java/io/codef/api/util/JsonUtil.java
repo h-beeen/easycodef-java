@@ -13,9 +13,8 @@ import io.codef.api.error.CodefException;
 
 public class JsonUtil {
 
-	private static final ObjectMapper mapper =
-		new ObjectMapper()
-			.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
+	private static final ObjectMapper mapper = new ObjectMapper()
+		.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 
 	private JsonUtil() {}
 

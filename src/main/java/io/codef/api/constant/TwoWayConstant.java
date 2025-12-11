@@ -25,10 +25,8 @@ public enum TwoWayConstant {
 		return value;
 	}
 
-	public static final Set<String> REQUIRED_KEYS =
-		Collections.unmodifiableSet(
-			Stream.of(values())
-				.map(TwoWayConstant::getValue)
-				.collect(Collectors.toSet())
-		);
+	public static final Set<String> REQUIRED_KEYS = Collections.unmodifiableSet(
+		Stream.of(values())
+			.map(TwoWayConstant::getValue)
+			.collect(Collectors.toSet()));
 }

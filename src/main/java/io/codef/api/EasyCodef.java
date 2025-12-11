@@ -14,17 +14,15 @@ public class EasyCodef extends EasyCodefProperties {
 
 	private final Map<EasyCodefServiceType, EasyCodefClient> clientMap = new HashMap<>();
 
-    private EasyCodefClient easyCodefClient;
+	private EasyCodefClient easyCodefClient;
 
-    public EasyCodef() {
-    }
+	public EasyCodef() {}
 
-    @Deprecated
-    public String requestProduct(
-            String productUrl,
-            EasyCodefServiceType serviceType,
-            Map<String, Object> parameterMap
-    ) {
+	@Deprecated
+	public String requestProduct(
+		String productUrl,
+		EasyCodefServiceType serviceType,
+		Map<String, Object> parameterMap) {
 		this.easyCodefClient = easyCodefClient(serviceType);
 
 		EasyCodefRequest request = EasyCodefRequestBuilder
@@ -36,14 +34,13 @@ public class EasyCodef extends EasyCodefProperties {
 		EasyCodefResponse response = easyCodefClient.requestProduct(request);
 
 		return response.toString();
-    }
+	}
 
 	@Deprecated
 	public String requestCertification(
 		String productUrl,
 		EasyCodefServiceType serviceType,
-		HashMap<String, Object> parameterMap)
-	{
+		HashMap<String, Object> parameterMap) {
 		this.easyCodefClient = easyCodefClient(serviceType);
 
 		EasyCodefRequest request = EasyCodefRequestBuilder

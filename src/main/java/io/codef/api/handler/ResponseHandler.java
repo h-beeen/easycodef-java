@@ -21,8 +21,7 @@ import io.codef.api.util.UrlUtil;
  */
 public class ResponseHandler {
 
-	private ResponseHandler() {
-	}
+	private ResponseHandler() {}
 
 	/**
 	 * HTTP 응답을 {@link EasyCodefResponse}로 변환하여 반환
@@ -83,8 +82,7 @@ public class ResponseHandler {
 
 		EasyCodefResponse.Result result = JsonUtil.convertValue(
 			jsonNode.get(RESULT.getValue()),
-			EasyCodefResponse.Result.class
-		);
+			EasyCodefResponse.Result.class);
 
 		if (result == null) {
 			throw CodefException.from(PARSE_ERROR);

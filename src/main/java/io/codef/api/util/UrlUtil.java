@@ -13,8 +13,7 @@ import io.codef.api.error.CodefException;
  */
 public class UrlUtil {
 
-	private UrlUtil() {
-	}
+	private UrlUtil() {}
 
 	/**
 	 * UTF-8 기준 URL 디코딩 수행

@@ -9,8 +9,7 @@ public class AuthorizationUtil {
 	private static final String BASIC_FORMAT = "Basic %s";
 	private static final String BEARER_FORMAT = "Bearer %s";
 
-	private AuthorizationUtil() {
-	}
+	private AuthorizationUtil() {}
 
 	/**
 	 * Basic 인증 헤더 문자열 생성

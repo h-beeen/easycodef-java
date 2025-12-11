@@ -18,8 +18,7 @@ import io.codef.api.error.CodefException;
  */
 public class RsaUtil {
 
-	private RsaUtil() {
-	}
+	private RsaUtil() {}
 
 	/**
 	 * RSA 암호화 수행
