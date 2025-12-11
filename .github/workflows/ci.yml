@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Gradle 빌드는 JDK 17로 고정
+      # JDK 17 고정
       - name: Setup JDK 17 for Gradle
         uses: actions/setup-java@v4
         with:
@@ -27,7 +27,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      # Gradle Toolchains가 각 matrix JDK를 다운로드하여 테스트 실행
+      # 환경변수 설정 후 테스트 실행
       - name: Run tests using Java ${{ matrix.java }}
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
