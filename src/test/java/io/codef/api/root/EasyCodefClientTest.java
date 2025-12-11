@@ -40,19 +40,19 @@ public class EasyCodefClientTest {
 	void setUp() throws Exception {
 		Constructor<EasyCodefClient> constructor = EasyCodefClient.class.getDeclaredConstructor(
 			EasyCodefDispatcher.class,
-			String.class
-		);
+			String.class);
 		constructor.setAccessible(true);
+
 		client = createEasyCodefClient();
 	}
 
 	@Nested
 	@DisplayName("[isSuccessResponse] 정상적으로 요청을 처리하면 성공")
-	class IsSuccessResponse {
+	class ResponseCases {
 
 		@Test
 		@DisplayName("[Success] 유효한 요청시 dispatcher 호출")
-		void productSuccess() throws Exception {
+		void requestProduct_success() throws Exception {
 			Map<String, Object> params = new HashMap<>();
 			params.put("param1", "value1");
 
@@ -65,8 +65,7 @@ public class EasyCodefClientTest {
 
 			Method dispatchMethod = EasyCodefDispatcher.class.getDeclaredMethod(
 				"dispatchRequest",
-				EasyCodefRequest.class
-			);
+				EasyCodefRequest.class);
 			dispatchMethod.setAccessible(true);
 			when(dispatchMethod.invoke(dispatcher, request)).thenReturn(expectedResponse);
 
@@ -79,7 +78,7 @@ public class EasyCodefClientTest {
 
 		@Test
 		@DisplayName("[Success] Two-Way 정보가 포함된 요청시 dispatcher 호출")
-		void certificationSuccess() throws Exception {
+		void requestCertification_success() throws Exception {
 			Map<String, Object> twoWayInfo = new HashMap<>();
 			twoWayInfo.put("jobIndex", 1);
 			twoWayInfo.put("threadIndex", 1);
@@ -97,7 +96,8 @@ public class EasyCodefClientTest {
 
 			EasyCodefResponse expectedResponse = EasyCodefResponse.from(new HashMap<>());
 
-			Method dispatchMethod = EasyCodefDispatcher.class.getDeclaredMethod("dispatchRequest", EasyCodefRequest.class);
+			Method dispatchMethod = EasyCodefDispatcher.class.getDeclaredMethod("dispatchRequest",
+				EasyCodefRequest.class);
 			dispatchMethod.setAccessible(true);
 			when(dispatchMethod.invoke(dispatcher, request)).thenReturn(expectedResponse);
 
@@ -109,7 +109,7 @@ public class EasyCodefClientTest {
 
 		@Test
 		@DisplayName("[Success] 토큰 요청 호출 확인")
-		void requestToken() throws Exception {
+		void requestToken_success() throws Exception {
 			String expectedToken = "test-token";
 
 			Method getTokenMethod = EasyCodefDispatcher.class.getDeclaredMethod("getToken");
@@ -119,14 +119,14 @@ public class EasyCodefClientTest {
 			Method requestTokenMethod = EasyCodefClient.class.getDeclaredMethod("requestToken");
 			requestTokenMethod.setAccessible(true);
 
-			String token = (String) requestTokenMethod.invoke(client);
+			String token = (String)requestTokenMethod.invoke(client);
 
 			assertEquals(expectedToken, token);
 		}
 
 		@Test
 		@DisplayName("[Success] 새로운 토큰 요청 호출 확인")
-		void requestNewToken() throws Exception {
+		void requestNewToken_success() throws Exception {
 			String expectedToken = "new-test-token";
 
 			Method getNewTokenMethod = EasyCodefDispatcher.class.getDeclaredMethod("getNewToken");
@@ -136,35 +136,33 @@ public class EasyCodefClientTest {
 			Method requestNewTokenMethod = EasyCodefClient.class.getDeclaredMethod("requestNewToken");
 			requestNewTokenMethod.setAccessible(true);
 
-			String token = (String) requestNewTokenMethod.invoke(client);
+			String token = (String)requestNewTokenMethod.invoke(client);
 
 			assertEquals(expectedToken, token);
 		}
 
 		@Test
 		@DisplayName("[Success] 퍼블릭 키 반환 확인")
-		void getPublicKey() {
+		void getPublicKey_success() {
 			assertEquals(publicKey, client.getPublicKey());
 		}
 	}
 
 	@Nested
-	@DisplayName("[Throw Exception] Exception Cases")
+	@DisplayName("[Throw Exception] 예외처리가 정상 동작하면 성공")
 	class ExceptionCases {
 
 		@Test
 		@DisplayName("[Exception] request가 null이면 EMPTY_EASYCODEF_REQUEST 예외처리")
-		void fail_nullRequest() {
-			CodefException exception = assertThrows(CodefException.class, () ->
-				client.requestProduct(null)
-			);
+		void requestProduct_null() {
+			CodefException exception = assertThrows(CodefException.class, () -> client.requestProduct(null));
 
 			assertEquals(EMPTY_EASYCODEF_REQUEST, exception.getCodefError());
 		}
 
 		@Test
 		@DisplayName("[Exception] Two-Way 키워드(is2Way)가 포함되면 INVALID_2WAY_KEYWORD 예외처리")
-		void fail_containsTwoWayKeyword() {
+		void requestProduct_containsTwoWayKeyword() {
 			Map<String, Object> params = new HashMap<>();
 			params.put(IS_2WAY.getValue(), true);
 			EasyCodefRequest request = EasyCodefRequestBuilder.builder()
@@ -172,16 +170,14 @@ public class EasyCodefClientTest {
 				.parameterMap(params)
 				.build();
 
-			CodefException exception = assertThrows(CodefException.class, () ->
-				client.requestProduct(request)
-			);
+			CodefException exception = assertThrows(CodefException.class, () -> client.requestProduct(request));
 
 			assertEquals(INVALID_2WAY_KEYWORD, exception.getCodefError());
 		}
 
 		@Test
 		@DisplayName("[Exception] Two-Way 정보가 누락되면 INVALID_2WAY_INFO 예외처리")
-		void fail_missingTwoWayInfo() {
+		void requestCertification_missingTwoWayInfo() {
 			Map<String, Object> params = new HashMap<>();
 			params.put("param1", "value1");
 
@@ -190,9 +186,7 @@ public class EasyCodefClientTest {
 				.parameterMap(params)
 				.build();
 
-			CodefException exception = assertThrows(CodefException.class, () ->
-				client.requestCertification(request)
-			);
+			CodefException exception = assertThrows(CodefException.class, () -> client.requestCertification(request));
 
 			assertEquals(INVALID_2WAY_INFO, exception.getCodefError());
 		}
@@ -201,8 +195,7 @@ public class EasyCodefClientTest {
 	private EasyCodefClient createEasyCodefClient() throws Exception {
 		Constructor<EasyCodefClient> constructor = EasyCodefClient.class.getDeclaredConstructor(
 			EasyCodefDispatcher.class,
-			String.class
-		);
+			String.class);
 		constructor.setAccessible(true);
 
 		return constructor.newInstance(dispatcher, publicKey);

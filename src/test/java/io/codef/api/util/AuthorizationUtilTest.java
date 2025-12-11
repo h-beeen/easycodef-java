@@ -11,42 +11,42 @@ public class AuthorizationUtilTest {
 
 	@Nested
 	@DisplayName("[isSuccessResponse] formatting를 정상적으로 처리하면 성공")
-	class isSuccessResponse {
+	class ResponseCases {
 
 		@Test
 		@DisplayName("[Success] Basic formatting 성공")
-		void testBasicFormatting() {
+		void basicFormatting_success() {
 			String token = "someBase64EncodedToken";
-			String expectedAuthHeader = "Basic someBase64EncodedToken";
-			String actualAuthHeader = AuthorizationUtil.createBasicAuth(token);
-			assertEquals(expectedAuthHeader, actualAuthHeader);
-
 			String emptyToken = "";
-			String expectedEmptyAuthHeader = "Basic ";
-			String actualEmptyAuthHeader = AuthorizationUtil.createBasicAuth(emptyToken);
-			assertEquals(expectedEmptyAuthHeader, actualEmptyAuthHeader);
 
-			String expectedNullAuthHeader = "Basic null";
-			String actualNullAuthHeader = AuthorizationUtil.createBasicAuth(null);
-			assertEquals(expectedNullAuthHeader, actualNullAuthHeader);
+			assertAll(
+				() -> assertEquals(
+					"Basic someBase64EncodedToken",
+					AuthorizationUtil.createBasicAuth(token)),
+				() -> assertEquals(
+					"Basic ",
+					AuthorizationUtil.createBasicAuth(emptyToken)),
+				() -> assertEquals(
+					"Basic null",
+					AuthorizationUtil.createBasicAuth(null)));
 		}
 
 		@Test
 		@DisplayName("[Success] Bearer formatting 성공")
-		void testBearerFormatting() {
+		void bearerFormatting_success() {
 			String token = "someAccessTokenString";
-			String expectedAuthHeader = "Bearer someAccessTokenString";
-			String actualAuthHeader = AuthorizationUtil.createBearerAuth(token);
-			assertEquals(expectedAuthHeader, actualAuthHeader);
-
 			String emptyToken = "";
-			String expectedEmptyAuthHeader = "Bearer ";
-			String actualEmptyAuthHeader = AuthorizationUtil.createBearerAuth(emptyToken);
-			assertEquals(expectedEmptyAuthHeader, actualEmptyAuthHeader);
 
-			String expectedNullAuthHeader = "Bearer null";
-			String actualNullAuthHeader = AuthorizationUtil.createBearerAuth(null);
-			assertEquals(expectedNullAuthHeader, actualNullAuthHeader);
+			assertAll(
+				() -> assertEquals(
+					"Bearer someAccessTokenString",
+					AuthorizationUtil.createBearerAuth(token)),
+				() -> assertEquals(
+					"Bearer ",
+					AuthorizationUtil.createBearerAuth(emptyToken)),
+				() -> assertEquals(
+					"Bearer null",
+					AuthorizationUtil.createBearerAuth(null)));
 		}
 	}
 }

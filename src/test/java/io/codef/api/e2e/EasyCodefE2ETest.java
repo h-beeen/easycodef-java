@@ -9,7 +9,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,12 +17,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.codef.api.EasyCodef;
 import io.codef.api.EasyCodefServiceType;
-import io.codef.api.e2e.fixture.ClientInfoFixture;
-import io.codef.api.e2e.fixture.ParameterMapFixture;
-import io.codef.api.e2e.fixture.ProductURL;
-import io.codef.api.e2e.fixture.TokenFixture;
+import io.codef.api.fixture.ClientInfoFixture;
+import io.codef.api.fixture.ParameterMapFixture;
+import io.codef.api.fixture.ProductURL;
+import io.codef.api.fixture.TokenFixture;
 
-@Tag("E2E")
 @DisplayName("[E2E Layer] EasyCodef (deprecated) E2E Test")
 public class EasyCodefE2ETest {
 
@@ -38,11 +36,11 @@ public class EasyCodefE2ETest {
 
 	@Nested
 	@DisplayName("[isSuccessResponse] 상품 API 호출이 정상이면 성공")
-	class isSuccessResponse {
+	class ResponseCases {
 
 		@Test
-		@DisplayName("[Success] 침수차량조회 상품 API 호출")
-		void requestProduct() throws JsonProcessingException {
+		@DisplayName("[Success] 침수차량조회 상품 API 호출 시 정상 응답")
+		void requestProduct_success() throws JsonProcessingException {
 			String productUrl = ProductURL.FLOODED_VEHICLE.getUrl();
 			Map<String, Object> parameterMap = ParameterMapFixture.floodedVehicleRequestParameterMap();
 
@@ -53,12 +51,11 @@ public class EasyCodefE2ETest {
 
 			assertAll(
 				() -> assertNotNull(response),
-				() -> assertNotNull(transactionId)
-			);
+				() -> assertNotNull(transactionId));
 		}
 
 		@Test
-		@DisplayName("[Success] 존재하지 않는 상품 URL로 API 호출")
+		@DisplayName("[Success] 존재하지 않는 상품 URL로 API 호출 시 CF-00003 정상 응답")
 		void requestProduct_notExistURL() throws JsonProcessingException {
 			String productUrl = ProductURL.FLOODED_VEHICLE_WRONG.getUrl();
 			Map<String, Object> parameterMap = ParameterMapFixture.floodedVehicleRequestParameterMap();
@@ -70,18 +67,17 @@ public class EasyCodefE2ETest {
 
 			assertAll(
 				() -> assertNotNull(response),
-				() -> assertFalse(hasTransactionId)
-			);
+				() -> assertFalse(hasTransactionId));
 		}
 	}
 
 	@Nested
 	@DisplayName("[isSuccessToken] 토큰이 정상적으로 발급되면 성공")
-	class isSuccessToken {
+	class TokenResponseCases {
 
 		@Test
 		@DisplayName("[Success] 토큰 발급 확인")
-		void requestToken() {
+		void requestToken_success() {
 			String firstIssuedToken = easyCodef.requestToken(EasyCodefServiceType.DEMO);
 			String reusedToken = easyCodef.requestToken(EasyCodefServiceType.DEMO);
 
@@ -91,7 +87,7 @@ public class EasyCodefE2ETest {
 
 		@Test
 		@DisplayName("[Success] 새로운 토큰 발급 확인")
-		void requestNewToken() {
+		void requestNewToken_success() {
 			String firstIssuedToken = easyCodef.requestToken(EasyCodefServiceType.DEMO);
 			String newIssuedToken = easyCodef.requestNewToken(EasyCodefServiceType.DEMO);
 
@@ -101,17 +97,14 @@ public class EasyCodefE2ETest {
 
 		@Test
 		@DisplayName("[Success] 토큰 만료 시 자동 갱신 후 API 호출 성공")
-		void testTokenAutoRefresh() throws Exception {
+		void requestToken_refresh() throws Exception {
 			String productUrl = ProductURL.FLOODED_VEHICLE.getUrl();
 			Map<String, Object> parameterMap = ParameterMapFixture.floodedVehicleRequestParameterMap();
 
 			String firstResponse = easyCodef.requestProduct(
 				productUrl,
 				EasyCodefServiceType.DEMO,
-				parameterMap
-			);
-
-			assertNotNull(firstResponse);
+				parameterMap);
 
 			Object tokenObj = TokenFixture.getTokenObject(easyCodef, EasyCodefServiceType.DEMO);
 			String oldAccessToken = TokenFixture.getAccessToken(tokenObj);
@@ -121,15 +114,14 @@ public class EasyCodefE2ETest {
 				() -> easyCodef.requestProduct(
 					productUrl,
 					EasyCodefServiceType.DEMO,
-					parameterMap
-				)
-			);
-
-			assertNotNull(secondResponse);
+					parameterMap));
 
 			String newAccessToken = TokenFixture.getAccessToken(tokenObj);
 
-			assertNotEquals(oldAccessToken, newAccessToken);
+			assertAll(
+				() -> assertNotNull(firstResponse),
+				() -> assertNotNull(secondResponse),
+				() -> assertNotEquals(oldAccessToken, newAccessToken));
 		}
 
 		private void assertValidJwt(String token) {
@@ -139,8 +131,7 @@ public class EasyCodefE2ETest {
 				() -> assertEquals(3, parts.length),
 				() -> assertDoesNotThrow(() -> Base64.getUrlDecoder().decode(parts[0])),
 				() -> assertDoesNotThrow(() -> Base64.getUrlDecoder().decode(parts[1])),
-				() -> assertFalse(parts[2].isEmpty())
-			);
+				() -> assertFalse(parts[2].isEmpty()));
 		}
 	}
 }

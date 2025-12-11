@@ -18,8 +18,8 @@ import io.codef.api.error.CodefException;
 public class CodefValidatorTest {
 
 	@Nested
-	@DisplayName("[validateNotNullOrThrow] 해당 메서드가 정상 동작하면 성공")
-	class ValidateNotNullOrThrow {
+	@DisplayName("[isSuccessResponse] 해당 메서드가 정상 동작하면 성공")
+	class ResponseCases {
 
 		@Test
 		@DisplayName("[Success] 유효한 객체인 경우 그대로 반환")
@@ -32,31 +32,6 @@ public class CodefValidatorTest {
 		}
 
 		@Test
-		@DisplayName("[Exception] 객체가 null인 경우 지정된 에러로 예외처리")
-		void validateNotNullOrThrow_null() {
-			CodefException exception = assertThrows(CodefException.class, () ->
-				CodefValidator.validateNotNullOrThrow(null, CodefError.EMPTY_PARAMETER)
-			);
-
-			assertEquals(CodefError.EMPTY_PARAMETER, exception.getCodefError());
-		}
-
-		@Test
-		@DisplayName("[Exception] 객체가 빈 문자열인 경우 지정된 에러로 예외처리")
-		void validateNotNullOrThrow_invalid() {
-			CodefException exception = assertThrows(CodefException.class, () ->
-				CodefValidator.validateNotNullOrThrow("", CodefError.EMPTY_PARAMETER)
-			);
-
-			assertEquals(CodefError.EMPTY_PARAMETER, exception.getCodefError());
-		}
-	}
-
-	@Nested
-	@DisplayName("[validatePathOrThrow] 해당 메서드가 정상 동작하면 성공")
-	class ValidatePathOrThrow {
-
-		@Test
 		@DisplayName("[Success] 유효한 경로인 경우 그대로 반환")
 		void validatePathOrThrow_valid() {
 			String path = "/v1/kr/bank/account/list";
@@ -67,33 +42,6 @@ public class CodefValidatorTest {
 		}
 
 		@Test
-		@DisplayName("[Exception] 경로가 null인 경우 INVALID_PATH_REQUESTED 예외처리")
-		void validatePathOrThrow_null() {
-			CodefException exception = assertThrows(CodefException.class, () ->
-				CodefValidator.validatePathOrThrow(null)
-			);
-
-			assertEquals(CodefError.INVALID_PATH_REQUESTED, exception.getCodefError());
-		}
-
-		@Test
-		@DisplayName("[Exception] 경로가 https로 시작하는 경우 INVALID_PATH_REQUESTED 예외처리")
-		void validatePathOrThrow_invalid() {
-			String path = "https://development.io/v1/kr/bank/account/list";
-
-			CodefException exception = assertThrows(CodefException.class, () ->
-				CodefValidator.validatePathOrThrow(path)
-			);
-
-			assertEquals(CodefError.INVALID_PATH_REQUESTED, exception.getCodefError());
-		}
-	}
-
-	@Nested
-	@DisplayName("[validateTwoWayKeywordsOrThrow] 해당 메서드가 정상 동작하면 성공")
-	class ValidateTwoWayKeywordsOrThrow {
-
-		@Test
 		@DisplayName("[Success] Two-Way 키워드가 없는 경우 성공")
 		void validateTwoWayKeywordsOrThrow_valid() {
 			Map<String, Object> params = new HashMap<>();
@@ -102,39 +50,6 @@ public class CodefValidatorTest {
 
 			assertDoesNotThrow(() -> CodefValidator.validateTwoWayKeywordsOrThrow(params));
 		}
-
-		@Test
-		@DisplayName("[Exception] is2Way 키워드가 포함된 경우 INVALID_2WAY_KEYWORD 예외처리")
-		void validateTwoWayKeywordsOrThrow_containsIs2Way() {
-			Map<String, Object> params = new HashMap<>();
-			params.put("organization", "0004");
-			params.put("is2Way", true);
-
-			CodefException exception = assertThrows(CodefException.class, () ->
-					CodefValidator.validateTwoWayKeywordsOrThrow(params)
-			);
-
-			assertEquals(CodefError.INVALID_2WAY_KEYWORD, exception.getCodefError());
-		}
-
-		@Test
-		@DisplayName("[Exception] twoWayInfo 키워드가 포함된 경우 INVALID_2WAY_KEYWORD 예외처리")
-		void validateTwoWayKeywordsOrThrow_invalid() {
-			Map<String, Object> params = new HashMap<>();
-			params.put("organization", "0004");
-			params.put("twoWayInfo", new HashMap<>());
-
-			CodefException exception = assertThrows(CodefException.class, () ->
-				CodefValidator.validateTwoWayKeywordsOrThrow(params)
-			);
-
-			assertEquals(CodefError.INVALID_2WAY_KEYWORD, exception.getCodefError());
-		}
-	}
-
-	@Nested
-	@DisplayName("[validateTwoWayInfoOrThrow] 해당 메서드가 정상 동작하면 성공")
-	class ValidateTwoWayInfoOrThrow {
 
 		@Test
 		@DisplayName("[Success] 모든 필수 정보가 존재하면 성공")
@@ -151,13 +66,81 @@ public class CodefValidatorTest {
 
 			assertDoesNotThrow(() -> CodefValidator.validateTwoWayInfoOrThrow(param));
 		}
+	}
+
+	@Nested
+	@DisplayName("[Throw Exceptions] 예외처리가 정상 동작하면 성공")
+	class ExceptionCases {
+
+		@Test
+		@DisplayName("[Exception] 객체가 null인 경우 지정된 에러로 예외처리")
+		void validateNotNullOrThrow_null() {
+			CodefException exception = assertThrows(CodefException.class,
+				() -> CodefValidator.validateNotNullOrThrow(null, CodefError.EMPTY_PARAMETER));
+
+			assertEquals(CodefError.EMPTY_PARAMETER, exception.getCodefError());
+		}
+
+		@Test
+		@DisplayName("[Exception] 객체가 빈 문자열인 경우 지정된 에러로 예외처리")
+		void validateNotNullOrThrow_invalid() {
+			CodefException exception = assertThrows(CodefException.class,
+				() -> CodefValidator.validateNotNullOrThrow("", CodefError.EMPTY_PARAMETER));
+
+			assertEquals(CodefError.EMPTY_PARAMETER, exception.getCodefError());
+		}
+
+		@Test
+		@DisplayName("[Exception] 경로가 null인 경우 INVALID_PATH_REQUESTED 예외처리")
+		void validatePathOrThrow_null() {
+			CodefException exception = assertThrows(CodefException.class,
+				() -> CodefValidator.validatePathOrThrow(null));
+
+			assertEquals(CodefError.INVALID_PATH_REQUESTED, exception.getCodefError());
+		}
+
+		@Test
+		@DisplayName("[Exception] 경로가 https로 시작하는 경우 INVALID_PATH_REQUESTED 예외처리")
+		void validatePathOrThrow_invalid() {
+			String path = "https://development.io/v1/kr/bank/account/list";
+
+			CodefException exception = assertThrows(CodefException.class,
+				() -> CodefValidator.validatePathOrThrow(path));
+
+			assertEquals(CodefError.INVALID_PATH_REQUESTED, exception.getCodefError());
+		}
+
+		@Test
+		@DisplayName("[Exception] is2Way 키워드가 포함된 경우 INVALID_2WAY_KEYWORD 예외처리")
+		void validateTwoWayKeywordsOrThrow_containsIs2Way() {
+			Map<String, Object> params = new HashMap<>();
+			params.put("organization", "0004");
+			params.put("is2Way", true);
+
+			CodefException exception = assertThrows(CodefException.class,
+				() -> CodefValidator.validateTwoWayKeywordsOrThrow(params));
+
+			assertEquals(CodefError.INVALID_2WAY_KEYWORD, exception.getCodefError());
+		}
+
+		@Test
+		@DisplayName("[Exception] twoWayInfo 키워드가 포함된 경우 INVALID_2WAY_KEYWORD 예외처리")
+		void validateTwoWayKeywordsOrThrow_invalid() {
+			Map<String, Object> params = new HashMap<>();
+			params.put("organization", "0004");
+			params.put("twoWayInfo", new HashMap<>());
+
+			CodefException exception = assertThrows(CodefException.class,
+				() -> CodefValidator.validateTwoWayKeywordsOrThrow(params));
+
+			assertEquals(CodefError.INVALID_2WAY_KEYWORD, exception.getCodefError());
+		}
 
 		@Test
 		@DisplayName("[Exception] 파라미터가 비어있으면 EMPTY_PARAMETER 예외처리")
 		void validateTwoWayInfoOrThrow_empty() {
-			CodefException exception = assertThrows(CodefException.class, () ->
-					CodefValidator.validateTwoWayInfoOrThrow(new HashMap<>())
-			);
+			CodefException exception = assertThrows(CodefException.class,
+				() -> CodefValidator.validateTwoWayInfoOrThrow(new HashMap<>()));
 
 			assertEquals(CodefError.EMPTY_PARAMETER, exception.getCodefError());
 		}
@@ -168,19 +151,17 @@ public class CodefValidatorTest {
 			Map<String, Object> params = new HashMap<>();
 			params.put("organization", "0004");
 
-			CodefException emptyException = assertThrows(CodefException.class, () ->
-					CodefValidator.validateTwoWayInfoOrThrow(params)
-			);
-
-			assertEquals(CodefError.INVALID_2WAY_INFO, emptyException.getCodefError());
+			CodefException emptyException = assertThrows(CodefException.class,
+				() -> CodefValidator.validateTwoWayInfoOrThrow(params));
 
 			params.put(IS_2WAY.getValue(), false);
 
-			CodefException falseException = assertThrows(CodefException.class, () ->
-				CodefValidator.validateTwoWayInfoOrThrow(params)
-			);
+			CodefException falseException = assertThrows(CodefException.class,
+				() -> CodefValidator.validateTwoWayInfoOrThrow(params));
 
-			assertEquals(CodefError.INVALID_2WAY_INFO, falseException.getCodefError());
+			assertAll(
+				() -> assertEquals(CodefError.INVALID_2WAY_INFO, emptyException.getCodefError()),
+				() -> assertEquals(CodefError.INVALID_2WAY_INFO, falseException.getCodefError()));
 		}
 
 		@Test
@@ -189,9 +170,8 @@ public class CodefValidatorTest {
 			Map<String, Object> params = new HashMap<>();
 			params.put(IS_2WAY.getValue(), true);
 
-			CodefException exception = assertThrows(CodefException.class, () ->
-					CodefValidator.validateTwoWayInfoOrThrow(params)
-			);
+			CodefException exception = assertThrows(CodefException.class,
+				() -> CodefValidator.validateTwoWayInfoOrThrow(params));
 
 			assertEquals(CodefError.INVALID_2WAY_INFO, exception.getCodefError());
 		}
@@ -206,9 +186,8 @@ public class CodefValidatorTest {
 			twoWayInfoMap.put(JOB_INDEX.getValue(), 1);
 			params.put(INFO_KEY.getValue(), twoWayInfoMap);
 
-			CodefException exception = assertThrows(CodefException.class, () ->
-					CodefValidator.validateTwoWayInfoOrThrow(params)
-			);
+			CodefException exception = assertThrows(CodefException.class,
+				() -> CodefValidator.validateTwoWayInfoOrThrow(params));
 
 			assertEquals(CodefError.INVALID_2WAY_INFO, exception.getCodefError());
 		}

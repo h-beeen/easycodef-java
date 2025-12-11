@@ -48,26 +48,25 @@ public class EasyCodefTokenTest {
 	}
 
 	@Nested
-	@DisplayName("[isSuccessResponse] 성공적으로 Access Token 생성 후 반환하면 성공")
-	class ValidAccessToken {
+	@DisplayName("[isSuccessResponse] 정상적으로 Access Token을 반환하면 성공")
+	class ResponseCases {
 
 		@Test
-		@DisplayName("[Constructor] OAuth 토큰 생성 및 Access Token 초기화")
-		void constructor_initializesToken() throws Exception {
+		@DisplayName("[Success] OAuth 토큰 생성 및 Access Token 초기화")
+		void constructor_success() throws Exception {
 			EasyCodefToken easyCodefToken = createEasyCodefToken();
 
-			verify(mockOAuthService, times(1)).requestToken(any(String.class));
-
 			String accessToken = invokeGetAccessToken(easyCodefToken);
-			assertEquals(MOCK_ACCESS_TOKEN, accessToken);
-
 			String expectedOauthToken = invokeCreateOAuthToken(easyCodefToken);
 			String actualOauthToken = getOauthTokenField(easyCodefToken);
-			assertEquals(expectedOauthToken, actualOauthToken);
-
 			LocalDateTime expiresAt = getExpiresAt(easyCodefToken);
-			assertNotNull(expiresAt);
-			assertTrue(expiresAt.isAfter(LocalDateTime.now().minusSeconds(1)));
+
+			assertAll(
+				() -> verify(mockOAuthService, times(2)).requestToken(any(String.class)),
+				() -> assertEquals(MOCK_ACCESS_TOKEN, accessToken),
+				() -> assertEquals(expectedOauthToken, actualOauthToken),
+				() -> assertNotNull(expiresAt),
+				() -> assertTrue(expiresAt.isAfter(LocalDateTime.now().minusSeconds(1))));
 		}
 
 		@Test
@@ -77,14 +76,12 @@ public class EasyCodefTokenTest {
 			EasyCodefToken easyCodefToken = createEasyCodefTokenWithSpecificExpiry(nearFutureExpiry);
 
 			String validAccessToken = easyCodefToken.getValidAccessToken();
-			assertEquals("Bearer " + MOCK_ACCESS_TOKEN, validAccessToken);
-
-			verify(mockOAuthService, times(2)).requestToken(any(String.class));
-
 			String accessToken = invokeGetAccessToken(easyCodefToken);
-			assertEquals(MOCK_ACCESS_TOKEN, accessToken);
 
-			verify(mockOAuthService, times(3)).requestToken(any(String.class));
+			assertAll(
+				() -> assertEquals("Bearer " + MOCK_ACCESS_TOKEN, validAccessToken),
+				() -> assertEquals(MOCK_ACCESS_TOKEN, accessToken),
+				() -> verify(mockOAuthService, times(3)).requestToken(any(String.class)));
 		}
 
 		@Test
@@ -94,44 +91,30 @@ public class EasyCodefTokenTest {
 			EasyCodefToken easyCodefToken = createEasyCodefTokenWithSpecificExpiry(pastExpiry);
 
 			String validAccessToken = easyCodefToken.getValidAccessToken();
-			assertEquals("Bearer " + MOCK_ACCESS_TOKEN, validAccessToken);
-
-			verify(mockOAuthService, times(2)).requestToken(any(String.class));
-
 			String accessToken = invokeGetAccessToken(easyCodefToken);
-			assertEquals(MOCK_ACCESS_TOKEN, accessToken);
 
-			verify(mockOAuthService, times(3)).requestToken(any(String.class));
+			assertAll(
+				() -> assertEquals("Bearer " + MOCK_ACCESS_TOKEN, validAccessToken),
+				() -> assertEquals(MOCK_ACCESS_TOKEN, accessToken),
+				() -> verify(mockOAuthService, times(3)).requestToken(any(String.class)));
 		}
-	}
-
-	@Nested
-	@DisplayName("[isSuccessResponse] 성공적으로 Token을 재생성하면 성공")
-	class RefreshToken {
 
 		@Test
 		@DisplayName("[Success] OAuth API로부터 토큰을 성공적으로 발급")
 		void refresh_success() throws Exception {
 			EasyCodefToken easyCodefToken = createEasyCodefToken();
 
-			verify(mockOAuthService, times(1)).requestToken(any(String.class));
-
 			invokeRefreshToken(easyCodefToken);
 
-			verify(mockOAuthService, times(2)).requestToken(any(String.class));
-
 			String accessToken = getAccessTokenField(easyCodefToken);
-			assertEquals(MOCK_ACCESS_TOKEN, accessToken);
-
 			LocalDateTime expiresAt = getExpiresAt(easyCodefToken);
-			assertNotNull(expiresAt);
-			assertTrue(expiresAt.isAfter(LocalDateTime.now().minusSeconds(1)));
-		}
-	}
 
-	@Nested
-	@DisplayName("[isSuccessResponse] 만료시간을 정상적으로 검증하면 성공")
-	class isTokenExpiringSoon {
+			assertAll(
+				() -> verify(mockOAuthService, times(2)).requestToken(any(String.class)),
+				() -> assertEquals(MOCK_ACCESS_TOKEN, accessToken),
+				() -> assertNotNull(expiresAt),
+				() -> assertTrue(expiresAt.isAfter(LocalDateTime.now().minusSeconds(1))));
+		}
 
 		@Test
 		@DisplayName("[Success] 만료까지 24시간 미만으로 남은 경우 true")
@@ -154,11 +137,6 @@ public class EasyCodefTokenTest {
 
 			assertTrue(result);
 		}
-	}
-
-	@Nested
-	@DisplayName("[isSuccessResponse] 성공적으로 OAuth 토큰을 생성하면 성공")
-	class createOAuthToken {
 
 		@Test
 		@DisplayName("[Success] 클라이언트 아이디와 시크릿으로 OAuth 토큰 생성")
@@ -178,8 +156,7 @@ public class EasyCodefTokenTest {
 		Constructor<EasyCodefToken> constructor = EasyCodefToken.class.getDeclaredConstructor(
 			String.class,
 			String.class,
-			EasyCodefOAuthService.class
-		);
+			EasyCodefOAuthService.class);
 		constructor.setAccessible(true);
 
 		return constructor.newInstance(CLIENT_ID, CLIENT_SECRET, mockOAuthService);
@@ -188,24 +165,25 @@ public class EasyCodefTokenTest {
 	private EasyCodefToken createEasyCodefTokenWithSpecificExpiry(LocalDateTime expiry) throws Exception {
 		EasyCodefToken easyCodefToken = createEasyCodefToken();
 		setExpiresAt(easyCodefToken, expiry);
+
 		return easyCodefToken;
 	}
 
 	private String invokeGetAccessToken(EasyCodefToken token) throws Exception {
 		Method method = EasyCodefToken.class.getDeclaredMethod("getAccessToken");
 		method.setAccessible(true);
-		return (String) method.invoke(token);
+
+		return (String)method.invoke(token);
 	}
 
 	private String invokeCreateOAuthToken(EasyCodefToken token) throws Exception {
 		Method method = EasyCodefToken.class.getDeclaredMethod(
 			"createOAuthToken",
 			String.class,
-			String.class
-		);
+			String.class);
 		method.setAccessible(true);
 
-		return (String) method.invoke(token, EasyCodefTokenTest.CLIENT_ID, EasyCodefTokenTest.CLIENT_SECRET);
+		return (String)method.invoke(token, EasyCodefTokenTest.CLIENT_ID, EasyCodefTokenTest.CLIENT_SECRET);
 	}
 
 	private void invokeRefreshToken(EasyCodefToken token) throws Exception {
@@ -217,18 +195,17 @@ public class EasyCodefTokenTest {
 	private boolean invokeIsTokenExpiringSoon(EasyCodefToken token, LocalDateTime expiry) throws Exception {
 		Method method = EasyCodefToken.class.getDeclaredMethod(
 			"isTokenExpiringSoon",
-			LocalDateTime.class
-		);
+			LocalDateTime.class);
 		method.setAccessible(true);
 
-		return (Boolean) method.invoke(token, expiry);
+		return (Boolean)method.invoke(token, expiry);
 	}
 
 	private LocalDateTime getExpiresAt(EasyCodefToken token) throws Exception {
 		Field field = EasyCodefToken.class.getDeclaredField("expiresAt");
 		field.setAccessible(true);
 
-		return (LocalDateTime) field.get(token);
+		return (LocalDateTime)field.get(token);
 	}
 
 	private void setExpiresAt(EasyCodefToken token, LocalDateTime expiry) throws Exception {
@@ -241,13 +218,13 @@ public class EasyCodefTokenTest {
 		Field field = EasyCodefToken.class.getDeclaredField("oauthToken");
 		field.setAccessible(true);
 
-		return (String) field.get(token);
+		return (String)field.get(token);
 	}
 
 	private String getAccessTokenField(EasyCodefToken token) throws Exception {
 		Field field = EasyCodefToken.class.getDeclaredField("accessToken");
 		field.setAccessible(true);
 
-		return (String) field.get(token);
+		return (String)field.get(token);
 	}
 }

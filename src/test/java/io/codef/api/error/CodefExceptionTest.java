@@ -10,70 +10,79 @@ import org.junit.jupiter.api.Test;
 public class CodefExceptionTest {
 
 	@Nested
-	@DisplayName("[factoryMethod] 정적 팩토리 메서드 / 생성자 테스트")
-	class factoryMethod {
+	@DisplayName("[FactoryMethod] 정적 팩토리 메서드 / 생성자 테스트")
+	class FactoryMethod {
 
 		@Test
 		@DisplayName("[Success] ErrorCode만 존재하는 경우")
-		void testFromFactoryMethod() {
+		void from_success() {
 			CodefError codefError = CodefError.EMPTY_CLIENT_ID;
+
 			CodefException exception = CodefException.from(codefError);
 
-			assertNotNull(exception);
-			assertEquals(codefError, exception.getCodefError());
-			assertEquals(codefError.getMessage(), exception.getMessage());
-			assertNull(exception.getCause());
+			assertAll(
+				() -> assertNotNull(exception),
+				() -> assertEquals(codefError, exception.getCodefError()),
+				() -> assertEquals(codefError.getMessage(), exception.getMessage()),
+				() -> assertNull(exception.getCause()));
 		}
 
 		@Test
 		@DisplayName("[Success] ErrorCode, Exception이 존재하는 경우")
-		void testFromFactoryMethodWithCause() {
+		void of_exception() {
 			CodefError codefError = CodefError.IO_ERROR;
 			Exception cause = new RuntimeException("Network issue");
+
 			CodefException exception = CodefException.of(codefError, cause);
 
-			assertNotNull(exception);
-			assertEquals(codefError, exception.getCodefError());
-			assertTrue(exception.getMessage().contains(codefError.getMessage()));
-			assertTrue(exception.getMessage().contains(cause.getMessage()));
-			assertEquals(cause, exception.getCause());
+			assertAll(
+				() -> assertNotNull(exception),
+				() -> assertEquals(codefError, exception.getCodefError()),
+				() -> assertTrue(exception.getMessage().contains(codefError.getMessage())),
+				() -> assertTrue(exception.getMessage().contains(cause.getMessage())),
+				() -> assertEquals(cause, exception.getCause()));
 		}
 
 		@Test
 		@DisplayName("[Success] ErrorCode, extraMessage가 존재하는 경우")
-		void testFromFactoryMethodWithExtraMessage() {
+		void of_extraMessage() {
 			CodefError codefError = CodefError.INVALID_PATH_REQUESTED;
 			String extraMessage = "The path 'invalid/path' was used.";
+
 			CodefException exception = CodefException.of(codefError, extraMessage);
 
-			assertNotNull(exception);
-			assertEquals(codefError, exception.getCodefError());
-			assertTrue(exception.getMessage().contains(codefError.getMessage()));
-			assertTrue(exception.getMessage().contains(extraMessage));
-			assertNull(exception.getCause());
+			assertAll(
+				() -> assertNotNull(exception),
+				() -> assertEquals(codefError, exception.getCodefError()),
+				() -> assertTrue(exception.getMessage().contains(codefError.getMessage())),
+				() -> assertTrue(exception.getMessage().contains(extraMessage)),
+				() -> assertNull(exception.getCause()));
 		}
 	}
 
 	@Nested
 	@DisplayName("[isSuccessResponse] 메시지 조합이 성공적으로 조합되면 성공")
-	class isSuccessResponse {
+	class ResponseCases {
 
 		@Test
 		@DisplayName("[Success] 메시지 조합이 %s\n%s로 formatting되면 성공")
-		void testDecoratedMessage() {
+		void decoratedMessage_success() {
 			CodefError codefError = CodefError.UNSUPPORTED_ENCODING;
+
 			CodefException exception = CodefException.from(codefError);
-			assertEquals(codefError.getMessage(), exception.getMessage());
 
 			Exception cause = new IllegalArgumentException("Invalid argument format");
 			CodefException exceptionWithCause = CodefException.of(codefError, cause);
 			String expectedMessageWithCause = codefError.getMessage() + System.lineSeparator() + cause.getMessage();
-			assertEquals(expectedMessageWithCause, exceptionWithCause.getMessage());
 
 			String extraInfo = "Specific file not found";
 			CodefException exceptionWithExtraMessage = CodefException.of(codefError, extraInfo);
 			String expectedMessageWithExtraInfo = codefError.getMessage() + System.lineSeparator() + extraInfo;
-			assertEquals(expectedMessageWithExtraInfo, exceptionWithExtraMessage.getMessage());
+
+			assertAll(
+				() -> assertEquals(expectedMessageWithCause, exceptionWithCause.getMessage()),
+				() -> assertEquals(codefError.getMessage(), exception.getMessage()),
+				() -> assertEquals(expectedMessageWithExtraInfo, exceptionWithExtraMessage.getMessage()));
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package io.codef.api.e2e.fixture;
+package io.codef.api.fixture;
 
 import java.util.HashMap;
 import java.util.Map;

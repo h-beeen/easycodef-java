@@ -119,7 +119,8 @@ public class EasyCodefBuilder {
 		return new EasyCodefToken(clientId, clientSecret, oAuthService);
 	}
 
-	protected EasyCodefDispatcher createDispatcher(EasyCodefToken token, EasyCodefServiceType serviceType, EasyCodefApiService apiService) {
+	protected EasyCodefDispatcher createDispatcher(EasyCodefToken token, EasyCodefServiceType serviceType,
+		EasyCodefApiService apiService) {
 		return new EasyCodefDispatcher(token, serviceType, apiService);
 	}
 

@@ -109,7 +109,8 @@ public class CodefHttpClient {
 
 		StringBuilder responseBuilder = new StringBuilder();
 		if (inputStream != null) {
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+			try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 				String line;
 				while ((line = reader.readLine()) != null) {
 					responseBuilder.append(line);
@@ -122,7 +123,7 @@ public class CodefHttpClient {
 	protected HttpURLConnection createConnection(String urlString) {
 		try {
 			URL url = new URL(urlString);
-			return (HttpURLConnection) url.openConnection();
+			return (HttpURLConnection)url.openConnection();
 		} catch (IOException e) {
 			throw CodefException.from(CodefError.IO_ERROR);
 		}

@@ -15,8 +15,7 @@ import io.codef.api.util.JsonUtil;
  */
 public class CodefValidator {
 
-	private CodefValidator() {
-	}
+	private CodefValidator() {}
 
 	/**
 	 * 객체가 {@code null}이 아니고, 문자열인 경우 공백이 아닌지 검증
