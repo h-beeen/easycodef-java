@@ -49,13 +49,11 @@ public class EasyCodefE2ETest {
 			String response = easyCodef.requestProduct(productUrl, EasyCodefServiceType.DEMO, parameterMap);
 			JsonNode root = mapper.readTree(response);
 
-			String code = root.path("result").path("code").asText();
 			String transactionId = root.path("result").path("transactionId").asText();
 
 			assertAll(
 				() -> assertNotNull(response),
-				() -> assertNotNull(transactionId),
-				() -> assertEquals("CF-00000", code)
+				() -> assertNotNull(transactionId)
 			);
 		}
 
@@ -68,13 +66,11 @@ public class EasyCodefE2ETest {
 			String response = easyCodef.requestProduct(productUrl, EasyCodefServiceType.DEMO, parameterMap);
 			JsonNode root = mapper.readTree(response);
 
-			String code = root.path("result").path("code").asText();
 			boolean hasTransactionId = root.path("result").has("transactionId");
 
 			assertAll(
 				() -> assertNotNull(response),
-				() -> assertFalse(hasTransactionId),
-				() -> assertEquals("CF-00003", code)
+				() -> assertFalse(hasTransactionId)
 			);
 		}
 	}

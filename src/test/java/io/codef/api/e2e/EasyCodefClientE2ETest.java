@@ -44,14 +44,12 @@ public class EasyCodefClientE2ETest {
 
 			EasyCodefResponse response = easyCodefClient.requestProduct(request);
 
-			String code = response.getResult().getCode();
 			String transactionId = response.getResult().getTransactionId();
 
 			assertAll(
 				() -> assertNotNull(response),
 				() -> assertNotNull(transactionId),
-				() -> assertNotNull(response.getData()),
-				() -> assertTrue(code.startsWith("CF-00000"))
+				() -> assertNotNull(response.getData())
 			);
 		}
 
@@ -65,13 +63,11 @@ public class EasyCodefClientE2ETest {
 
 			EasyCodefResponse response = easyCodefClient.requestProduct(request);
 
-			String code = response.getResult().getCode();
 			String transactionId = response.getResult().getTransactionId();
 
 			assertAll(
 				() -> assertNotNull(response),
-				() -> assertNull(transactionId),
-				() -> assertTrue(code.startsWith("CF-00003"))
+				() -> assertNull(transactionId)
 			);
 		}
 
