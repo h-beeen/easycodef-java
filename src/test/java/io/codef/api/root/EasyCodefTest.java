@@ -26,11 +26,11 @@ public class EasyCodefTest {
 
 	@Nested
 	@DisplayName("[isSuccessResponse] 정상적으로 설정되면 성공")
-	class IsSuccessResponse {
+	class ResponseCases {
 
 		@Test
 		@DisplayName("[Success] Properties 설정 확인 (Getter Test)")
-		void testPropertiesGetter() {
+		void constructor_success() {
 			String clientId = "test-id";
 			String clientSecret = "test-secret";
 			String publicKey = "test-public-key";
@@ -38,44 +38,42 @@ public class EasyCodefTest {
 			easyCodef.setClientInfo(clientId, clientSecret);
 			easyCodef.setPublicKey(publicKey);
 
-			assertEquals(clientId, easyCodef.getClientId());
-			assertEquals(clientSecret, easyCodef.getClientSecret());
-			assertEquals(publicKey, easyCodef.getPublicKey());
+			assertAll(
+				() -> assertEquals(clientId, easyCodef.getClientId()),
+				() -> assertEquals(clientSecret, easyCodef.getClientSecret()),
+				() -> assertEquals(publicKey, easyCodef.getPublicKey()));
 		}
 	}
 
 	@Nested
-	@DisplayName("[Throw Exceptions] Exception Cases")
+	@DisplayName("[Throw Exceptions] 예외처리가 정상 동작하면 성공")
 	class ExceptionCases {
 
 		@Test
 		@DisplayName("[Exception] API 클라이언트 정보 미설정 시 EMPTY_CLIENT_ID 예외처리")
-		void fail_emptyClientInfo() {
-			CodefException exception = assertThrows(CodefException.class, () ->
-				easyCodef.requestProduct("/v1/test", EasyCodefServiceType.API, new HashMap<>())
-			);
+		void requestProduct_emptyClientInfo() {
+			CodefException exception = assertThrows(CodefException.class,
+				() -> easyCodef.requestProduct("/v1/test", EasyCodefServiceType.API, new HashMap<>()));
 
 			assertEquals(EMPTY_CLIENT_ID, exception.getCodefError());
 		}
 
 		@Test
 		@DisplayName("[Exception] DEMO 클라이언트 정보 미설정 시 EMPTY_CLIENT_ID 예외처리")
-		void fail_emptyDemoClientInfo() {
-			CodefException exception = assertThrows(CodefException.class, () ->
-				easyCodef.requestProduct("/v1/test", EasyCodefServiceType.DEMO, new HashMap<>())
-			);
+		void requestProduct_emptyDemoClientInfo() {
+			CodefException exception = assertThrows(CodefException.class,
+				() -> easyCodef.requestProduct("/v1/test", EasyCodefServiceType.DEMO, new HashMap<>()));
 
 			assertEquals(EMPTY_CLIENT_ID, exception.getCodefError());
 		}
 
 		@Test
 		@DisplayName("[Exception] 퍼블릭 키 정보 미설정 시 EMPTY_PUBLIC_KEY 예외처리")
-		void fail_emptyPubKey() {
+		void requestProduct_emptyPubKey() {
 			easyCodef.setClientInfoForDemo("demo-id", "demo-secret");
 
-			CodefException exception = assertThrows(CodefException.class, () ->
-				easyCodef.requestProduct("/v1/test", EasyCodefServiceType.DEMO, new HashMap<>())
-			);
+			CodefException exception = assertThrows(CodefException.class,
+				() -> easyCodef.requestProduct("/v1/test", EasyCodefServiceType.DEMO, new HashMap<>()));
 
 			assertEquals(EMPTY_PUBLIC_KEY, exception.getCodefError());
 		}

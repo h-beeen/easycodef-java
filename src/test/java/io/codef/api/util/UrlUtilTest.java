@@ -3,6 +3,7 @@ package io.codef.api.util;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import io.codef.api.error.CodefError;
@@ -11,43 +12,50 @@ import io.codef.api.error.CodefException;
 @DisplayName("[Util Layer] UrlUtil Test")
 public class UrlUtilTest {
 
-	@Test
-	@DisplayName("[Success] URL 디코딩하면 성공")
-	void testDecode_Success() {
-		String encodedString = "Hello%20World%21";
-		String expectedDecodedString = "Hello World!";
+	@Nested
+	@DisplayName("[isSuccessResponse] 정상적으로 암호화하면 성공")
+	class ResponseCases {
 
-		String actualDecodedString = UrlUtil.decode(encodedString);
+		@Test
+		@DisplayName("[Success] URL 디코딩하면 성공")
+		void decode_Success() {
+			String encoded1 = "Easy%20Codef";
+			String decoded1 = "Easy Codef";
 
-		assertEquals(expectedDecodedString, actualDecodedString);
+			String encoded2 = "%EC%9D%B4%EC%A7%80%EC%BD%94%EB%93%9C%EC%97%90%ED%94%84";
+			String decoded2 = "이지코드에프";
 
-		encodedString = "%ED%95%9C%EA%B8%80";
-		expectedDecodedString = "한글";
+			String actual1 = UrlUtil.decode(encoded1);
+			String actual2 = UrlUtil.decode(encoded2);
 
-		actualDecodedString = UrlUtil.decode(encodedString);
+			assertAll(
+				() -> assertEquals(decoded1, actual1),
+				() -> assertEquals(decoded2, actual2));
+		}
 
-		assertEquals(expectedDecodedString, actualDecodedString);
+		@Test
+		@DisplayName("[Success] 이미 디코딩된 문자열 비교")
+		void decode_AlreadyEncoded() {
+			String decodedString = "Already Decoded String";
+
+			String actualDecodedString = UrlUtil.decode(decodedString);
+
+			assertEquals(decodedString, actualDecodedString);
+		}
 	}
 
-	@Test
-	@DisplayName("[Success] 이미 디코딩된 문자열 비교")
-	void testDecode_AlreadyEncoded() {
-		String decodedString = "Already Decoded String";
+	@Nested
+	@DisplayName("[Throw Exception] 예외처리가 정상 동작하면 성공")
+	class ExceptionCases {
 
-		String actualDecodedString = UrlUtil.decode(decodedString);
+		@Test
+		@DisplayName("[Exception] 잘못된 인코딩 시퀀스인 경우 UNSUPPORTED_ENCODING 예외처리")
+		void decode_unsupportedEncoding() {
+			String malformedString = "%WRONG";
 
-		assertEquals(decodedString, actualDecodedString);
-	}
+			CodefException exception = assertThrows(CodefException.class, () -> UrlUtil.decode(malformedString));
 
-	@Test
-	@DisplayName("[Exception] 잘못된 인코딩 시퀀스인 경우 UNSUPPORTED_ENCODING 예외처리")
-	void testDecode_UnsupportedEncoding() {
-		String malformedString = "%WRONG";
-
-		CodefException exception = assertThrows(CodefException.class, () ->
-				UrlUtil.decode(malformedString)
-		);
-
-		assertEquals(CodefError.UNSUPPORTED_ENCODING, exception.getCodefError());
+			assertEquals(CodefError.UNSUPPORTED_ENCODING, exception.getCodefError());
+		}
 	}
 }

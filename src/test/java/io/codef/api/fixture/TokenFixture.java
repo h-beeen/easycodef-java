@@ -1,4 +1,4 @@
-package io.codef.api.e2e.fixture;
+package io.codef.api.fixture;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ public class TokenFixture {
 		Field clientMapField = EasyCodef.class.getDeclaredField("clientMap");
 		clientMapField.setAccessible(true);
 
-		Map<?, ?> clientMap = (Map<?, ?>) clientMapField.get(easyCodef);
+		Map<?, ?> clientMap = (Map<?, ?>)clientMapField.get(easyCodef);
 		Object client = clientMap.get(serviceType);
 
 		Field dispatcherField = EasyCodefClient.class.getDeclaredField("dispatcher");
@@ -39,7 +39,7 @@ public class TokenFixture {
 	public static String getAccessToken(Object tokenObj) throws Exception {
 		Field field = tokenObj.getClass().getDeclaredField("accessToken");
 		field.setAccessible(true);
-		return (String) field.get(tokenObj);
+		return (String)field.get(tokenObj);
 	}
 
 	public static void forceExpireToken(Object tokenObj) throws Exception {

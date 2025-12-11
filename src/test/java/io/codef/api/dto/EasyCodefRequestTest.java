@@ -13,7 +13,7 @@ public class EasyCodefRequestTest {
 
 	@Test
 	@DisplayName("[Success] 생성자 및 Getter가 올바르게 동작하는지 확인")
-	public void success() {
+	void constructor_success() {
 		String expectedProductUrl = "/v1/test/product";
 		Map<String, Object> expectedParameterMap = new HashMap<>();
 		expectedParameterMap.put("param1", "value1");
@@ -24,10 +24,10 @@ public class EasyCodefRequestTest {
 		assertAll(
 			() -> assertNotNull(request),
 			() -> assertEquals(expectedProductUrl, request.getProductUrl()),
-			() -> assertSame(expectedParameterMap, request.getParameterMap())
-		);
+			() -> assertSame(expectedParameterMap, request.getParameterMap()));
 
 		request.getParameterMap().put("param3", "newValue");
+
 		assertTrue(expectedParameterMap.containsKey("param3"));
 	}
 }

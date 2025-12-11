@@ -17,6 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.codef.api.dto.EasyCodefResponse;
 import io.codef.api.http.CodefHttpClient;
 import io.codef.api.http.CodefHttpRequest;
@@ -36,24 +38,31 @@ public class EasyCodefServiceTest {
 	}
 
 	@Nested
-	@DisplayName("[constructor] 생성자 테스트")
-	class NewConstructor {
+	@DisplayName("[isSuccessResponse] 요청이 정상적으로 호출되고 응답이 정상이면 성공")
+	class ResponseCases {
 
 		@Test
 		@DisplayName("[Success] EasyCodefService 생성자 테스트")
-		void testConstructor() {
+		void constructor_success() {
 			assertNotNull(easyCodefService);
 		}
-	}
-
-	@Nested
-	@DisplayName("[isSuccessResponse] 요청이 정상적으로 호출되고 응답이 정상이면 성공")
-	class SuccessCases {
 
 		@Test
 		@DisplayName("[Success] sendRequest 상품 요청 정상 응답")
-		void testSendRequest_ProductResponse() throws Exception {
-			String rawJson = "{\"result\":{\"code\":\"CF-00000\",\"message\":\"Success\",\"extraMessage\":\"\"}, \"data\": {\"name\": \"test\"}}";
+		void sendRequest_success() throws Exception {
+			Map<String, Object> result = new HashMap<>();
+			result.put("code", "CF-00000");
+			result.put("message", "Success");
+			result.put("extraMessage", "");
+
+			Map<String, Object> data = new HashMap<>();
+			data.put("name", "test");
+
+			Map<String, Object> root = new HashMap<>();
+			root.put("result", result);
+			root.put("data", data);
+
+			String rawJson = new ObjectMapper().writeValueAsString(root);
 			String encodedResponse = URLEncoder.encode(rawJson, StandardCharsets.UTF_8.name());
 
 			when(httpClient.execute(any(CodefHttpRequest.class))).thenReturn(encodedResponse);
@@ -62,20 +71,24 @@ public class EasyCodefServiceTest {
 
 			EasyCodefResponse response = easyCodefService.sendRequest(request);
 
-			assertNotNull(response);
-			assertNotNull(response.getResult());
-			assertEquals("CF-00000", response.getResult().getCode());
-			assertEquals("Success", response.getResult().getMessage());
+			Map<?, ?> responseData = response.getData(Map.class);
 
-			assertEquals("test", response.getData(Map.class).get("name"));
-
-			verify(httpClient, times(1)).execute(request);
+			assertAll(
+				() -> assertNotNull(response),
+				() -> assertNotNull(response.getResult()),
+				() -> assertEquals("CF-00000", response.getResult().getCode()),
+				() -> assertEquals("Success", response.getResult().getMessage()),
+				() -> assertEquals("test", responseData.get("name")),
+				() -> verify(httpClient, times(1)).execute(request));
 		}
 
 		@Test
 		@DisplayName("[Success] sendRequest 토큰 요청 정상 응답")
-		void testSendRequest_TokenResponse() throws Exception {
-			String rawJson = "{\"access_token\":\"Bearer token123\"}";
+		void sendRequest_TokenResponse() throws Exception {
+			Map<String, Object> tokenMap = new HashMap<>();
+			tokenMap.put("access_token", "Bearer token123");
+
+			String rawJson = new ObjectMapper().writeValueAsString(tokenMap);
 			String encodedResponse = URLEncoder.encode(rawJson, StandardCharsets.UTF_8.name());
 
 			when(httpClient.execute(any(CodefHttpRequest.class))).thenReturn(encodedResponse);
@@ -84,12 +97,13 @@ public class EasyCodefServiceTest {
 
 			EasyCodefResponse response = easyCodefService.sendRequest(request);
 
-			assertNotNull(response);
-			assertNull(response.getResult());
+			Map<?, ?> responseData = response.getData(Map.class);
 
-			assertEquals("Bearer token123", response.getData(Map.class).get("access_token"));
-
-			verify(httpClient, times(1)).execute(request);
+			assertAll(
+				() -> assertNotNull(response),
+				() -> assertNull(response.getResult()),
+				() -> assertEquals("Bearer token123", responseData.get("access_token")),
+				() -> verify(httpClient, times(1)).execute(request));
 		}
 	}
 }

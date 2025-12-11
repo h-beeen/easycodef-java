@@ -34,8 +34,7 @@ public class EasyCodefRequestBuilderTest {
 			assertAll(
 				() -> assertNotNull(request),
 				() -> assertEquals(validUrl, request.getProductUrl()),
-				() -> assertEquals(params, request.getParameterMap())
-			);
+				() -> assertEquals(params, request.getParameterMap()));
 		}
 	}
 
@@ -48,9 +47,7 @@ public class EasyCodefRequestBuilderTest {
 		void url_null() {
 			EasyCodefRequestBuilder builder = EasyCodefRequestBuilder.builder();
 
-			CodefException exception = assertThrows(CodefException.class, () ->
-				builder.productUrl(null)
-			);
+			CodefException exception = assertThrows(CodefException.class, () -> builder.productUrl(null));
 
 			assertEquals(INVALID_PATH_REQUESTED, exception.getCodefError());
 		}
@@ -60,28 +57,15 @@ public class EasyCodefRequestBuilderTest {
 		void url_https() {
 			EasyCodefRequestBuilder builder = EasyCodefRequestBuilder.builder();
 
-			CodefException exception = assertThrows(CodefException.class, () ->
-				builder.productUrl("https://api.codef.io/v1/test")
-			);
+			CodefException exception = assertThrows(CodefException.class,
+				() -> builder.productUrl("https://api.codef.io/v1/test"));
 
 			assertEquals(INVALID_PATH_REQUESTED, exception.getCodefError());
 		}
 
 		@Test
-		@DisplayName("[Exception] 파라미터 맵이 null이면 EMPTY_PARAMETER 예외처리")
-		void fail_parameterMapNull() {
-			EasyCodefRequestBuilder builder = EasyCodefRequestBuilder.builder();
-
-			CodefException exception = assertThrows(CodefException.class, () ->
-				builder.parameterMap(null)
-			);
-
-			assertEquals(EMPTY_PARAMETER, exception.getCodefError());
-		}
-
-		@Test
 		@DisplayName("[Exception] build() 시 URL 미설정이면 INVALID_PATH_REQUESTED 예외처리")
-		void build_missingUrl() {
+		void url_missing() {
 			Map<String, Object> params = new HashMap<>();
 			params.put("key", "value");
 
@@ -94,8 +78,18 @@ public class EasyCodefRequestBuilderTest {
 		}
 
 		@Test
+		@DisplayName("[Exception] 파라미터 맵이 null이면 EMPTY_PARAMETER 예외처리")
+		void parameterMap_null() {
+			EasyCodefRequestBuilder builder = EasyCodefRequestBuilder.builder();
+
+			CodefException exception = assertThrows(CodefException.class, () -> builder.parameterMap(null));
+
+			assertEquals(EMPTY_PARAMETER, exception.getCodefError());
+		}
+
+		@Test
 		@DisplayName("[Exception] build() 시 파라미터 맵 미설정이면 EMPTY_PARAMETER 예외처리")
-		void build_missingParams() {
+		void parameterMap_missing() {
 			EasyCodefRequestBuilder builder = EasyCodefRequestBuilder.builder()
 				.productUrl("/v1/test/path");
 

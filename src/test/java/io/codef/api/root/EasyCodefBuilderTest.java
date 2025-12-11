@@ -35,7 +35,7 @@ public class EasyCodefBuilderTest {
 
 	@Nested
 	@DisplayName("[isSuccessResponse] 초기 설정이 정상적으로 작동하면 성공")
-	class IsSuccessResponse {
+	class ResponseCases {
 
 		@Test
 		@DisplayName("[Success] 필수 값이 모두 설정되면 Client 생성 성공")
@@ -71,24 +71,25 @@ public class EasyCodefBuilderTest {
 				.publicKey(publicKey)
 				.build();
 
-			assertNotNull(client);
-			assertEquals(publicKey, client.getPublicKey());
-
 			Field dispatcherField = EasyCodefClient.class.getDeclaredField("dispatcher");
 			dispatcherField.setAccessible(true);
 			EasyCodefDispatcher actualDispatcher = (EasyCodefDispatcher)dispatcherField.get(client);
 
-			assertEquals(mockDispatcher, actualDispatcher);
+			assertAll(
+				() -> assertNotNull(client),
+				() -> assertEquals(publicKey, client.getPublicKey()),
+				() -> assertNotNull(actualDispatcher),
+				() -> assertEquals(mockDispatcher, actualDispatcher));
 		}
 	}
 
 	@Nested
-	@DisplayName("[Throw Exception] Exception Cases")
-	class ThrowsException {
+	@DisplayName("[Throw Exception] 예외처리가 정상 동작하면 성공")
+	class ExceptionCases {
 
 		@Test
 		@DisplayName("[Exception] 클라이언트 ID 누락 시 EMPTY_CLIENT_ID 예외처리")
-		void build_fail_emptyClientId() {
+		void build_emptyClientId() {
 			EasyCodefBuilder builder = EasyCodefBuilder.builder()
 				.serviceType(EasyCodefServiceType.DEMO)
 				.clientSecret("test-client-secret")
@@ -101,7 +102,7 @@ public class EasyCodefBuilderTest {
 
 		@Test
 		@DisplayName("[Exception] 클라이언트 시크릿 누락 시 EMPTY_CLIENT_SECRET 예외처리")
-		void build_fail_emptyClientSecret() {
+		void build_emptyClientSecret() {
 			EasyCodefBuilder builder = EasyCodefBuilder.builder()
 				.serviceType(EasyCodefServiceType.DEMO)
 				.clientId("test-client-id")
@@ -114,13 +115,14 @@ public class EasyCodefBuilderTest {
 
 		@Test
 		@DisplayName("[Exception] 설정 메서드에 null 전달 시 예외처리")
-		void build_fail_nullCheck() {
+		void build_null() {
 			EasyCodefBuilder builder = EasyCodefBuilder.builder();
 
-			assertThrows(CodefException.class, () -> builder.serviceType(null));
-			assertThrows(CodefException.class, () -> builder.clientId(null));
-			assertThrows(CodefException.class, () -> builder.clientSecret(null));
-			assertThrows(CodefException.class, () -> builder.publicKey(null));
+			assertAll(
+				() -> assertThrows(CodefException.class, () -> builder.serviceType(null)),
+				() -> assertThrows(CodefException.class, () -> builder.clientId(null)),
+				() -> assertThrows(CodefException.class, () -> builder.clientSecret(null)),
+				() -> assertThrows(CodefException.class, () -> builder.publicKey(null)));
 		}
 	}
 }

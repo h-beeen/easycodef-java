@@ -1,26 +1,27 @@
 package io.codef.api.e2e;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.codef.api.EasyCodef;
-import io.codef.api.EasyCodefClient;
-import io.codef.api.EasyCodefServiceType;
-import io.codef.api.dto.EasyCodefResponse;
-import io.codef.api.e2e.fixture.ClientInfoFixture;
-import io.codef.api.e2e.fixture.TwoWayFixture;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import io.codef.api.EasyCodef;
+import io.codef.api.EasyCodefClient;
+import io.codef.api.EasyCodefServiceType;
+import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.fixture.ClientInfoFixture;
+import io.codef.api.fixture.TwoWayFixture;
 
 @DisplayName("[E2E Layer] EasyCodef TwoWay Test")
 class EasyCodefTwoWayTest {
@@ -38,16 +39,15 @@ class EasyCodefTwoWayTest {
 		Field clientMapField = EasyCodef.class.getDeclaredField("clientMap");
 		clientMapField.setAccessible(true);
 
-		@SuppressWarnings("unchecked")
-		Map<EasyCodefServiceType, EasyCodefClient> clientMap =
-			(Map<EasyCodefServiceType, EasyCodefClient>) clientMapField.get(easyCodef);
+		@SuppressWarnings("unchecked") Map<EasyCodefServiceType, EasyCodefClient> clientMap = (Map<EasyCodefServiceType, EasyCodefClient>)clientMapField
+			.get(easyCodef);
 
 		clientMap.put(EasyCodefServiceType.DEMO, mockClient);
 	}
 
 	@Test
 	@DisplayName("[Success] 2-Way 추가인증 호출")
-	void testKakaoAuth_Success() throws Exception {
+	void requestCertification_success() throws Exception {
 		EasyCodefResponse firstMockResponse = Mockito.mock(EasyCodefResponse.class);
 		when(firstMockResponse.toString()).thenReturn(TwoWayFixture.twoWayRequiredResponseJson());
 		when(mockClient.requestProduct(any())).thenReturn(firstMockResponse);
@@ -61,13 +61,10 @@ class EasyCodefTwoWayTest {
 		String firstResult = easyCodef.requestProduct(
 			"/v1/kr/mock/url",
 			EasyCodefServiceType.DEMO,
-			paramMap
-		);
+			paramMap);
 
 		JsonNode firstRoot = mapper.readTree(firstResult);
 		String firstResponseCode = firstRoot.path("result").path("code").asText();
-
-		assertEquals("CF-03002", firstResponseCode);
 
 		JsonNode twoWayInfo = firstRoot.path("data").path("twoWayInfo");
 
@@ -76,14 +73,15 @@ class EasyCodefTwoWayTest {
 		twoWayMap.put("is2Way", true);
 		twoWayMap.put("simpleAuth", "1");
 
-		String result2 = easyCodef.requestCertification(
+		String secondResult = easyCodef.requestCertification(
 			"/v1/kr/mock/url",
 			EasyCodefServiceType.DEMO,
-			twoWayMap
-		);
+			twoWayMap);
 
-		JsonNode root2 = mapper.readTree(result2);
+		JsonNode secondRoot = mapper.readTree(secondResult);
 
-		assertEquals("CF-00000", root2.path("result").path("code").asText());
+		assertAll(
+			() -> assertEquals("CF-03002", firstResponseCode),
+			() -> assertEquals("CF-00000", secondRoot.path("result").path("code").asText()));
 	}
 }

@@ -11,14 +11,21 @@ import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.codef.api.error.CodefError;
 import io.codef.api.error.CodefException;
@@ -27,6 +34,10 @@ import io.codef.api.error.CodefException;
 @DisplayName("[HTTP Layer] CodefHttpClient Test")
 public class CodefHttpClientTest {
 
+	private static final String TEST_URL = "http://test-api.com";
+	private static final String HEADER_CONTENT_TYPE = "Content-Type";
+	private static final String APPLICATION_JSON = "application/json";
+
 	@Mock
 	private HttpURLConnection mockConnection;
 
@@ -34,7 +45,7 @@ public class CodefHttpClientTest {
 	private CodefHttpRequest validRequest;
 
 	@BeforeEach
-	void setUp() {
+	void setUp() throws JsonProcessingException {
 		client = new CodefHttpClient() {
 			@Override
 			protected HttpURLConnection createConnection(String url) {
@@ -43,18 +54,27 @@ public class CodefHttpClientTest {
 		};
 
 		Map<String, String> headers = new HashMap<>();
-		headers.put("Content-Type", "application/json");
-		validRequest = new CodefHttpRequest("http://test-api.com", headers, "{\"param\":\"value\"}");
+		headers.put(HEADER_CONTENT_TYPE, APPLICATION_JSON);
+
+		Map<String, Object> body = new HashMap<>();
+		body.put("param", "value");
+
+		String jsonBody = new ObjectMapper().writeValueAsString(body);
+
+		validRequest = new CodefHttpRequest(TEST_URL, headers, jsonBody);
 	}
 
 	@Nested
 	@DisplayName("[isSuccessResponse] 응답이 정상이면 성공")
-	class SuccessCases {
+	class ResponseCases {
 
 		@Test
 		@DisplayName("[Success] HTTP 정상 요청 및 응답 처리")
-		void execute_Success() throws IOException {
-			String successBody = "{\"result\":\"success\"}";
+		void execute_success() throws IOException {
+			Map<String, Object> successMap = new HashMap<>();
+			successMap.put("result", "success");
+			String successBody = new ObjectMapper().writeValueAsString(successMap);
+
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 			when(mockConnection.getOutputStream()).thenReturn(outputStream);
@@ -64,18 +84,24 @@ public class CodefHttpClientTest {
 
 			String result = client.execute(validRequest);
 
-			assertEquals(successBody, result);
-			verify(mockConnection).setRequestMethod("POST");
-			verify(mockConnection).setRequestProperty("Content-Type", "application/json");
-			verify(mockConnection).setDoOutput(true);
-			verify(mockConnection).setDoInput(true);
+			assertAll(
+				() -> assertEquals(successBody, result),
+				() -> verify(mockConnection).setRequestMethod("POST"),
+				() -> verify(mockConnection).setRequestProperty(HEADER_CONTENT_TYPE, APPLICATION_JSON),
+				() -> verify(mockConnection).setDoOutput(true),
+				() -> verify(mockConnection).setDoInput(true));
 		}
 
 		@Test
 		@DisplayName("[Success] CodefHttpRequest 내의 body가 null일 경우 요청 바디 없이 정상 처리")
-		void execute_RequestWithNullBody() throws IOException {
-			CodefHttpRequest requestWithNullBody = new CodefHttpRequest("http://test-api.com", new HashMap<>(), null);
-			String successBody = "{\"result\":\"success_no_body\"}";
+		void execute_requestWithNullBody() throws IOException {
+			Map<String, String> emptyHeaders = new HashMap<>();
+
+			CodefHttpRequest requestWithNullBody = new CodefHttpRequest("http://test-api.com", emptyHeaders, null);
+
+			Map<String, Object> body = new HashMap<>();
+			body.put("result", "success_no_body");
+			String successBody = new ObjectMapper().writeValueAsString(body);
 
 			when(mockConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
 			when(mockConnection.getInputStream()).thenReturn(
@@ -83,15 +109,19 @@ public class CodefHttpClientTest {
 
 			String result = client.execute(requestWithNullBody);
 
-			assertEquals(successBody, result);
-			verify(mockConnection, never()).getOutputStream();
+			assertAll(
+				() -> assertEquals(successBody, result),
+				() -> verify(mockConnection, never()).getOutputStream());
 		}
 
 		@Test
 		@DisplayName("[Success] 요청 바디가 빈 문자열일 경우 요청 바디 없이 정상 처리")
-		void execute_RequestWithEmptyBody() throws IOException {
+		void execute_requestWithEmptyBody() throws IOException {
 			CodefHttpRequest requestWithEmptyBody = new CodefHttpRequest("http://test-api.com", new HashMap<>(), "");
-			String successBody = "{\"result\":\"success_empty_body\"}";
+
+			Map<String, Object> body = new HashMap<>();
+			body.put("result", "success_empty_body");
+			String successBody = new ObjectMapper().writeValueAsString(body);
 
 			when(mockConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
 			when(mockConnection.getInputStream()).thenReturn(
@@ -99,14 +129,18 @@ public class CodefHttpClientTest {
 
 			String result = client.execute(requestWithEmptyBody);
 
-			assertEquals(successBody, result);
-			verify(mockConnection, never()).getOutputStream();
+			assertAll(
+				() -> assertEquals(successBody, result),
+				() -> verify(mockConnection, never()).getOutputStream());
 		}
 
 		@Test
-		@DisplayName("[Success] 연결 종료(disconnect)가 항상 호출되는지 확인")
-		void execute_ConnectionAlwaysDisconnected() throws IOException {
-			String successBody = "{\"result\":\"success\"}";
+		@DisplayName("[Success] 연결 종료(disconnect) 호출 보장")
+		void execute_connectionAlwaysDisconnected() throws IOException {
+			Map<String, Object> successMap = new HashMap<>();
+			successMap.put("result", "success");
+			String successBody = new ObjectMapper().writeValueAsString(successMap);
+
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 			when(mockConnection.getOutputStream()).thenReturn(outputStream);
@@ -114,21 +148,18 @@ public class CodefHttpClientTest {
 			when(mockConnection.getInputStream()).thenReturn(
 				new ByteArrayInputStream(successBody.getBytes(StandardCharsets.UTF_8)));
 
-			client.execute(validRequest);
-
-			verify(mockConnection, times(1)).disconnect();
-
-			reset(mockConnection);
-			when(mockConnection.getOutputStream()).thenThrow(new SocketTimeoutException());
-
-			assertThrows(CodefException.class, () -> client.execute(validRequest));
-
-			verify(mockConnection, times(1)).disconnect();
+			assertAll(
+				() -> {
+					String result = client.execute(validRequest);
+					assertEquals(successBody, result);
+				},
+				() -> assertThrows(CodefException.class, () -> client.execute(validRequest)),
+				() -> verify(mockConnection, times(2)).disconnect());
 		}
 	}
 
 	@Nested
-	@DisplayName("[Throw Exception] Exception Cases (IO / Timeout / Empty Body)")
+	@DisplayName("[Throw Exception] 예외처리가 정상 동작하면 성공")
 	class ExceptionCases {
 
 		@Test
@@ -137,6 +168,7 @@ public class CodefHttpClientTest {
 			when(mockConnection.getOutputStream()).thenThrow(new IOException());
 
 			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
+
 			assertEquals(CodefError.IO_ERROR, exception.getCodefError());
 		}
 
@@ -146,6 +178,7 @@ public class CodefHttpClientTest {
 			when(mockConnection.getOutputStream()).thenThrow(new SocketTimeoutException());
 
 			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
+
 			assertEquals(CodefError.TIMEOUT_ERROR, exception.getCodefError());
 		}
 
@@ -159,97 +192,58 @@ public class CodefHttpClientTest {
 			when(mockConnection.getInputStream()).thenReturn(null);
 
 			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
+
 			assertEquals(CodefError.EMPTY_CODEF_RESPONSE, exception.getCodefError());
 		}
 	}
 
-	@Nested
-	@DisplayName("[HTTP Error] HTTP Status Error Cases")
-	class HTTPStatusErrorCases {
+	@ParameterizedTest(name = "[{index}] HTTP {0} → {1}")
+	@MethodSource("errorResponseProvider")
+	@DisplayName("HTTP 에러 코드 매핑 테스트")
+	void execute_HttpErrorMapping(int httpStatus,
+		CodefError expectedError,
+		String errorBody) throws IOException {
 
-		@Test
-		@DisplayName("[Exception] 400 Bad Request 응답 시 INTERNAL_SERVER_ERROR 예외처리")
-		void execute_BadRequest() throws IOException {
-			String errorBody = "Bad Request";
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-			when(mockConnection.getOutputStream()).thenReturn(outputStream);
-			when(mockConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_REQUEST);
-			when(mockConnection.getErrorStream()).thenReturn(
-				new ByteArrayInputStream(errorBody.getBytes(StandardCharsets.UTF_8)));
+		when(mockConnection.getOutputStream()).thenReturn(outputStream);
+		when(mockConnection.getResponseCode()).thenReturn(httpStatus);
+		when(mockConnection.getErrorStream()).thenReturn(
+			new ByteArrayInputStream(errorBody.getBytes(StandardCharsets.UTF_8)));
 
-			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
-			assertEquals(CodefError.INTERNAL_SERVER_ERROR, exception.getCodefError());
-			String expectedMessage = CodefError.INTERNAL_SERVER_ERROR.getMessage() + System.lineSeparator() + errorBody;
-			assertEquals(expectedMessage, exception.getMessage());
-		}
+		CodefException exception = assertThrows(CodefException.class,
+			() -> client.execute(validRequest));
 
-		@Test
-		@DisplayName("[Exception] 401 Unauthorized 응답 시 UNAUTHORIZED 예외처리")
-		void execute_Unauthorized() throws IOException {
-			String errorBody = "{\"error\":\"invalid_token\"}";
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		String expectedMessage = expectedError.getMessage()
+			+ System.lineSeparator()
+			+ errorBody;
 
-			when(mockConnection.getOutputStream()).thenReturn(outputStream);
-			when(mockConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_UNAUTHORIZED);
-			when(mockConnection.getErrorStream()).thenReturn(
-				new ByteArrayInputStream(errorBody.getBytes(StandardCharsets.UTF_8)));
+		assertAll(
+			() -> assertEquals(expectedError, exception.getCodefError()),
+			() -> assertEquals(expectedMessage, exception.getMessage()));
+	}
 
-			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
-			assertEquals(CodefError.UNAUTHORIZED, exception.getCodefError());
-			String expectedMessage = CodefError.UNAUTHORIZED.getMessage() + System.lineSeparator() + errorBody;
-			assertEquals(expectedMessage, exception.getMessage());
-		}
-
-		@Test
-		@DisplayName("[Exception] 403 Forbidden 응답 시 INTERNAL_SERVER_ERROR 예외처리")
-		void execute_Forbidden() throws IOException {
-			String errorBody = "Forbidden";
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-			when(mockConnection.getOutputStream()).thenReturn(outputStream);
-			when(mockConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
-			when(mockConnection.getErrorStream()).thenReturn(
-				new ByteArrayInputStream(errorBody.getBytes(StandardCharsets.UTF_8)));
-
-			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
-			assertEquals(CodefError.INTERNAL_SERVER_ERROR, exception.getCodefError());
-			String expectedMessage = CodefError.INTERNAL_SERVER_ERROR.getMessage() + System.lineSeparator() + errorBody;
-			assertEquals(expectedMessage, exception.getMessage());
-		}
-
-		@Test
-		@DisplayName("[Exception] 404 Not Found 응답 시 INTERNAL_SERVER_ERROR 예외처리")
-		void execute_NotFound() throws IOException {
-			String errorBody = "Not Found";
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-			when(mockConnection.getOutputStream()).thenReturn(outputStream);
-			when(mockConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_NOT_FOUND);
-			when(mockConnection.getErrorStream()).thenReturn(
-				new ByteArrayInputStream(errorBody.getBytes(StandardCharsets.UTF_8)));
-
-			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
-			assertEquals(CodefError.INTERNAL_SERVER_ERROR, exception.getCodefError());
-			String expectedMessage = CodefError.INTERNAL_SERVER_ERROR.getMessage() + System.lineSeparator() + errorBody;
-			assertEquals(expectedMessage, exception.getMessage());
-		}
-
-		@Test
-		@DisplayName("[Exception] 500 서버 에러 응답 시 INTERNAL_SERVER_ERROR 예외처리")
-		void execute_InternalServerError() throws IOException {
-			String errorBody = "Server Error";
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-			when(mockConnection.getOutputStream()).thenReturn(outputStream);
-			when(mockConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_INTERNAL_ERROR);
-			when(mockConnection.getErrorStream()).thenReturn(
-				new ByteArrayInputStream(errorBody.getBytes(StandardCharsets.UTF_8)));
-
-			CodefException exception = assertThrows(CodefException.class, () -> client.execute(validRequest));
-			assertEquals(CodefError.INTERNAL_SERVER_ERROR, exception.getCodefError());
-			String expectedMessage = CodefError.INTERNAL_SERVER_ERROR.getMessage() + System.lineSeparator() + errorBody;
-			assertEquals(expectedMessage, exception.getMessage());
-		}
+	private static Stream<Arguments> errorResponseProvider() {
+		return Stream.of(
+			Arguments.of(
+				HttpURLConnection.HTTP_BAD_REQUEST,
+				CodefError.INTERNAL_SERVER_ERROR,
+				"Bad Request"),
+			Arguments.of(
+				HttpURLConnection.HTTP_UNAUTHORIZED,
+				CodefError.UNAUTHORIZED,
+				"{\"error\":\"invalid_token\"}"),
+			Arguments.of(
+				HttpURLConnection.HTTP_FORBIDDEN,
+				CodefError.INTERNAL_SERVER_ERROR,
+				"Forbidden"),
+			Arguments.of(
+				HttpURLConnection.HTTP_NOT_FOUND,
+				CodefError.INTERNAL_SERVER_ERROR,
+				"Not Found"),
+			Arguments.of(
+				HttpURLConnection.HTTP_INTERNAL_ERROR,
+				CodefError.INTERNAL_SERVER_ERROR,
+				"Server Error"));
 	}
 }
