@@ -4,6 +4,7 @@ import static io.codef.api.error.CodefError.*;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +13,9 @@ import io.codef.api.error.CodefException;
 
 public class JsonUtil {
 
-	private static final ObjectMapper mapper = new ObjectMapper();
+	private static final ObjectMapper mapper =
+		new ObjectMapper()
+			.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 
 	private JsonUtil() {}
 
