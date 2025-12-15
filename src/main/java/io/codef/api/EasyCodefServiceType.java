@@ -7,7 +7,6 @@ import io.codef.api.constant.CodefHost;
  *
  */
 public enum EasyCodefServiceType {
-
 	DEMO(CodefHost.DEMO_DOMAIN),
 	API(CodefHost.API_DOMAIN);
 

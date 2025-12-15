@@ -93,35 +93,14 @@ public class EasyCodefBuilder {
 	public EasyCodefClient build() {
 		validateProperties();
 
-		CodefHttpClient httpClient = createHttpClient();
-		EasyCodefOAuthService oAuthService = createOAuthService(httpClient);
-		EasyCodefApiService apiService = createApiService(httpClient);
+		CodefHttpClient httpClient = new CodefHttpClient();
+		EasyCodefOAuthService oAuthService = new EasyCodefOAuthService(httpClient);
+		EasyCodefApiService apiService = new EasyCodefApiService(httpClient);
 
-		EasyCodefToken token = createToken(clientId, clientSecret, oAuthService);
-		EasyCodefDispatcher dispatcher = createDispatcher(token, serviceType, apiService);
+		EasyCodefToken token = new EasyCodefToken(clientId, clientSecret, oAuthService);
+		EasyCodefDispatcher dispatcher = new EasyCodefDispatcher(token, serviceType, apiService);
 
 		return new EasyCodefClient(dispatcher, publicKey);
-	}
-
-	protected CodefHttpClient createHttpClient() {
-		return new CodefHttpClient();
-	}
-
-	protected EasyCodefOAuthService createOAuthService(CodefHttpClient httpClient) {
-		return new EasyCodefOAuthService(httpClient);
-	}
-
-	protected EasyCodefApiService createApiService(CodefHttpClient httpClient) {
-		return new EasyCodefApiService(httpClient);
-	}
-
-	protected EasyCodefToken createToken(String clientId, String clientSecret, EasyCodefOAuthService oAuthService) {
-		return new EasyCodefToken(clientId, clientSecret, oAuthService);
-	}
-
-	protected EasyCodefDispatcher createDispatcher(EasyCodefToken token, EasyCodefServiceType serviceType,
-		EasyCodefApiService apiService) {
-		return new EasyCodefDispatcher(token, serviceType, apiService);
 	}
 
 	/**

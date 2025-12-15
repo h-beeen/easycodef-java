@@ -91,6 +91,13 @@ public class ResponseHandler {
 		return result;
 	}
 
+	/**
+	 * 응답 JSON에서 {@code data} 필드 파싱
+	 *
+	 * @param jsonNode JSON 파싱된 응답 객체
+	 * @return {@code data}가 Object인 경우 {@link Map}, Array인 경우 {@link List}
+	 * @throws CodefException {@code data} 필드가 없거나 형식이 예상과 다른 경우 {@link CodefError#PARSE_ERROR}
+	 */
 	private static Object parseData(JsonNode jsonNode) {
 		if (!jsonNode.has(DATA.getValue())) {
 			throw CodefException.from(PARSE_ERROR);
@@ -111,6 +118,12 @@ public class ResponseHandler {
 		throw CodefException.from(PARSE_ERROR);
 	}
 
+	/**
+	 * 응답 JSON에서 {@code result}, {@code data}를 제외한 부가 정보 필드 파싱
+	 *
+	 * @param jsonNode JSON 파싱된 응답 객체
+	 * @return {@code result}, {@code data}를 제외한 나머지 필드 Map
+	 */
 	private static Object parseExtraInfo(JsonNode jsonNode) {
 		Map<String, Object> extraInfo = JsonUtil.toMap(jsonNode);
 

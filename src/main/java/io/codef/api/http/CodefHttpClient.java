@@ -76,6 +76,10 @@ public class CodefHttpClient {
 	 *
 	 * @param connection 연결된 HttpURLConnection 객체
 	 * @return 변환된 응답 문자열
+	 * @throws CodefException 응답 코드가 200이 아닌 경우 {@link CodefError#UNAUTHORIZED} 또는
+	 * {@link CodefError#INTERNAL_SERVER_ERROR}
+	 * @throws CodefException 응답 본문이 비어 있는 경우 {@link CodefError#EMPTY_CODEF_RESPONSE}
+	 * @throws CodefException 응답 처리 중 I/O 오류가 발생한 경우 {@link CodefError#IO_ERROR}
 	 */
 	private String getResponse(HttpURLConnection connection) {
 		try {
@@ -98,6 +102,14 @@ public class CodefHttpClient {
 		}
 	}
 
+	/**
+	 * 응답 코드를 기준으로 성공/에러 스트림을 읽어 문자열로 변환
+	 *
+	 * @param connection 연결된 HttpURLConnection 객체
+	 * @param responseCode HTTP 응답 상태 코드
+	 * @return 변환된 응답 문자열
+	 * @throws IOException 스트림 읽기 중 오류 발생 시
+	 */
 	private static String getString(HttpURLConnection connection, int responseCode) throws IOException {
 		InputStream inputStream;
 
@@ -120,7 +132,14 @@ public class CodefHttpClient {
 		return responseBuilder.toString();
 	}
 
-	protected HttpURLConnection createConnection(String urlString) {
+	/**
+	 * URL 문자열로부터 {@link HttpURLConnection} 생성
+	 *
+	 * @param urlString 요청 URL 문자열
+	 * @return 생성된 {@link HttpURLConnection}
+	 * @throws CodefException 커넥션 생성 중 I/O 오류가 발생한 경우 {@link CodefError#IO_ERROR}
+	 */
+	private HttpURLConnection createConnection(String urlString) {
 		try {
 			URL url = new URL(urlString);
 			return (HttpURLConnection)url.openConnection();

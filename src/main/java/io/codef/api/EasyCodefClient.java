@@ -62,12 +62,22 @@ public class EasyCodefClient {
 		return dispatcher.dispatchRequest(request);
 	}
 
+	/**
+	 * 저장된 Access Token 조회
+	 *
+	 * @return Access Token 문자열
+	 */
 	protected String requestToken() {
-		return dispatcher.getToken();
+		return dispatcher.getAccessToken();
 	}
 
+	/**
+	 * 신규 Access Token 발급
+	 *
+	 * @return 신규 Access Token 문자열
+	 */
 	protected String requestNewToken() {
-		return dispatcher.getNewToken();
+		return dispatcher.getNewAccessToken();
 	}
 
 	/**

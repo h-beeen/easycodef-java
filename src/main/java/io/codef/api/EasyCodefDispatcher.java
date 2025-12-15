@@ -42,17 +42,27 @@ public class EasyCodefDispatcher {
 	 */
 	EasyCodefResponse dispatchRequest(EasyCodefRequest request) {
 		String urlPath = easyCodefServiceType.getHost() + request.getProductUrl();
-		String bearerToken = token.getValidAccessToken();
+		String bearerToken = token.getBearerAccessToken();
 		String jsonBody = JsonUtil.toJson(request.getParameterMap());
 
 		return apiService.requestProduct(urlPath, bearerToken, jsonBody);
 	}
 
-	String getToken() {
+	/**
+	 * 저장된 Access Token 조회
+	 *
+	 * @return Access Token 문자열
+	 */
+	String getAccessToken() {
 		return token.getAccessToken();
 	}
 
-	String getNewToken() {
-		return token.getNewAccessToken();
+	/**
+	 * 신규 Access Token 발급
+	 *
+	 * @return 신규 Access Token 문자열
+	 */
+	String getNewAccessToken() {
+		return token.forceNewAccessToken();
 	}
 }
