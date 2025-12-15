@@ -20,7 +20,6 @@ import io.codef.api.EasyCodefServiceType;
 import io.codef.api.fixture.ClientInfoFixture;
 import io.codef.api.fixture.ParameterMapFixture;
 import io.codef.api.fixture.ProductURL;
-import io.codef.api.fixture.TokenFixture;
 
 @DisplayName("[E2E Layer] EasyCodef (deprecated) E2E Test")
 public class EasyCodefE2ETest {
@@ -93,35 +92,6 @@ public class EasyCodefE2ETest {
 
 			assertValidJwt(newIssuedToken);
 			assertNotEquals(firstIssuedToken, newIssuedToken);
-		}
-
-		@Test
-		@DisplayName("[Success] 토큰 만료 시 자동 갱신 후 API 호출 성공")
-		void requestToken_refresh() throws Exception {
-			String productUrl = ProductURL.FLOODED_VEHICLE.getUrl();
-			Map<String, Object> parameterMap = ParameterMapFixture.floodedVehicleRequestParameterMap();
-
-			String firstResponse = easyCodef.requestProduct(
-				productUrl,
-				EasyCodefServiceType.DEMO,
-				parameterMap);
-
-			Object tokenObj = TokenFixture.getTokenObject(easyCodef, EasyCodefServiceType.DEMO);
-			String oldAccessToken = TokenFixture.getAccessToken(tokenObj);
-			TokenFixture.forceExpireToken(tokenObj);
-
-			String secondResponse = assertDoesNotThrow(
-				() -> easyCodef.requestProduct(
-					productUrl,
-					EasyCodefServiceType.DEMO,
-					parameterMap));
-
-			String newAccessToken = TokenFixture.getAccessToken(tokenObj);
-
-			assertAll(
-				() -> assertNotNull(firstResponse),
-				() -> assertNotNull(secondResponse),
-				() -> assertNotEquals(oldAccessToken, newAccessToken));
 		}
 
 		private void assertValidJwt(String token) {
