@@ -9,6 +9,7 @@ public enum CodefError {
 	UNSUPPORTED_ENCODING(
 		"The string is encoded in an unsupported format."),
 
+	/** JSON 역직렬화 실패 */
 	JSON_PARSE_ERROR(
 		"An error occurred during JSON deserialization."),
 
@@ -27,9 +28,10 @@ public enum CodefError {
 	/** Two-Way 요청이 아닌데 관련 키워드를 포함하고 요청했을 경우 */
 	INVALID_2WAY_KEYWORD(
 		"Requests for additional authentication (2-way) must use the requestCertification method."),
-	/** 상품 URL 형식 오류 */
+	/** 상품 URL 형식이 올바르지 않은 경우 */
 	INVALID_PATH_REQUESTED(
 		"Invalid path requested. Please exclude the domain address and provide only the relative path (e.g., /v1/kr/...)."),
+	/** 지원하지 않는 서비스 타입을 요청한 경우 */
 	INVALID_SERVICE_TYPE(
 		"The requested service type is not supported."),
 
@@ -51,15 +53,19 @@ public enum CodefError {
 	/** 요청 파라미터가 비어 있거나 존재하지 않을 경우 */
 	EMPTY_PARAMETER(
 		"Parameter is required for the product request. Please set the parameter information."),
+	/** EasyCodefRequest 객체가 누락된 경우 */
 	EMPTY_EASYCODEF_REQUEST(
 		"EasyCodefRequest is required for the product request. Please set the EasyCodefRequest parameter information."),
 
+	/** 인증 실패 또는 권한이 없는 요청 */
 	UNAUTHORIZED(
 		"You do not have permission to make this request. Please check your access token or permissions."),
 
+	/** 서버에서 오류 응답을 반환한 경우 */
 	INTERNAL_SERVER_ERROR(
 		"The server returned an unsuccessful response. Please check the error details from the server."),
 
+	/** 서버 응답 본문이 비어 있는 경우 */
 	EMPTY_CODEF_RESPONSE(
 		"the server returned an empty response body."),
 
@@ -68,6 +74,7 @@ public enum CodefError {
 		"An error occurred because the request was either not sent properly or not received. "
 			+ "Please check if the outbound port to IP: 211.55.34.5, PORT: 443 is open."),
 
+	/** OAuth 인증 처리 중 오류 발생 */
 	OAUTH_ERROR(
 		"OAuth authentication failed. Please check your client_id, client_secret, or validity of the access token."),
 

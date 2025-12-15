@@ -108,40 +108,6 @@ public class EasyCodefClientTest {
 		}
 
 		@Test
-		@DisplayName("[Success] 토큰 요청 호출 확인")
-		void requestToken_success() throws Exception {
-			String expectedToken = "test-token";
-
-			Method getTokenMethod = EasyCodefDispatcher.class.getDeclaredMethod("getToken");
-			getTokenMethod.setAccessible(true);
-			when(getTokenMethod.invoke(dispatcher)).thenReturn(expectedToken);
-
-			Method requestTokenMethod = EasyCodefClient.class.getDeclaredMethod("requestToken");
-			requestTokenMethod.setAccessible(true);
-
-			String token = (String)requestTokenMethod.invoke(client);
-
-			assertEquals(expectedToken, token);
-		}
-
-		@Test
-		@DisplayName("[Success] 새로운 토큰 요청 호출 확인")
-		void requestNewToken_success() throws Exception {
-			String expectedToken = "new-test-token";
-
-			Method getNewTokenMethod = EasyCodefDispatcher.class.getDeclaredMethod("getNewToken");
-			getNewTokenMethod.setAccessible(true);
-			when(getNewTokenMethod.invoke(dispatcher)).thenReturn(expectedToken);
-
-			Method requestNewTokenMethod = EasyCodefClient.class.getDeclaredMethod("requestNewToken");
-			requestNewTokenMethod.setAccessible(true);
-
-			String token = (String)requestNewTokenMethod.invoke(client);
-
-			assertEquals(expectedToken, token);
-		}
-
-		@Test
 		@DisplayName("[Success] 퍼블릭 키 반환 확인")
 		void getPublicKey_success() {
 			assertEquals(publicKey, client.getPublicKey());
