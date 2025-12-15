@@ -10,6 +10,8 @@ import org.apache.commons.codec.binary.Base64;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import io.codef.api.dto.EasyCodefResponse;
+import io.codef.api.error.CodefError;
+import io.codef.api.error.CodefException;
 import io.codef.api.service.EasyCodefOAuthService;
 import io.codef.api.util.AuthorizationUtil;
 import io.codef.api.util.JsonUtil;
@@ -38,10 +40,10 @@ public class EasyCodefToken {
 	 * @param oAuthService    OAuth 토큰 발급 요청 담당 서비스
 	 */
 	EasyCodefToken(String clientId, String clientSecret, EasyCodefOAuthService oAuthService) {
-		this.oauthToken = createOAuthToken(clientId, clientSecret);
+		this.oauthToken = encodeClientCredentials(clientId, clientSecret);
 		this.oAuthService = oAuthService;
 
-		refreshToken();
+		requestAccessToken();
 	}
 
 	/**
@@ -49,27 +51,40 @@ public class EasyCodefToken {
 	 *
 	 * @return "Bearer {accessToken}" 형식의 인증 문자열
 	 */
-	public String getValidAccessToken() {
-		validateAndRefreshToken();
+	String getBearerAccessToken() {
+		validateExpiring();
+
 		return AuthorizationUtil.createBearerAuth(accessToken);
 	}
 
+	/**
+	 * 저장된 Access Token 반환
+	 *
+	 * @return Access Token 문자열
+	 */
 	String getAccessToken() {
-		validateAndRefreshToken();
+		validateExpiring();
+
 		return accessToken;
 	}
 
-	String getNewAccessToken() {
-		refreshToken();
+	/**
+	 * 신규 Access Token 발급 후 반환
+	 *
+	 * @return 신규 Access Token 문자열
+	 */
+	String forceNewAccessToken() {
+		requestAccessToken();
+
 		return accessToken;
 	}
 
 	/**
 	 * Access Token 만료 여부 검증, 필요시 재발급
 	 */
-	private void validateAndRefreshToken() {
+	private void validateExpiring() {
 		if (expiresAt == null || isTokenExpiringSoon(expiresAt)) {
-			refreshToken();
+			requestAccessToken();
 		}
 	}
 
@@ -80,7 +95,7 @@ public class EasyCodefToken {
 	 * @param clientSecret    CODEF 클라이언트 시크릿
 	 * @return Base64 인코딩된 OAuth 토큰 문자열
 	 */
-	private String createOAuthToken(String clientId, String clientSecret) {
+	private String encodeClientCredentials(String clientId, String clientSecret) {
 		String auth = clientId + ":" + clientSecret;
 		byte[] authEncBytes = Base64.encodeBase64(auth.getBytes());
 
@@ -90,7 +105,7 @@ public class EasyCodefToken {
 	/**
 	 * CODEF OAuth API로부터 Access Token 발급하여 초기화
 	 */
-	private void refreshToken() {
+	private void requestAccessToken() {
 		String basicToken = AuthorizationUtil.createBasicAuth(oauthToken);
 		EasyCodefResponse response = oAuthService.requestToken(basicToken);
 		Map<?, ?> responseMap = response.getData(Map.class);
@@ -101,7 +116,7 @@ public class EasyCodefToken {
 		JsonNode expiresInNode = jsonNode.get(EXPIRES_IN.getValue());
 
 		if (accessTokenNode == null || expiresInNode == null) {
-			return;
+			throw CodefException.from(CodefError.OAUTH_ERROR);
 		}
 
 		this.accessToken = accessTokenNode.asText();
